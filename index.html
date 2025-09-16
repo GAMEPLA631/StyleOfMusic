@@ -129,6 +129,7 @@
             max-width: 85%;
             padding: 0.75rem 1rem;
             border-radius: 1rem;
+            white-space: pre-wrap; /* Zachová formátovanie, ako sú nové riadky */
         }
 
         .message.user {
@@ -291,7 +292,7 @@
         const loadingSpinner = document.getElementById('loading-spinner');
 
         // *** SEM VLOŽ SVOJ API KĽÚČ ***
-        const apiKey = "AIzaSyA7UeU1kIC_0VF5HNCeEhrBkPFoeoIiC4o";
+        const apiKey = "AIzaSyDKV9kAUZEOREri0mzZoeLPlfEoMpMKRdw";
         
         // Funkcia na pridanie správy do chatovacieho okna
         const addMessage = (text, sender) => {
@@ -304,18 +305,33 @@
 
         // Funkcia na posielanie požiadavky na Gemini API
         const generateText = async () => {
-            const prompt = promptInput.value.trim();
-            if (!prompt) return;
+            const userPrompt = promptInput.value.trim();
+            if (!userPrompt) return;
 
-            addMessage(prompt, 'user');
+            addMessage(userPrompt, 'user');
             promptInput.value = '';
             
             loadingSpinner.style.display = 'block';
             generateButton.disabled = true;
 
+            const structuredPrompt = `Generate a musical lyrical narrative with the following sections based on the user's idea:
+A Haunting Lyrical Narrative
+[Intro]
+[Verse 1]
+[Build-up]
+[Drop]
+[Verse 2]
+[Bridge]
+[Final Build]
+[Final Drop]
+
+User idea: ${userPrompt}
+
+Ensure the output is formatted exactly as shown, with the section titles in brackets.`;
+
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
             const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
+                contents: [{ parts: [{ text: structuredPrompt }] }],
             };
 
             try {
@@ -358,6 +374,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
