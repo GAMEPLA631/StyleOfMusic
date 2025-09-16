@@ -8,7 +8,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Inter:wght@400;700&display=swap');
         
-        /* Base body styles for a modern, dark look */
+        /* Základné štýly tela pre moderný, tmavý vzhľad */
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: #0a0a0a;
@@ -17,14 +17,14 @@
             overflow-x: hidden;
         }
         
-        /* Container for the entire page */
+        /* Kontajner pre celú stránku */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem 1rem;
         }
 
-        /* Hero section for a captivating introduction */
+        /* Hero sekcia pre pútavý úvod */
         .hero-section {
             background: linear-gradient(to right, #1a1a1a, #2c2c2c);
             padding: 6rem 2rem;
@@ -34,14 +34,14 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
         }
 
-        /* Grid for genre cards */
+        /* Mriežka pre karty žánrov */
         .genre-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 2rem;
         }
         
-        /* Styling and animation for genre cards */
+        /* Štýlovanie a animácia pre karty žánrov */
         .genre-card {
             border-radius: 1rem;
             padding: 1.5rem;
@@ -49,10 +49,10 @@
             transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
             opacity: 0;
             transform: translateY(30px);
-            border: 2px solid transparent; /* Transparent border that changes on hover */
+            border: 2px solid transparent; /* Priehľadný okraj, ktorý sa mení pri nabehnutí myši */
         }
         
-        /* Color gradients for the cards */
+        /* Farebné prechody pre karty */
         .grad-1 { background-image: linear-gradient(135deg, #FF6B6B, #F88A6A); }
         .grad-2 { background-image: linear-gradient(135deg, #51A8E8, #7DE2D1); }
         .grad-3 { background-image: linear-gradient(135deg, #A87DFF, #D18CEB); }
@@ -61,17 +61,17 @@
         .grad-6 { background-image: linear-gradient(135deg, #B993D6, #8CA6DB); }
         .grad-7 { background-image: linear-gradient(135deg, #FFDAB9, #FFC0CB); }
         
-        /* Card animation when visible */
+        /* Animácia karty, keď je viditeľná */
         .genre-card.is-visible {
             opacity: 1;
             transform: translateY(0);
         }
         
-        /* Hover effect */
+        /* Efekt nabehnutia myši */
         .genre-card:hover {
             transform: translateY(-10px) scale(1.05);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
-            border-color: #8c7ae6; /* Light purple border for a 'wow' effect */
+            border-color: #8c7ae6; /* Svetlofialový okraj pre 'wow' efekt */
         }
 
         .genre-title {
@@ -89,19 +89,140 @@
             line-height: 1.5;
             opacity: 0.8;
         }
+
+        /* Štýly pre chatovú sekciu */
+        .chat-section {
+            background-color: #1a1a1a;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            margin-top: 3rem;
+        }
+
+        .chat-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            background-color: #0d0d0d;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            -ms-overflow-style: none; /* Skryje posuvník v IE a Edge */
+            scrollbar-width: none; /* Skryje posuvník v Firefoxe */
+        }
+
+        /* Skryje posuvník vo WebKite (Chrome, Safari) */
+        .chat-box::-webkit-scrollbar {
+            display: none;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+        }
+
+        .message.user {
+            background-color: #51A8E8;
+            color: #1a1a1a;
+            align-self: flex-end;
+            text-align: right;
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        .message.ai {
+            background-color: #2c2c2c;
+            color: #f0f0f0;
+            align-self: flex-start;
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            background-color: #2c2c2c;
+            border: 2px solid #3d3d3d;
+            color: #f0f0f0;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .chat-input:focus {
+            border-color: #51A8E8;
+        }
+
+        .generate-button {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #A87DFF, #D18CEB);
+            color: #ffffff;
+            font-weight: 700;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .generate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #A87DFF;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Visually appealing hero section with a title and subtitle -->
+        <!-- Vizuálne pútavá hero sekcia s názvom a podnázvom -->
         <header class="hero-section">
             <h1 class="text-5xl md:text-6xl font-bold mb-4 text-white drop-shadow-md">The Musical Universe</h1>
             <p class="text-lg md:text-xl text-gray-300">Explore the endless palette of genres and their unique stories.</p>
         </header>
 
         <div class="genre-list" id="genre-container">
-            <!-- Cards will be generated by JavaScript, each with its own description -->
+            <!-- Karty budú generované pomocou JavaScriptu, každá s vlastným popisom -->
         </div>
+
+        <!-- Sekcia s chatom -->
+        <section class="chat-section">
+            <h2 class="chat-title">Generate Music Lyrics with AI</h2>
+            <div id="chat-box" class="chat-box">
+                <!-- Správy sa zobrazia tu -->
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="prompt-input" class="chat-input" placeholder="Enter your music genre or idea...">
+                <button id="generate-button" class="generate-button">Generate</button>
+                <div id="loading-spinner" class="loading-spinner"></div>
+            </div>
+        </section>
     </div>
 
     <script>
@@ -133,7 +254,7 @@
         const container = document.getElementById('genre-container');
         const colorClasses = ["grad-1", "grad-2", "grad-3", "grad-4", "grad-5", "grad-6", "grad-7"];
 
-        // Generating genres with dynamic descriptions and color gradients
+        // Generovanie žánrov s dynamickými popismi a farebnými prechodmi
         for (let i = 0; i < styles.length; i++) {
             const style = styles[i]; 
             const description = descriptions[style] || "This is a long, but fictional description that characterizes the musical genre and its atmosphere. It is just placeholder text to fill the space and make the card look fuller and more professional.";
@@ -148,7 +269,7 @@
             container.innerHTML += cardHtml;
         }
 
-        // Card animation on scroll
+        // Animácia kariet pri posúvaní
         const cards = document.querySelectorAll('.genre-card');
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
@@ -162,6 +283,80 @@
         cards.forEach(card => {
             observer.observe(card);
         });
+
+        // Logika chatu
+        const promptInput = document.getElementById('prompt-input');
+        const generateButton = document.getElementById('generate-button');
+        const chatBox = document.getElementById('chat-box');
+        const loadingSpinner = document.getElementById('loading-spinner');
+
+        // *** SEM VLOŽ SVOJ API KĽÚČ ***
+        const apiKey = "AIzaSyA7UeU1kIC_0VF5HNCeEhrBkPFoeoIiC4o";
+        
+        // Funkcia na pridanie správy do chatovacieho okna
+        const addMessage = (text, sender) => {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender);
+            messageDiv.textContent = text;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        };
+
+        // Funkcia na posielanie požiadavky na Gemini API
+        const generateText = async () => {
+            const prompt = promptInput.value.trim();
+            if (!prompt) return;
+
+            addMessage(prompt, 'user');
+            promptInput.value = '';
+            
+            loadingSpinner.style.display = 'block';
+            generateButton.disabled = true;
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                const aiText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                if (aiText) {
+                    addMessage(aiText, 'ai');
+                } else {
+                    addMessage("Sorry, I couldn't generate a response. Please try again.", 'ai');
+                }
+
+            } catch (error) {
+                console.error("Error generating content:", error);
+                addMessage("An error occurred. Please check your API key and try again.", 'ai');
+            } finally {
+                loadingSpinner.style.display = 'none';
+                generateButton.disabled = false;
+            }
+        };
+
+        generateButton.addEventListener('click', generateText);
+        promptInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                generateText();
+            }
+        });
     </script>
 </body>
 </html>
+
+
