@@ -298,7 +298,7 @@
         const addMessage = (text, sender) => {
             const messageDiv = document.createElement('div');
             messageDiv.classList.add('message', sender);
-            messageDiv.textContent = text;
+            messageDiv.innerHTML = text.replace(/\n/g, '<br>');
             chatBox.appendChild(messageDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
         };
@@ -314,20 +314,27 @@
             loadingSpinner.style.display = 'block';
             generateButton.disabled = true;
 
-            const structuredPrompt = `Generate a musical lyrical narrative with the following sections based on the user's idea:
-A Haunting Lyrical Narrative
+            const structuredPrompt = `Generate a musical lyrical narrative based on the user's idea. The output must follow this exact structure, including the section titles in brackets:
+
 [Intro]
+A brief, atmospheric opening.
 [Verse 1]
+Develop the first part of the story or theme.
 [Build-up]
+Increase tension or energy, leading into the main section.
 [Drop]
+The climactic, most impactful part of the song.
 [Verse 2]
+Further develop the narrative or introduce a new perspective.
 [Bridge]
+A contrasting section that provides a change of pace or mood.
 [Final Build]
+A second build that brings the song towards its conclusion.
 [Final Drop]
+The final, powerful conclusion of the song, often with a final line or a sound effect.
 
-User idea: ${userPrompt}
-
-Ensure the output is formatted exactly as shown, with the section titles in brackets.`;
+User's idea: ${userPrompt}
+`;
 
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
             const payload = {
@@ -374,6 +381,8 @@ Ensure the output is formatted exactly as shown, with the section titles in brac
     </script>
 </body>
 </html>
+
+
 
 
 
