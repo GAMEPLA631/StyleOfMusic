@@ -168,6 +168,9 @@
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
             border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
         }
 
         .copy-button:hover {
@@ -355,14 +358,38 @@
                 copyButton.classList.add('copy-button');
                 
                 copyButton.addEventListener('click', () => {
-                    navigator.clipboard.writeText(text).then(() => {
-                        copyButton.textContent = 'Skopírované!';
-                        setTimeout(() => {
-                            copyButton.textContent = 'Kopírovať';
-                        }, 2000);
-                    }).catch(err => {
-                        console.error('Failed to copy text: ', err);
-                    });
+                    // Fallback pre staršie prehliadače, ak navigator.clipboard nie je k dispozícii
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(text).then(() => {
+                            copyButton.textContent = 'Skopírované!';
+                            copyButton.classList.add('copied');
+                            setTimeout(() => {
+                                copyButton.textContent = 'Kopírovať';
+                                copyButton.classList.remove('copied');
+                            }, 2000);
+                        }).catch(err => {
+                            console.error('Failed to copy text: ', err);
+                        });
+                    } else {
+                        // Starší, ale spoľahlivejší spôsob kopírovania
+                        const textArea = document.createElement('textarea');
+                        textArea.value = text;
+                        document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        try {
+                            document.execCommand('copy');
+                            copyButton.textContent = 'Skopírované!';
+                            copyButton.classList.add('copied');
+                            setTimeout(() => {
+                                copyButton.textContent = 'Kopírovať';
+                                copyButton.classList.remove('copied');
+                            }, 2000);
+                        } catch (err) {
+                            console.error('Failed to copy text: ', err);
+                        }
+                        document.body.removeChild(textArea);
+                    }
                 });
                 messageDiv.appendChild(copyButton);
             }
@@ -449,6 +476,8 @@ User's idea: ${userPrompt}
     </script>
 </body>
 </html>
+
+
 
 
 
