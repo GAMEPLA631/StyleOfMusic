@@ -271,7 +271,8 @@
             "Chillwave", "Trip Hop", "Reggaeton", "Jungle",
             "Ska Punk", "Gospel", "Celtic Music", "Minimalism", "Baroque Pop", "K-Pop", "Samba", "Flamenco", "Opera",
             // Nové, energické štýly pridané nižšie
-            "Hardcore Punk", "Drum and Bass", "Speedcore", "Power Metal"
+            "Hardcore Punk", "Drum and Bass", "Speedcore", "Power Metal",
+            "Metalcore Dark" // Nový štýl
         ];
 
         const descriptions = {
@@ -313,7 +314,8 @@
             "Hardcore Punk": "Extrémne rýchly a agresívny subžáner punku, často s krátkymi piesňami a surovým zvukom.",
             "Drum and Bass": "Vysokoenergetický žáner elektronickej hudby, charakteristický rýchlymi bicími slučkami a hlbokými basmi.",
             "Speedcore": "Extrémne rýchly a intenzívny štýl elektronickej hudby, s tempom často presahujúcim 300 úderov za minútu.",
-            "Power Metal": "Subžáner heavy metalu, známy pre svoje rýchle melódie, melodické vokály a fantasy témy."
+            "Power Metal": "Subžáner heavy metalu, známy pre svoje rýchle melódie, melodické vokály a fantasy témy.",
+            "Metalcore Dark": "A mix of heavy guitar riffs, fast drums, and melodic yet aggressive choruses, with screams/growls in the verses." // Nový popis
         };
 
         const container = document.getElementById('genre-container');
@@ -356,7 +358,7 @@
         const loadingSpinner = document.getElementById('loading-spinner');
 
         // *** INSERT YOUR API KEY HERE ***
-        const apiKey = "AIzaSyA7UeU1kIC_0VF5HNCeEhrBkPFoeoIiC4o";
+        const apiKey = "AIzaSyAzWkdCBiqlrFZODs2zEichlIWe68Wo2eI";
         
         // Function to add a message to the chat
         const addMessage = (text, sender) => {
@@ -493,6 +495,7 @@ User's idea: ${userPrompt}
     </script>
 </body>
 </html>
+
 
 
 
