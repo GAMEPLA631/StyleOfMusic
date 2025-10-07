@@ -78,6 +78,7 @@
         .grad-5 { background-image: linear-gradient(135deg, #20E3B2, #6C5B7B); }
         .grad-6 { background-image: linear-gradient(135deg, #B993D6, #8CA6DB); }
         .grad-7 { background-image: linear-gradient(135deg, #FFDAB9, #FFC0CB); }
+        .grad-8 { background-image: linear-gradient(135deg, #ff00cc, #333399); } /* Nový gradient pre extra štýly */
         
         /* Animation when the card is visible */
         .genre-card.is-visible {
@@ -299,8 +300,9 @@
             // Energetické štýly
             "Hardcore Punk", "Drum and Bass", "Speedcore", "Power Metal",
             "Metalcore Dark", 
+            "Aggressive Bass Boosted Energy",
             // NOVÝ ŠTÝL ZADANÝ UŽÍVATEĽOM
-            "Aggressive Bass Boosted Energy" 
+            "Bass Boosted Hard" 
         ];
 
         const descriptions = {
@@ -344,12 +346,13 @@
             "Speedcore": "Extrémne rýchly a intenzívny štýl elektronickej hudby, s tempom často presahujúcim 300 úderov za minútu.",
             "Power Metal": "Subžáner heavy metalu, známy pre svoje rýchle melódie, melodické vokaly a fantasy témy.",
             "Metalcore Dark": "A mix of heavy guitar riffs, fast drums, and melodic yet aggressive choruses, with screams/growls in the verses.",
-            // NOVÝ POPIS
-            "Aggressive Bass Boosted Energy": "A chaotic fusion blending Brutal Bass, Dubstep, Hardstyle, Neurostep, and Ravecore. Defined by its heavy, dark, explosive sound for peak festival energy and chaos." 
+            "Aggressive Bass Boosted Energy": "A chaotic fusion blending Brutal Bass, Dubstep, Hardstyle, Neurostep, and Ravecore. Defined by its heavy, dark, explosive sound for peak festival energy and chaos.",
+            // NOVÝ POPIS - PREPNUTÉ NA PRESNÝ POPIS OD UŽÍVATEĽA
+            "Bass Boosted Hard": "Bass Boosted, EDM, Trap, Techno, Pop, Electric, Kawaii, House Energy, Extreme, Bass House – ultimate high-energy mix."
         };
 
         const container = document.getElementById('genre-container');
-        const colorClasses = ["grad-1", "grad-2", "grad-3", "grad-4", "grad-5", "grad-6", "grad-7"];
+        const colorClasses = ["grad-1", "grad-2", "grad-3", "grad-4", "grad-5", "grad-6", "grad-7", "grad-8"];
 
         // Generate genre cards with dynamic descriptions and color gradients
         for (let i = 0; i < styles.length; i++) {
@@ -765,8 +768,6 @@ User's idea: ${userPrompt}
     </script>
 </body>
 </html>
-
-
 
 
 
