@@ -100,6 +100,11 @@
             color: #ffffff;
             margin-bottom: 0.75rem;
         }
+        
+        /* Špeciálne pre dlhé názvy štýlov */
+        .genre-title.long {
+            font-size: 1.1rem; 
+        }
 
         .genre-description {
             font-family: 'Inter', sans-serif;
@@ -301,8 +306,9 @@
             "Hardcore Punk", "Drum and Bass", "Speedcore", "Power Metal",
             "Metalcore Dark", 
             "Aggressive Bass Boosted Energy",
-            // NOVÝ ŠTÝL ZADANÝ UŽÍVATEĽOM
-            "Bass Boosted Hard" 
+            // NOVÉ ŠTÝLY ZADANÉ UŽÍVATEĽOM
+            "Bass Boosted Hard",
+            "Dark Horror Darkness" 
         ];
 
         const descriptions = {
@@ -347,8 +353,9 @@
             "Power Metal": "Subžáner heavy metalu, známy pre svoje rýchle melódie, melodické vokaly a fantasy témy.",
             "Metalcore Dark": "A mix of heavy guitar riffs, fast drums, and melodic yet aggressive choruses, with screams/growls in the verses.",
             "Aggressive Bass Boosted Energy": "A chaotic fusion blending Brutal Bass, Dubstep, Hardstyle, Neurostep, and Ravecore. Defined by its heavy, dark, explosive sound for peak festival energy and chaos.",
-            // NOVÝ POPIS - PREPNUTÉ NA PRESNÝ POPIS OD UŽÍVATEĽA
-            "Bass Boosted Hard": "Bass Boosted, EDM, Trap, Techno, Pop, Electric, Kawaii, House Energy, Extreme, Bass House – ultimate high-energy mix."
+            "Bass Boosted Hard": "Bass Boosted, EDM, Trap, Techno, Pop, Electric, Kawaii, House Energy, Extreme, Bass House – ultimate high-energy mix.",
+            // NOVÝ POPIS pre Dark Horror Darkness
+            "Dark Horror Darkness": "The ultimate fusion of dark ambient, horror soundtrack, cinematic horror, psychological horror, eerie atmosphere, suspense music, dark cinematic, thriller score, ambient horror, and dark soundtrack elements for maximum tension."
         };
 
         const container = document.getElementById('genre-container');
@@ -360,9 +367,12 @@
             const description = descriptions[style] || "This is a long, but fictional description that characterizes the musical genre and its atmosphere. It is just placeholder text to fill the space and make the card look fuller and more professional.";
             const colorClass = colorClasses[i % colorClasses.length];
             
+            // Pridanie triedy 'long' pre štýly s dlhým názvom (viac ako 30 znakov)
+            const titleClass = style.length > 30 ? 'long' : '';
+
             const cardHtml = `
                 <div class="genre-card ${colorClass}">
-                    <h2 class="genre-title">${style}</h2>
+                    <h2 class="genre-title ${titleClass}">${style}</h2>
                     <p class="genre-description">${description}</p>
                 </div>
             `;
@@ -391,7 +401,7 @@
         const loadingSpinner = document.getElementById('loading-spinner');
 
         // *** INSERT YOUR API KEY HERE ***
-        const apiKey = "AIzaSyAzWkdCBiqlrFZODs2zEichlIWe68Wo2eI";
+        const apiKey = "AIzaSyDdiCiIfr2gLtsRMENBkWG1hJo6N1uij7w";
         
         // Function to add a message to the chat
         const addMessage = (text, sender) => {
