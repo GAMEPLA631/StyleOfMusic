@@ -68,6 +68,7 @@
             opacity: 0;
             transform: translateY(30px);
             border: 2px solid transparent;
+            color: #ffffff; /* Zabezpečí, že text na kartách s gradientom je biely */
         }
         
         /* Color gradients for cards */
@@ -78,7 +79,7 @@
         .grad-5 { background-image: linear-gradient(135deg, #20E3B2, #6C5B7B); }
         .grad-6 { background-image: linear-gradient(135deg, #B993D6, #8CA6DB); }
         .grad-7 { background-image: linear-gradient(135deg, #FFDAB9, #FFC0CB); }
-        .grad-8 { background-image: linear-gradient(135deg, #ff00cc, #333399); } /* Nový gradient pre extra štýly */
+        .grad-8 { background-image: linear-gradient(135deg, #ff00cc, #333399); } 
         
         /* Animation when the card is visible */
         .genre-card.is-visible {
@@ -206,6 +207,52 @@
             background-color: #20E3B2;
         }
 
+        .chat-controls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem; /* Zväčšený margin pre lepšie oddelenie */
+            gap: 1rem;
+        }
+
+        .model-toggle-button {
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            white-space: nowrap; 
+            border: 2px solid transparent; /* Základný border pre všetky */
+        }
+        
+        .model-toggle-button.standard {
+            background-color: #3d3d3d;
+            color: #f0f0f0;
+            border-color: #51A8E8;
+        }
+        
+        /* Nový štýl pre V4 Energy - Žltá/Oranžová Energia */
+        .model-toggle-button.energy {
+            background-color: #F9D423; 
+            color: #1a1a1a;
+            border-color: #F64F59;
+            box-shadow: 0 0 10px rgba(249, 212, 35, 0.8);
+        }
+
+
+        .model-toggle-button.boosted {
+            background-color: #FF6B6B; /* Červená farba pre BOOST */
+            color: #1a1a1a;
+            border-color: #F88A6A;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+        }
+
         .chat-input-container {
             display: flex;
             gap: 1rem;
@@ -282,6 +329,14 @@
         <!-- Chat section -->
         <section class="chat-section">
             <h2 class="chat-title">Generate Music Lyrics with AI</h2>
+            
+            <!-- Nová riadiaca sekcia pre prepínanie modelov -->
+            <div class="chat-controls-row">
+                <button id="model-toggle" class="model-toggle-button standard">
+                    Aktuálny Model: V1
+                </button>
+            </div>
+            
             <div id="chat-box" class="chat-box">
                 <!-- Messages will appear here -->
             </div>
@@ -294,6 +349,13 @@
     </div>
 
     <script>
+        // Definovanie stavov modelu
+        const MODEL_STATES = {
+            STANDARD: 0, // V1
+            ENERGY: 1,   // V4 Energy
+            BOOSTED: 2   // V5 Pro (Bass Boosted)
+        };
+
         const styles = [
             "Bass Boosted",
             "Horrorcore", "Dark Ambient", "Drone", "Industrial", "Gothic Metal", 
@@ -399,6 +461,35 @@
         const generateButton = document.getElementById('generate-button');
         const chatBox = document.getElementById('chat-box');
         const loadingSpinner = document.getElementById('loading-spinner');
+        const modelToggleButton = document.getElementById('model-toggle');
+
+        let currentModel = MODEL_STATES.STANDARD; // Začíname so V1 (Štandard)
+
+        // Funkcia na prepínanie modelov
+        const toggleModelMode = () => {
+            currentModel = (currentModel + 1) % 3; // Cyklus 0 -> 1 -> 2 -> 0
+            
+            modelToggleButton.classList.remove('standard', 'energy', 'boosted');
+
+            switch (currentModel) {
+                case MODEL_STATES.STANDARD:
+                    modelToggleButton.textContent = 'Aktuálny Model: V1';
+                    modelToggleButton.classList.add('standard');
+                    break;
+                case MODEL_STATES.ENERGY:
+                    modelToggleButton.textContent = 'Aktuálny Model: V4 Energy';
+                    modelToggleButton.classList.add('energy');
+                    break;
+                case MODEL_STATES.BOOSTED:
+                    modelToggleButton.textContent = 'Aktuálny Model: V5 Pro (Bass Boosted)';
+                    modelToggleButton.classList.add('boosted');
+                    break;
+            }
+        };
+
+        // Event listener pre prepínanie modelov
+        modelToggleButton.addEventListener('click', toggleModelMode);
+
 
         // *** INSERT YOUR API KEY HERE ***
         const apiKey = "AIzaSyDdiCiIfr2gLtsRMENBkWG1hJo6N1uij7w";
@@ -471,6 +562,17 @@
             loadingSpinner.style.display = 'block';
             generateButton.disabled = true;
 
+            // --- Logika prepínania promptov ---
+            let systemPrompt = `You are a creative music lyricist. Generate a lyrical narrative that follows the requested structure.`;
+            
+            if (currentModel === MODEL_STATES.ENERGY) {
+                // V4 Energy: Zameranie na Metal a Hardcore
+                systemPrompt = `You are 'Model V4 Energy', specializing in hyper-fast, aggressive, and melodramatic Metal and Hardcore Punk lyrics. Your style should be focused on epic battles, speed, raw power, destiny, and overwhelming force. Use high-octane, intense, and dramatic language. Always follow the requested structure.`;
+            } else if (currentModel === MODEL_STATES.BOOSTED) {
+                // V5 Pro: Zameranie na Bass Boosted
+                systemPrompt = `You are 'Model V5 Pro', specializing in aggressive, high-energy, bass-boosted music lyrics (like Dubstep, Hardstyle, or Trap). Your lyrics must emphasize intense bass, heavy sound systems, distortion, power, and overwhelming energy. Use explicit language related to loudness and subwoofers. Always follow the requested structure.`;
+            }
+
             const structuredPrompt = `Generate a musical lyrical narrative based on the user's idea. The output must follow this exact structure, including the section titles in brackets:
 
 [Intro]
@@ -480,7 +582,7 @@ Develop the first part of the story or theme.
 [Build-up]
 Increase tension or energy, leading into the main section.
 [Drop]
-The climactic, most impactful part of the song.
+The climactic, most impactful part of the song (For V4/V5, this should be the peak of power/chaos).
 [Verse 2]
 Further develop the narrative or introduce a new perspective.
 [Bridge]
@@ -496,6 +598,9 @@ User's idea: ${userPrompt}
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: structuredPrompt }] }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                }
             };
 
             try {
@@ -537,7 +642,7 @@ User's idea: ${userPrompt}
 
         // Deklarácia premenných vrátane planét
         let scene, camera, renderer, particles, geometry, material, torusKnot, pointLight, planet1, planet2;
-        let currentMode = 'nebula'; // Predvolený režim je teraz 'nebula'
+        let currentWallpaperMode = 'nebula'; // Predvolený režim je teraz 'nebula'
         let clock = new THREE.Clock();
 
         function initThreeJS() {
@@ -658,7 +763,7 @@ User's idea: ${userPrompt}
                 scene.add(planet2);
             }
             
-            currentMode = 'nebula';
+            currentWallpaperMode = 'nebula';
             toggleButton.textContent = 'Zmeniť Tapetu: Magický Uzol';
         }
 
@@ -691,13 +796,13 @@ User's idea: ${userPrompt}
                 torusKnot = new THREE.Mesh(geometry, material);
                 scene.add(torusKnot);
             }
-            currentMode = 'torus';
+            currentWallpaperMode = 'torus';
             toggleButton.textContent = 'Zmeniť Tapetu: Kozmická Hmla';
         }
 
         function toggleWallpaper() {
             // Prepnutie medzi režimami
-            if (currentMode === 'nebula') {
+            if (currentWallpaperMode === 'nebula') {
                 createTorusKnot();
             } else {
                 createCosmicNebula();
@@ -711,7 +816,7 @@ User's idea: ${userPrompt}
             const delta = clock.getDelta();
             const elapsedTime = clock.getElapsedTime();
 
-            if (currentMode === 'nebula' && particles) {
+            if (currentWallpaperMode === 'nebula' && particles) {
                 // Rotácia hmloviny pre dynamický vesmírny pocit
                 particles.rotation.y += 0.0001;
                 particles.rotation.x = Math.sin(elapsedTime * 0.05) * 0.1;
@@ -733,7 +838,7 @@ User's idea: ${userPrompt}
                     planet2.rotation.x += 0.001;
                 }
 
-            } else if (currentMode === 'torus' && torusKnot) {
+            } else if (currentWallpaperMode === 'torus' && torusKnot) {
                 // Magická rotácia uzla
                 torusKnot.rotation.x += 0.1 * delta;
                 torusKnot.rotation.y += 0.2 * delta;
@@ -778,7 +883,6 @@ User's idea: ${userPrompt}
     </script>
 </body>
 </html>
-
 
 
 
