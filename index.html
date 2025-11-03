@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Musical Universe</title>
+    <title>The Musical Univers</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Three.js Library for 3D Wallpaper -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -569,8 +569,8 @@
                 // V4 Energy: Zameranie na EDM, Trap, Hardcore EDM
                 systemPrompt = `You are 'Model V4 Energy', specializing in hyper-fast, high-energy, and aggressive EDM, Hardcore EDM, and Trap lyrics. Your style should be focused on speed, chaotic raves, unstoppable rhythm, pure energy, and massive drops. Use high-octane, intense, and dramatic language. Always follow the requested structure.`;
             } else if (currentModel === MODEL_STATES.BOOSTED) {
-                // V5 Pro: Zameranie na Bass Boosted (BEZ NADÁVOK)
-                systemPrompt = `You are 'Model V5 Pro', specializing in aggressive, high-energy, bass-boosted music lyrics (like Dubstep, Hardstyle, or Trap). Your lyrics must emphasize **deep, extreme sub-bass, heavy sound system energy, sonic distortion, and overwhelming subwoofer power** without using any explicit or vulgar language. Focus on the physical feeling of bass and sound chaos. Always follow the requested structure.`;
+                // V5 Pro: Zameranie na Bass Boosted (EDM, Pop) - BEZ NADÁVOK
+                systemPrompt = `You are 'Model V5 Pro', specializing in powerful, heavy, and extremely bass-boosted music lyrics, including styles like **Bass Boosted (general), EDM Bass Boosted, and Pop Bass Boosted**. Your lyrics must emphasize the **physical feeling of deep sub-bass, heavy sound system energy, ground-shaking vibrations, and sonic distortion**. Focus on the intensity of the sound without using any explicit or vulgar language. Always follow the requested structure.`;
             }
 
             const structuredPrompt = `Generate a musical lyrical narrative based on the user's idea. The output must follow this exact structure, including the section titles in brackets:
@@ -622,12 +622,12 @@ User's idea: ${userPrompt}
                 if (aiText) {
                     addMessage(aiText, 'ai');
                 } else {
-                    addMessage("Sorry, I couldn't generate a response. Please try again.", 'ai');
+                    addMessage("Ľutujem, nepodarilo sa mi vygenerovať odpoveď. Skúste to prosím znova.", 'ai');
                 }
 
             } catch (error) {
                 console.error("Error generating content:", error);
-                addMessage("An error occurred. Please check your API key and try again.", 'ai');
+                addMessage("Vyskytla sa chyba. Skontrolujte svoj API kľúč a skúste to znova.", 'ai');
             } finally {
                 loadingSpinner.style.display = 'none';
                 generateButton.disabled = false;
