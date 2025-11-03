@@ -352,8 +352,8 @@
         // Definovanie stavov modelu
         const MODEL_STATES = {
             STANDARD: 0, // V1
-            ENERGY: 1,   // V4 Energy
-            BOOSTED: 2   // V5 Pro (Bass Boosted)
+            ENERGY: 1,   // V4 Energy (EDM/Trap Energy)
+            BOOSTED: 2   // V5 Pro (Bass Boosted / Silné Basy bez vulgarizmov)
         };
 
         const styles = [
@@ -477,7 +477,7 @@
                     modelToggleButton.classList.add('standard');
                     break;
                 case MODEL_STATES.ENERGY:
-                    modelToggleButton.textContent = 'Aktuálny Model: V4 Energy';
+                    modelToggleButton.textContent = 'Aktuálny Model: V4 Energy (EDM/Trap)';
                     modelToggleButton.classList.add('energy');
                     break;
                 case MODEL_STATES.BOOSTED:
@@ -566,11 +566,11 @@
             let systemPrompt = `You are a creative music lyricist. Generate a lyrical narrative that follows the requested structure.`;
             
             if (currentModel === MODEL_STATES.ENERGY) {
-                // V4 Energy: Zameranie na Metal a Hardcore
-                systemPrompt = `You are 'Model V4 Energy', specializing in hyper-fast, aggressive, and melodramatic Metal and Hardcore Punk lyrics. Your style should be focused on epic battles, speed, raw power, destiny, and overwhelming force. Use high-octane, intense, and dramatic language. Always follow the requested structure.`;
+                // V4 Energy: Zameranie na EDM, Trap, Hardcore EDM
+                systemPrompt = `You are 'Model V4 Energy', specializing in hyper-fast, high-energy, and aggressive EDM, Hardcore EDM, and Trap lyrics. Your style should be focused on speed, chaotic raves, unstoppable rhythm, pure energy, and massive drops. Use high-octane, intense, and dramatic language. Always follow the requested structure.`;
             } else if (currentModel === MODEL_STATES.BOOSTED) {
-                // V5 Pro: Zameranie na Bass Boosted
-                systemPrompt = `You are 'Model V5 Pro', specializing in aggressive, high-energy, bass-boosted music lyrics (like Dubstep, Hardstyle, or Trap). Your lyrics must emphasize intense bass, heavy sound systems, distortion, power, and overwhelming energy. Use explicit language related to loudness and subwoofers. Always follow the requested structure.`;
+                // V5 Pro: Zameranie na Bass Boosted (BEZ NADÁVOK)
+                systemPrompt = `You are 'Model V5 Pro', specializing in aggressive, high-energy, bass-boosted music lyrics (like Dubstep, Hardstyle, or Trap). Your lyrics must emphasize **deep, extreme sub-bass, heavy sound system energy, sonic distortion, and overwhelming subwoofer power** without using any explicit or vulgar language. Focus on the physical feeling of bass and sound chaos. Always follow the requested structure.`;
             }
 
             const structuredPrompt = `Generate a musical lyrical narrative based on the user's idea. The output must follow this exact structure, including the section titles in brackets:
@@ -883,7 +883,6 @@ User's idea: ${userPrompt}
     </script>
 </body>
 </html>
-
 
 
 
