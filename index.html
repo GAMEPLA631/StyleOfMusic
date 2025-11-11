@@ -223,6 +223,7 @@
             transition: background-color 0.3s ease, color 0.3s ease;
             white-space: nowrap; 
             border: 2px solid transparent; /* Základný border pre všetky */
+            flex-shrink: 0;
         }
         
         .model-toggle-button.standard {
@@ -268,6 +269,7 @@
             color: #f0f0f0;
             outline: none;
             transition: border-color 0.3s ease;
+            font-family: 'Inter', sans-serif;
         }
 
         .chat-input:focus {
@@ -283,6 +285,7 @@
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
         }
 
         .generate-button:hover {
@@ -298,12 +301,32 @@
             height: 24px;
             animation: spin 1s linear infinite;
             display: none;
+            flex-shrink: 0;
         }
         
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        /* Media Query for responsiveness */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 4rem 1rem;
+            }
+            .chat-title {
+                font-size: 1.5rem;
+            }
+            .chat-controls-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+            }
+            .model-toggle-button {
+                width: 100%;
+            }
+        }
+
+        
     </style>
 </head>
 <body>
@@ -312,7 +335,7 @@
 
     <!-- Wallpaper Control Button - Z-index 20 zabezpečí, že bude vždy navrchu -->
     <button id="toggle-wallpaper" class="fixed bottom-4 right-4 z-20 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-full shadow-lg transition duration-300">
-        Zmeniť Tapetu
+        Zmeniť Tapetu (Nebula)
     </button>
     
     <div class="container">
@@ -332,8 +355,12 @@
             
             <!-- Nová riadiaca sekcia pre prepínanie modelov -->
             <div class="chat-controls-row">
+                <!-- Tlačidlo sa inicializuje v JS -->
                 <button id="model-toggle" class="model-toggle-button standard">
                     Aktuálny Model: V1
+                </button>
+                <button id="tts-button" class="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-full transition duration-300">
+                    Prečítať Hlasom (TTS)
                 </button>
             </div>
             
@@ -347,13 +374,16 @@
             </div>
         </section>
     </div>
+    
+    <audio id="audio-player" style="display:none;"></audio>
+
 
     <script>
         // Definovanie stavov modelu
         const MODEL_STATES = {
-            STANDARD: 0, // V1
-            ENERGY: 1,   // V4 Energy (EDM/Trap Energy)
-            BOOSTED: 2   // V5 Pro (Bass Boosted / Silné Basy bez vulgarizmov)
+            STANDARD: 0, // V1 - Štandardné kreatívne
+            ENERGY: 1,   // V4 Energy (EDM/Trap Energy)
+            BOOSTED: 2   // V5 Pro (Bass Boosted / Silné Basy bez vulgarizmov)
         };
 
         const styles = [
@@ -462,8 +492,12 @@
         const chatBox = document.getElementById('chat-box');
         const loadingSpinner = document.getElementById('loading-spinner');
         const modelToggleButton = document.getElementById('model-toggle');
+        const ttsButton = document.getElementById('tts-button');
+        const audioPlayer = document.getElementById('audio-player');
+
 
         let currentModel = MODEL_STATES.STANDARD; // Začíname so V1 (Štandard)
+        let lastGeneratedText = ""; // Uloží posledný AI text pre TTS
 
         // Funkcia na prepínanie modelov
         const toggleModelMode = () => {
@@ -491,9 +525,162 @@
         modelToggleButton.addEventListener('click', toggleModelMode);
 
 
-        // *** INSERT YOUR API KEY HERE ***
-        const apiKey = "AIzaSyBIzvYGiWGoFUxmxdz2qEYMpNdCnUN8DjE";
+        // --- FIREBASE API KEY & CONFIG (DUMMY/PLACEHOLDER) ---
+        const apiKey = "AIzaSyDdiCiIfr2gLtsRMENBkWG1hJo6N1uij7w"; // Canvas poskytne v runtime
         
+        // Funkcia pre exponenciálny backoff
+        async function exponentialBackoffFetch(url, options, maxRetries = 5) {
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.ok) {
+                        return response;
+                    }
+                    if (response.status === 429 || response.status >= 500) {
+                        const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        continue;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                } catch (error) {
+                    if (i === maxRetries - 1) throw error;
+                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+        }
+
+        // Funkcie pre konverziu PCM na WAV (vyžadované pre TTS)
+        function base64ToArrayBuffer(base64) {
+            const binaryString = atob(base64);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+        function pcmToWav(pcmData, sampleRate) {
+            const buffer = new ArrayBuffer(44 + pcmData.length * 2);
+            const view = new DataView(buffer);
+
+            // RIFF chunk descriptor
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, 36 + pcmData.length * 2, true);
+            writeString(view, 8, 'WAVE');
+
+            // FMT sub-chunk
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true); // PCM format
+            view.setUint16(22, 1, true); // Monophonic
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * 2, true); // byte rate
+            view.setUint16(32, 2, true); // block align
+            view.setUint16(34, 16, true); // bits per sample
+
+            // data sub-chunk
+            writeString(view, 36, 'data');
+            view.setUint32(40, pcmData.length * 2, true);
+
+            // PCM data (Int16)
+            for (let i = 0; i < pcmData.length; i++) {
+                view.setInt16(44 + i * 2, pcmData[i], true);
+            }
+
+            return new Blob([view], { type: 'audio/wav' });
+        }
+
+        function writeString(view, offset, string) {
+            for (let i = 0; i < string.length; i++) {
+                view.setUint8(offset + i, string.charCodeAt(i));
+            }
+        }
+
+        // Funkcia na prečítanie posledného vygenerovaného textu
+        const generateTts = async (text) => {
+            if (!text) {
+                console.error("No text available for TTS.");
+                return;
+            }
+
+            ttsButton.textContent = 'Generujem Hlas...';
+            ttsButton.disabled = true;
+            audioPlayer.pause();
+            audioPlayer.src = '';
+            
+            const payload = {
+                contents: [{
+                    parts: [{ text: `Say with a high-energy, exciting, and melodic tone: ${text}` }]
+                }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: {
+                            prebuiltVoiceConfig: { voiceName: "Puck" } // Upbeat voice
+                        }
+                    }
+                },
+                model: "gemini-2.5-flash-preview-tts"
+            };
+            
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await exponentialBackoffFetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                const part = result?.candidates?.[0]?.content?.parts?.[0];
+                const audioData = part?.inlineData?.data;
+                const mimeType = part?.inlineData?.mimeType;
+
+                if (audioData && mimeType && mimeType.startsWith("audio/")) {
+                    const sampleRateMatch = mimeType.match(/rate=(\d+)/);
+                    const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 16000;
+                    
+                    const pcmData = base64ToArrayBuffer(audioData);
+                    // API vracia signed PCM16 audio dáta.
+                    const pcm16 = new Int16Array(pcmData);
+                    const wavBlob = pcmToWav(pcm16, sampleRate);
+                    const audioUrl = URL.createObjectURL(wavBlob);
+                    
+                    audioPlayer.src = audioUrl;
+                    audioPlayer.play();
+                    ttsButton.textContent = 'Prehrávam Hlas...';
+                } else {
+                    console.error("TTS response missing audio data or invalid mime type.");
+                    ttsButton.textContent = 'Chyba TTS!';
+                }
+
+            } catch (error) {
+                console.error("Error generating TTS:", error);
+                ttsButton.textContent = 'Chyba TTS!';
+            } finally {
+                ttsButton.disabled = false;
+                if(audioPlayer.paused && audioPlayer.src) {
+                     // Ak nie je chyba a prehrávanie sa nespustilo hneď, zobraziť "Prečítať"
+                    ttsButton.textContent = 'Prečítať Hlasom (TTS)';
+                }
+            }
+        };
+
+        // Event listener pre TTS tlačidlo
+        ttsButton.addEventListener('click', () => {
+             // Očistiť text od sekcií ([Intro], [Drop] atď.)
+            const cleanText = lastGeneratedText.replace(/\[.*?\]\n?/g, '').trim();
+            generateTts(cleanText);
+        });
+
+        audioPlayer.onended = () => {
+             ttsButton.textContent = 'Prečítať Hlasom (TTS)';
+        };
+
+
         // Function to add a message to the chat
         const addMessage = (text, sender) => {
             const messageDiv = document.createElement('div');
@@ -506,43 +693,31 @@
 
             // Only add a copy button for AI messages
             if (sender === 'ai') {
+                lastGeneratedText = text; // Uložiť text pre TTS
+                
                 const copyButton = document.createElement('button');
                 copyButton.textContent = 'Kopírovať';
                 copyButton.classList.add('copy-button');
                 
                 copyButton.addEventListener('click', () => {
-                    // Fallback pre staršie prehliadače, ak navigator.clipboard nie je k dispozícii
-                    if (navigator.clipboard && navigator.clipboard.writeText) {
-                        navigator.clipboard.writeText(text).then(() => {
-                            copyButton.textContent = 'Skopírované!';
-                            copyButton.classList.add('copied');
-                            setTimeout(() => {
-                                copyButton.textContent = 'Kopírovať';
-                                copyButton.classList.remove('copied');
-                            }, 2000);
-                        }).catch(err => {
-                            console.error('Failed to copy text: ', err);
-                        });
-                    } else {
-                        // Starší, ale spoľahlivejší spôsob kopírovania
-                        const textArea = document.createElement('textarea');
-                        textArea.value = text;
-                        document.body.appendChild(textArea);
-                        textArea.focus();
-                        textArea.select();
-                        try {
-                            document.execCommand('copy');
-                            copyButton.textContent = 'Skopírované!';
-                            copyButton.classList.add('copied');
-                            setTimeout(() => {
-                                copyButton.textContent = 'Kopírovať';
-                                copyButton.classList.remove('copied');
-                            }, 2000);
-                        } catch (err) {
-                            console.error('Failed to copy text: ', err);
-                        }
-                        document.body.removeChild(textArea);
+                    // Starší, ale spoľahlivejší spôsob kopírovania
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        copyButton.textContent = 'Skopírované!';
+                        copyButton.classList.add('copied');
+                        setTimeout(() => {
+                            copyButton.textContent = 'Kopírovať';
+                            copyButton.classList.remove('copied');
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy text: ', err);
                     }
+                    document.body.removeChild(textArea);
                 });
                 messageDiv.appendChild(copyButton);
             }
@@ -569,7 +744,7 @@
                 // V4 Energy: Zameranie na EDM, Trap, Hardcore EDM
                 systemPrompt = `You are 'Model V4 Energy', specializing in hyper-fast, high-energy, and aggressive EDM, Hardcore EDM, and Trap lyrics. Your style should be focused on speed, chaotic raves, unstoppable rhythm, pure energy, and massive drops. Use high-octane, intense, and dramatic language. Always follow the requested structure.`;
             } else if (currentModel === MODEL_STATES.BOOSTED) {
-                // V5 Pro: Zameranie na Bass Boosted (EDM, Pop) - BEZ NADÁVOK
+                // V5 Pro: Zameranie na Bass Boosted (EDM, Pop) - BEZ VULGARIZMOV
                 systemPrompt = `You are 'Model V5 Pro', specializing in powerful, heavy, and extremely bass-boosted music lyrics, including styles like **Bass Boosted (general), EDM Bass Boosted, and Pop Bass Boosted**. Your lyrics must emphasize the **physical feeling of deep sub-bass, heavy sound system energy, ground-shaking vibrations, and sonic distortion**. Focus on the intensity of the sound without using any explicit or vulgar language. Always follow the requested structure.`;
             }
 
@@ -595,7 +770,7 @@ The final, powerful conclusion of the song, often with a final line or a sound e
 User's idea: ${userPrompt}
 `;
 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: structuredPrompt }] }],
                 systemInstruction: {
@@ -604,17 +779,13 @@ User's idea: ${userPrompt}
             };
 
             try {
-                const response = await fetch(apiUrl, {
+                const response = await exponentialBackoffFetch(apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(payload)
                 });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
                 
                 const result = await response.json();
                 const aiText = result.candidates?.[0]?.content?.parts?.[0]?.text;
@@ -627,12 +798,19 @@ User's idea: ${userPrompt}
 
             } catch (error) {
                 console.error("Error generating content:", error);
-                addMessage("Vyskytla sa chyba. Skontrolujte svoj API kľúč a skúste to znova.", 'ai');
+                addMessage("Vyskytla sa chyba pri komunikácii s AI modelom. Skúste to prosím znova.", 'ai');
             } finally {
                 loadingSpinner.style.display = 'none';
                 generateButton.disabled = false;
             }
         };
+
+        promptInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !generateButton.disabled) {
+                generateText();
+            }
+        });
+        generateButton.addEventListener('click', generateText);
 
 
         // --- LOGIKA 3D TAPETY (Three.js) - Kozmické a Magické Režimy ---
@@ -640,9 +818,9 @@ User's idea: ${userPrompt}
         const canvas = document.getElementById('threejs-canvas');
         const toggleButton = document.getElementById('toggle-wallpaper');
 
-        // Deklarácia premenných vrátane planét
+        // Deklarácia globálnych premenných
         let scene, camera, renderer, particles, geometry, material, torusKnot, pointLight, planet1, planet2;
-        let currentWallpaperMode = 'nebula'; // Predvolený režim je teraz 'nebula'
+        let currentWallpaperMode = 'nebula'; // Predvolený režim
         let clock = new THREE.Clock();
 
         function initThreeJS() {
@@ -660,17 +838,17 @@ User's idea: ${userPrompt}
             renderer.setClearColor(0x000000, 0); // Priehľadné pozadie
 
             // Osvetlenie
-            // Zvýšená intenzita pre lepší magický a kozmický efekt
             const ambientLight = new THREE.AmbientLight(0x404040, 10); 
             scene.add(ambientLight);
             
             // Bodové svetlo pre Torus Knot (Magický Uzol)
             pointLight = new THREE.PointLight(0x7DE2D1, 15, 100);
             pointLight.position.set(5, 5, 5);
-            pointLight.visible = false; // Začiatok neviditeľný, kým sa neprepne na Magický Uzol
+            pointLight.visible = false; 
             scene.add(pointLight);
 
             createCosmicNebula(); // Inicializácia predvoleného režimu
+            animate(); // Spustenie animačnej slučky
             
             // Nastavenie pre zmenu veľkosti okna
             window.addEventListener('resize', onWindowResize, false);
@@ -682,208 +860,161 @@ User's idea: ${userPrompt}
             renderer.setSize(window.innerWidth, window.innerHeight);
         }
 
+        // Pomocná funkcia na čistenie scény
+        function clearScene() {
+            const removableObjects = [];
+            scene.traverse(object => {
+                if (object.type === 'Mesh' || object.type === 'Points') {
+                    removableObjects.push(object);
+                }
+            });
+            removableObjects.forEach(object => {
+                scene.remove(object);
+                if (object.geometry) object.geometry.dispose();
+                if (object.material) {
+                    if (Array.isArray(object.material)) {
+                        object.material.forEach(m => m.dispose());
+                    } else {
+                        object.material.dispose();
+                    }
+                }
+            });
+        }
+
         // Režim 1: Kozmická Hmla (Cosmic Nebula Mode) s planétami
         function createCosmicNebula() {
-            if (torusKnot) scene.remove(torusKnot);
-            if (pointLight) pointLight.visible = false; // Skryť svetlo
+            clearScene();
 
-            // Zviditeľniť planéty, ak už boli vytvorené
-            if (planet1) planet1.visible = true;
-            if (planet2) planet2.visible = true;
+            // Vytvorenie galaxie/častíc
+            geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            const particleCount = 15000;
 
-            // ----------------------------------------------------
-            // ČASTICE (Hmlovina)
-            // ----------------------------------------------------
-            if (particles) {
-                scene.add(particles);
-            } else {
-                geometry = new THREE.BufferGeometry();
-                const vertices = [];
-                const colors = [];
-                const particleCount = 5000;
-                
-                const color = new THREE.Color();
-
-                for (let i = 0; i < particleCount; i++) {
-                    // Širšie rozloženie častíc pre efekt hmloviny/galaxie
-                    const x = (Math.random() - 0.5) * 400;
-                    const y = (Math.random() - 0.5) * 400;
-                    const z = (Math.random() - 0.5) * 400;
-                    vertices.push(x, y, z);
-                    
-                    // Náhodné farby v spektre modrej, fialovej a tyrkysovej
-                    color.setHSL(Math.random() * 0.1 + 0.6, 0.7, 0.7); 
-                    colors.push(color.r, color.g, color.b);
-                }
-
-                geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-                geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-                
-                material = new THREE.PointsMaterial({ 
-                    size: 0.5, 
-                    vertexColors: true, 
-                    transparent: true,
-                    opacity: 0.8,
-                    sizeAttenuation: true 
-                });
-
-                particles = new THREE.Points(geometry, material);
-                scene.add(particles);
+            for (let i = 0; i < particleCount; i++) {
+                const x = (Math.random() - 0.5) * 200;
+                const y = (Math.random() - 0.5) * 200;
+                const z = (Math.random() - 0.5) * 200;
+                vertices.push(x, y, z);
             }
-            
-            // ----------------------------------------------------
-            // PLANÉTY (Magický kozmický vzhľad)
-            // ----------------------------------------------------
-            if (!planet1) {
-                // Planeta 1: Magický, žiariaci plyn
-                const geo1 = new THREE.SphereGeometry(1.0, 32, 32);
-                // Emissive material pre žiariaci efekt
-                const mat1 = new THREE.MeshStandardMaterial({
-                    color: 0x98FF98, // Svetlozelená/Tyrkysová
-                    emissive: 0x32CD32, // Žiariaca zelená
-                    emissiveIntensity: 2.0, // Silná žiara
-                    metalness: 0.1,
-                    roughness: 0.8
-                });
-                planet1 = new THREE.Mesh(geo1, mat1);
-                planet1.position.set(-10, 5, -20);
-                scene.add(planet1);
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
 
-                // Planeta 2: Vzdialená, chladná modrá
-                const geo2 = new THREE.SphereGeometry(0.6, 32, 32);
-                const mat2 = new THREE.MeshStandardMaterial({
-                    color: 0x87CEEB, // Svetlomodrá
-                    emissive: 0x00BFFF, // Hlboká modrá žiara
-                    emissiveIntensity: 1.0,
-                    metalness: 0.5,
-                    roughness: 0.4
-                });
-                planet2 = new THREE.Mesh(geo2, mat2);
-                planet2.position.set(15, -10, -35);
-                scene.add(planet2);
-            }
-            
+            material = new THREE.PointsMaterial({
+                size: 0.05,
+                color: 0x8888ff,
+                transparent: true,
+                opacity: 0.8,
+                sizeAttenuation: true
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            // Vytvorenie dvoch planét pre vizuálny záujem
+            const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+
+            // Planéta 1 (Modrý plyn)
+            const material1 = new THREE.MeshPhongMaterial({ color: 0x51A8E8, emissive: 0x111133, shininess: 50 });
+            planet1 = new THREE.Mesh(sphereGeometry, material1);
+            planet1.position.set(-3, 1, -10);
+            scene.add(planet1);
+
+            // Planéta 2 (Purpurová skala)
+            const material2 = new THREE.MeshStandardMaterial({ color: 0xD18CEB, metalness: 0.9, roughness: 0.1, emissive: 0x221133 });
+            planet2 = new THREE.Mesh(sphereGeometry, material2);
+            planet2.position.set(3, -2, -8);
+            scene.add(planet2);
+
+            if (pointLight) pointLight.visible = false;
             currentWallpaperMode = 'nebula';
-            toggleButton.textContent = 'Zmeniť Tapetu: Magický Uzol';
+            toggleButton.textContent = 'Zmeniť Tapetu (Nebula)';
         }
 
-        // Režim 2: Magický Uzol (Torus Knot Mode)
-        function createTorusKnot() {
-            if (particles) scene.remove(particles);
-            if (pointLight) pointLight.visible = true; // Zobraziť svetlo
+        // Režim 2: Magický Uzol (Magic Torus Mode)
+        function createMagicTorus() {
+            clearScene();
+
+            // Geometria a materiál pre Torus Knot
+            const torusGeometry = new THREE.TorusKnotGeometry(1.5, 0.4, 150, 20);
             
-            // Skryť planéty pri prepnutí na Magický Uzol
-            if (planet1) planet1.visible = false;
-            if (planet2) planet2.visible = false;
+            // Magický, žiarivý materiál
+            const torusMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0xff00ff, // Fialová farba
+                metalness: 0.9,
+                roughness: 0.1,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.1,
+                emissive: 0xaa00aa, // Žiara
+                emissiveIntensity: 0.8
+            });
+            torusKnot = new THREE.Mesh(torusGeometry, torusMaterial);
+            scene.add(torusKnot);
 
-            // Ak už existuje, len ho vrátime
-            if (torusKnot) {
-                scene.add(torusKnot);
-            } else {
-                // Torus Knot je komplexná, magicky vyzerajúca geometria
-                const geometry = new THREE.TorusKnotGeometry(1.5, 0.5, 100, 16);
-                
-                // MeshStandardMaterial pre lesklý, kovový/magický vzhľad
-                const material = new THREE.MeshStandardMaterial({ 
-                    color: 0xA87DFF, // Fialová
-                    metalness: 0.8,
-                    roughness: 0.2,
-                    transparent: true,
-                    opacity: 0.9,
-                    emissive: 0x51A8E8, // Modrá žiara
-                    emissiveIntensity: 0.5 
-                }); 
-                torusKnot = new THREE.Mesh(geometry, material);
-                scene.add(torusKnot);
+            // Nastavenie bodového svetla
+            if (pointLight) {
+                pointLight.color.setHex(0x7DE2D1);
+                pointLight.intensity = 20;
+                pointLight.visible = true;
             }
+
             currentWallpaperMode = 'torus';
-            toggleButton.textContent = 'Zmeniť Tapetu: Kozmická Hmla';
+            toggleButton.textContent = 'Zmeniť Tapetu (Torus)';
         }
 
-        function toggleWallpaper() {
-            // Prepnutie medzi režimami
+        // Funkcia na prepínanie režimov
+        toggleButton.addEventListener('click', () => {
             if (currentWallpaperMode === 'nebula') {
-                createTorusKnot();
+                createMagicTorus();
             } else {
                 createCosmicNebula();
             }
-        }
+        });
+
 
         // Animačná slučka
         function animate() {
             requestAnimationFrame(animate);
-
             const delta = clock.getDelta();
-            const elapsedTime = clock.getElapsedTime();
 
-            if (currentWallpaperMode === 'nebula' && particles) {
-                // Rotácia hmloviny pre dynamický vesmírny pocit
-                particles.rotation.y += 0.0001;
-                particles.rotation.x = Math.sin(elapsedTime * 0.05) * 0.1;
-
-                // Mierne "dýchanie" kamery pre pocit pohybu
-                camera.position.z = 5 + Math.sin(elapsedTime * 0.5) * 0.5;
-
-                // Pohyb a rotácia planét pre magický kozmický efekt
-                if (planet1 && planet1.visible) {
-                    planet1.rotation.y += 0.005;
-                    // Planéta 1 sa pomaly posúva a osciluje
-                    planet1.position.x = Math.sin(elapsedTime * 0.1) * 10 - 5;
-                    planet1.position.y = Math.cos(elapsedTime * 0.1) * 5 + 5;
+            if (currentWallpaperMode === 'nebula') {
+                // Rotácia častíc
+                if (particles) {
+                    particles.rotation.y += 0.0005 * delta * 60;
+                }
+                // Rotácia planét
+                if (planet1) {
+                    planet1.rotation.y += 0.005 * delta * 60;
+                    planet1.position.x = Math.sin(clock.elapsedTime * 0.1) * 3;
+                    planet1.position.y = Math.cos(clock.elapsedTime * 0.1) * 1.5;
+                }
+                if (planet2) {
+                    planet2.rotation.z -= 0.008 * delta * 60;
+                    planet2.position.z = -8 + Math.sin(clock.elapsedTime * 0.2) * 1;
                 }
 
-                if (planet2 && planet2.visible) {
-                    // Planéta 2 sa len pomaly otáča
-                    planet2.rotation.y -= 0.003;
-                    planet2.rotation.x += 0.001;
+            } else if (currentWallpaperMode === 'torus') {
+                // Rotácia Torus Knot
+                if (torusKnot) {
+                    torusKnot.rotation.x += 0.005 * delta * 60;
+                    torusKnot.rotation.y += 0.01 * delta * 60;
+                    torusKnot.rotation.z += 0.007 * delta * 60;
                 }
-
-            } else if (currentWallpaperMode === 'torus' && torusKnot) {
-                // Magická rotácia uzla
-                torusKnot.rotation.x += 0.1 * delta;
-                torusKnot.rotation.y += 0.2 * delta;
-                
-                // Pomalé farebné pulzovanie emisívnej (žiariacej) zložky
-                const hue = (Math.sin(elapsedTime * 0.5) * 0.5 + 0.5); // 0 do 1
-                torusKnot.material.emissive.setHSL(hue * 0.2 + 0.6, 1, 0.7); // Tón modrej/fialovej
-                
-                // Pohyb svetla okolo uzla (magický efekt)
+                // Pohyb bodového svetla
                 if (pointLight) {
-                    pointLight.position.x = Math.sin(elapsedTime * 0.7) * 7;
-                    pointLight.position.y = Math.cos(elapsedTime * 0.7) * 7;
+                    pointLight.position.x = Math.sin(clock.elapsedTime * 0.5) * 5;
+                    pointLight.position.y = Math.cos(clock.elapsedTime * 0.5) * 5;
                 }
             }
-            
+
             renderer.render(scene, camera);
         }
 
         // Inicializácia pri načítaní okna
         window.onload = function () {
-            // Inicializácia Three.js
-            if (typeof THREE !== 'undefined') {
-                initThreeJS();
-                animate();
-                toggleButton.addEventListener('click', toggleWallpaper);
-            } else {
-                console.error("Three.js nebol načítaný.");
-            }
-
-            // Existujúce event listenery pre chat a karty:
-            cards.forEach(card => {
-                observer.observe(card);
-            });
-
-            generateButton.addEventListener('click', generateText);
-            promptInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    generateText();
-                }
-            });
-        };
+            initThreeJS();
+        }
     </script>
 </body>
 </html>
-
 
 
 
