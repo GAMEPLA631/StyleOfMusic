@@ -82,6 +82,7 @@
             transform: translateY(30px);
             border: 3px solid transparent;
             cursor: pointer;
+            position: relative; /* For the notification */
         }
         
         /* Hover effect: slight 3D lift and pulsing shadow */
@@ -128,6 +129,12 @@
             font-size: 1.65rem;
             font-weight: 700;
             text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: color 0.2s ease;
+            cursor: copy; /* Indicate copy action for title */
+        }
+        
+        .genre-title:hover {
+            color: rgba(255, 255, 255, 0.9);
         }
         
         .genre-title.long {
@@ -139,6 +146,41 @@
             font-size: 1rem;
             color: #eeeeee;
             opacity: 0.9;
+            margin-top: 0.75rem;
+            cursor: copy; /* Indicate copy action for description */
+            transition: color 0.2s ease;
+        }
+
+        .genre-description:hover {
+            color: #d1d1d1;
+        }
+
+        /* Genre copied notification */
+        .copy-notification {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #20E3B2; /* Default for Title Copy */
+            color: #1a1a1a;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 20;
+        }
+
+        .copy-notification.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Specific style for description copy notification */
+        .copy-notification.desc-copy {
+            background-color: #51A8E8;
         }
 
         /* Chat section styles */
@@ -233,7 +275,7 @@
             border: none;
         }
 
-        .copy-button:hover {
+        .copy-button:hover:not(.copied) {
             background-color: #9266e7;
             transform: translateY(-1px);
         }
@@ -441,6 +483,7 @@
         <header class="hero-section">
             <h1 class="hero-title mb-4">The Musical Universe</h1>
             <p class="text-xl md:text-2xl text-gray-300 font-light">Discover the infinite palette of genres and their unique stories with AI.</p>
+            <p class="text-lg text-gray-400 mt-4">TIP: Kliknite na názov žánru pre skopírovanie **názvu** alebo na popis pre skopírovanie **kľúčových slov**.</p>
         </header>
 
         <!-- Genre section -->
@@ -624,13 +667,13 @@
             "Trap Christmas (Dark Christmas)": "Christmas themes translated into a harsh, slow Trap beat. Holiday nostalgia with 808 bass.",
             "Acoustic Christmas Jazz (Comfortable Tone)": "Gentle, warm Jazz with piano and double bass, ideal for a cozy, traditional Christmas atmosphere.",
 
-            // --- DANCE / URBAN DESCRIPTIONS ---
+            // --- DANCE / URBAN GENRES ---
             "Eurodance 90s (High Energy)": "Classic 90s dance style: fast, catchy synth hooks, powerful female vocals, and male rap.",
             "Latin Trap (Spanish/English)": "Fusion of Hip Hop and Latin rhythms. Slow, dark beat with themes of the street and luxury (ideally in Spanish).",
             "Afrobeat Fusion (Dance Rhythm)": "A mix of modern Afrobeat, Dancehall, and Pop. Focus on complex but danceable and hypnotic rhythms and positive themes.",
             "Kizomba (Romantic Dance)": "A slow and very sensual dance genre, originating from Angola. Lyrics are romantic, with gentle and fluid rhythms.",
             
-            // --- ORIGINAL AND METAL/DARK DESCRIPTIONS ---
+            // --- ORIGINAL AND METAL/DARK GENRES ---
             "Horrorcore": "A blend of hip hop with horror themes, creepy samples, and dark beats, focusing on terror.",
             "Dark Horror Darkness": "A fusion of dark ambient, cinematic horror, psychological terror, and ambient horror for maximum suspense and dark atmosphere.",
             "Black Metal": "An extreme metal subgenre defined by fast tempos, raw recording, and screeching vocals, with themes of darkness and evil.",
@@ -641,7 +684,7 @@
             "Steampunk Opera (Victorian Tech)": "Dramatic, orchestral music combining elements of Opera, Rock, and Steampunk aesthetics. About steam engines and the Victorian era.",
             "Crunkcore (Screamo & Rap)": "A fusion of Screamo, Emo, and Crunk Hip Hop. Combines screaming with rap verses and dance beats.",
             
-            // --- RELAXING AND EXPERIMENTAL DESCRIPTIONS ---
+            // --- RELAXING AND EXPERIMENTAL GENRES ---
             "Vaporwave": "A microgenre with a nostalgic, surreal aesthetic and slowed-down, pitch-shifted samples.",
             "Synthwave": "A retro-futuristic genre inspired by the 80s, with prominent synthesizers and a vibrant sound.",
             "Lofi Hip Hop": "A relaxing genre with muted, slow beats and a gentle background hum, ideal for studying.",
@@ -654,7 +697,7 @@
             "Baroque Pop": "A subgenre of pop and rock that incorporates elements of classical music, such as strings and harpsichord.",
             "Chiptune (8-bit Soundtrack)": "Music created with the sound chips of old computers and consoles, sounding like an 8-bit game soundtrack.",
 
-            // --- WORLD GENRES DESCRIPTIONS ---
+            // --- WORLD GENRES ---
             "Reggaeton": "A genre originating from Puerto Rico, blending Jamaican dancehall with Latin American and hip hop rhythms.",
             "Jungle": "A fast electronic music genre, characterized by breakbeats, heavy bass lines, and samples.",
             "Ska Punk": "A fusion of the energetic, upbeat rhythms of ska with the aggressive and fast nature of punk rock.",
@@ -715,9 +758,14 @@
             const titleClass = style.length > 30 ? 'long' : '';
 
             const cardHtml = `
-                <div class="genre-card ${colorClass}" data-genre="${style}">
-                    <h2 class="genre-title ${titleClass}">${style}</h2>
-                    <p class="genre-description">${description}</p>
+                <div class="genre-card ${colorClass}" data-genre="${style}" data-full-genre="${style}">
+                    <h2 class="genre-title ${titleClass}" data-genre-copy="${style}">
+                        ${style}
+                    </h2>
+                    <p class="genre-description" data-description-copy="${description}">
+                        ${description}
+                    </p>
+                    <div class="copy-notification" id="copy-notif-${i}">SKOPÍROVANÉ!</div>
                 </div>
             `;
             container.innerHTML += cardHtml;
@@ -737,16 +785,79 @@
             });
         }, { threshold: 0.1 });
 
-        cards.forEach(card => {
+        cards.forEach((card, index) => {
             observer.observe(card);
-            // Add click functionality to the card
-            card.addEventListener('click', () => {
+            
+            // 1. CLICK NA CELÚ KARTU: Vyplní input
+            card.addEventListener('click', (e) => {
+                // Ak sa kliklo priamo na title alebo description, preskočí sa táto časť a vykoná sa len kopírovanie
+                if (e.target.classList.contains('genre-title') || e.target.classList.contains('genre-description')) return;
+                
                 const genre = card.getAttribute('data-genre');
-                // Remove the note in parentheses for a clean prompt
+                // Odstránenie poznámky v zátvorkách pre čistý prompt
                 promptInput.value = genre.replace(/ \(.*\)/, '') + " about ";
                 promptInput.focus();
-                // Scroll to the chat box
+                // Scroll na chat box
                 chatBox.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // FUNKCIA PRE KOPÍROVANIE A NOTIFIKÁCIU
+            const performCopy = (textToCopy, notificationText, notificationColor, resetText) => {
+                const copyNotification = document.getElementById(`copy-notif-${index}`);
+                try {
+                    // Použitie dočasného inputu na skopírovanie textu
+                    const tempInput = document.createElement('textarea');
+                    tempInput.value = textToCopy;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+
+                    // Zobrazenie notifikácie
+                    copyNotification.textContent = notificationText;
+                    copyNotification.style.backgroundColor = notificationColor;
+                    copyNotification.classList.remove('desc-copy'); // Reset class for title copy
+                    if(notificationColor === '#51A8E8') {
+                        copyNotification.classList.add('desc-copy'); // Set class for description copy
+                    }
+                    copyNotification.classList.add('visible');
+                    
+                    setTimeout(() => {
+                        copyNotification.classList.remove('visible');
+                        // Reset to default state
+                        copyNotification.textContent = resetText;
+                        copyNotification.style.backgroundColor = '#20E3B2';
+                        copyNotification.classList.remove('desc-copy');
+                    }, 1500);
+
+                } catch (err) {
+                    console.error('Nepodarilo sa skopírovať:', err);
+                    // Prípadná chyba notifikácia
+                    copyNotification.textContent = 'CHYBA KOPÍROVANIA';
+                    copyNotification.classList.add('visible');
+                    copyNotification.style.backgroundColor = '#FF6B6B';
+                    setTimeout(() => {
+                        copyNotification.classList.remove('visible');
+                        copyNotification.style.backgroundColor = '#20E3B2';
+                        copyNotification.textContent = resetText;
+                    }, 2000);
+                }
+            };
+            
+            // 2. CLICK NA NÁZOV ŽÁNRU: Skopíruje názov
+            const genreTitle = card.querySelector('.genre-title');
+            genreTitle.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                const genreToCopy = genreTitle.getAttribute('data-genre-copy');
+                performCopy(genreToCopy, 'NÁZOV SKOPÍROVANÝ!', '#20E3B2', 'SKOPÍROVANÉ!');
+            });
+            
+            // 3. CLICK NA POPIS ŽÁNRU (Kľúčové slová): Skopíruje popis
+            const genreDescription = card.querySelector('.genre-description');
+            genreDescription.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                const descriptionToCopy = genreDescription.getAttribute('data-description-copy').trim();
+                performCopy(descriptionToCopy, 'KĽÚČOVÉ SLOVÁ SKOPÍROVANÉ!', '#51A8E8', 'SKOPÍROVANÉ!');
             });
         });
 
@@ -1191,7 +1302,7 @@
         };
 
         ttsButton.addEventListener('click', () => {
-            // Must have generated text before running TTS
+            // Musí byť vygenerovaný text pred spustením TTS
             if (lastGeneratedText) {
                 generateTts(lastGeneratedText);
             } else {
@@ -1199,7 +1310,7 @@
             }
         });
         
-        // Ensures the button resets even if playback ends outside of a click.
+        // Zabezpečí resetovanie tlačidla aj v prípade, že prehrávanie skončí mimo click eventu.
         audioPlayer.onended = () => {
             ttsButton.textContent = 'Read Aloud (TTS)';
         };
@@ -1207,9 +1318,6 @@
     </script>
 </body>
 </html>
-
-
-
 
 
 
