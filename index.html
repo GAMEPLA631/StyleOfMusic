@@ -8,69 +8,88 @@
     <!-- Three.js Library for 3D Wallpaper -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Inter:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Inter:wght');
         
-        /* Basic body styles for a modern, dark look */
+        /* Base styles: Dark, modern, fluid */
         body {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: #0a0a0a;
             color: #f0f0f0;
             line-height: 1.6;
             overflow-x: hidden;
-            /* Dôležité: zabezpečuje, že obsah bude nad 3D tapetou */
             position: relative; 
             z-index: 1;
+            scroll-behavior: smooth;
         }
 
-        /* 3D Wallpaper Canvas Styles - celá obrazovka, fixné, za obsahom */
+        /* 3D Wallpaper Canvas Styles */
         #threejs-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0; /* Zabezpečuje, že je za obsahom */
-            pointer-events: none; /* Umožňuje prekliknutie na obsah stránky */
-            opacity: 0.5; /* Mierne stlmené, aby nebolo príliš rušivé */
-        }
-        
-        /* Container for the entire page */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-            position: relative; /* Pre zachovanie z-index 1 */
+            z-index: 0; 
+            pointer-events: none; 
+            opacity: 0.25; /* Dark background to make content pop */
+            transition: opacity 0.5s ease;
         }
 
-        /* Hero section for an engaging introduction */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem 5rem 1rem;
+            position: relative; 
+            z-index: 10; /* Ensure content is above the background */
+        }
+
+        /* Hero section with a new gradient and shadow */
         .hero-section {
-            background: linear-gradient(to right, #1a1a1a, #2c2c2c);
-            padding: 6rem 2rem;
-            border-radius: 1rem;
+            background: linear-gradient(135deg, #1f1f1f 0%, #0d0d0d 100%);
+            padding: 7rem 2rem;
+            border-radius: 1.5rem;
             text-align: center;
-            margin-bottom: 3rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 4rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Title with distinctive font and subtle shadow */
+        .hero-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #A87DFF, #51A8E8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(168, 125, 255, 0.5);
+            line-height: 1.1;
         }
 
         /* Grid for genre cards */
         .genre-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2.5rem;
         }
         
         /* Styling and animation for genre cards */
         .genre-card {
             border-radius: 1rem;
-            padding: 1.5rem;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-            transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+            padding: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             opacity: 0;
             transform: translateY(30px);
-            border: 2px solid transparent;
-            color: #ffffff; /* Zabezpečí, že text na kartách s gradientom je biely */
+            border: 3px solid transparent;
+            cursor: pointer;
         }
         
+        /* Hover effect: slight 3D lift and pulsing shadow */
+        .genre-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 25px 50px rgba(168, 125, 255, 0.3), 0 0 0 3px rgba(168, 125, 255, 0.5);
+        }
+
         /* Color gradients for cards */
         .grad-1 { background-image: linear-gradient(135deg, #FF6B6B, #F88A6A); }
         .grad-2 { background-image: linear-gradient(135deg, #51A8E8, #7DE2D1); }
@@ -80,174 +99,216 @@
         .grad-6 { background-image: linear-gradient(135deg, #B993D6, #8CA6DB); }
         .grad-7 { background-image: linear-gradient(135deg, #FFDAB9, #FFC0CB); }
         .grad-8 { background-image: linear-gradient(135deg, #ff00cc, #333399); } 
+        .grad-9 { background-image: linear-gradient(135deg, #ff99e6, #A87DFF); } /* New Pop */
+        .grad-10 { background-image: linear-gradient(135deg, #1D2B53, #1F6E8C); } /* Deep Blue */
+        .grad-11 { background-image: linear-gradient(135deg, #FFBD59, #FF7B59); } /* Orange / Sunset */
+        .grad-12 { background-image: linear-gradient(135deg, #4CAF50, #8BC34A); } /* Green / Nature */
+        .grad-13 { background-image: linear-gradient(135deg, #FF66A3, #E85D75); } /* Bright Pink */
+        .grad-14 { background-image: linear-gradient(135deg, #7A00CC, #C77DFF); } /* Dark Purple / Lavender */
+        .grad-15 { background-image: linear-gradient(135deg, #333333, #666666); } /* Dark Grey / Metal */
+        .grad-16 { background-image: linear-gradient(135deg, #00C9FF, #92FE9D); } /* Aqua / Mint */
+        .grad-17 { background-image: linear-gradient(135deg, #A85A3F, #D7A795); } /* Bronze / Earth */
+        .grad-18 { background-image: linear-gradient(135deg, #CC2936, #FF6B6B); } /* True Red */
         
-        /* Animation when the card is visible */
         .genre-card.is-visible {
             opacity: 1;
             transform: translateY(0);
         }
-        
-        /* Hover effect */
-        .genre-card:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
-            border-color: #8c7ae6;
-        }
 
         .genre-title {
             font-family: 'Montserrat', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.65rem;
             font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 0.75rem;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
         
-        /* Špeciálne pre dlhé názvy štýlov */
         .genre-title.long {
-            font-size: 1.1rem; 
+            font-size: 1.2rem; 
         }
 
         .genre-description {
             font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            color: #f0f0f0;
-            line-height: 1.5;
-            opacity: 0.8;
+            font-size: 1rem;
+            color: #eeeeee;
+            opacity: 0.9;
         }
 
         /* Chat section styles */
         .chat-section {
             background-color: #1a1a1a;
-            border-radius: 1rem;
+            border-radius: 1.5rem;
             padding: 2rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            margin-top: 3rem;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+            margin-top: 5rem;
+            max-width: 900px;
         }
 
         .chat-title {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             text-align: center;
+            color: #A87DFF;
         }
 
         .chat-box {
-            height: 400px;
+            height: 450px;
             overflow-y: auto;
             background-color: #0d0d0d;
-            border-radius: 0.75rem;
+            border-radius: 1rem;
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
             gap: 1rem;
             margin-bottom: 1.5rem;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+            border: 1px solid #2c2c2c;
         }
 
-        /* Hide scrollbar on WebKit browsers */
-        .chat-box::-webkit-scrollbar {
-            display: none;
-        }
+        /* Hide scrollbar */
+        .chat-box::-webkit-scrollbar { display: none; }
+        .chat-box { -ms-overflow-style: none; scrollbar-width: none; }
 
         .message {
-            max-width: 85%;
-            padding: 0.75rem 1rem;
-            border-radius: 1rem;
+            max-width: 90%;
+            padding: 1rem 1.25rem;
+            border-radius: 1.25rem;
             white-space: pre-wrap;
-            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .message.user {
             background-color: #51A8E8;
             color: #1a1a1a;
             align-self: flex-end;
-            text-align: right;
-            border-bottom-right-radius: 0.25rem;
+            border-bottom-right-radius: 0.5rem;
         }
 
         .message.ai {
             background-color: #2c2c2c;
             color: #f0f0f0;
             align-self: flex-start;
-            border-bottom-left-radius: 0.25rem;
+            border-bottom-left-radius: 0.5rem;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
         }
-
+        
+        .message-text pre {
+            background-color: #3d3d3d;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-top: 0.5rem;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        
         .message-text {
             word-wrap: break-word;
         }
 
         .copy-button {
             margin-top: 1rem;
-            padding: 0.5rem 1rem;
-            background-color: #51A8E8;
-            color: #1a1a1a;
+            padding: 0.6rem 1.2rem;
+            background-color: #A87DFF;
+            color: #ffffff;
             border-radius: 0.5rem;
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
             border: none;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            font-family: 'Inter', sans-serif;
-            text-transform: uppercase;
         }
 
         .copy-button:hover {
-            background-color: #3f87c2;
+            background-color: #9266e7;
             transform: translateY(-1px);
         }
 
         .copy-button.copied {
             background-color: #20E3B2;
         }
-
-        .chat-controls-row {
+        
+        .chat-info-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem; /* Zväčšený margin pre lepšie oddelenie */
+            margin-bottom: 1.5rem; 
             gap: 1rem;
+            padding: 0 0.5rem;
         }
 
-        .model-toggle-button {
-            padding: 0.75rem 1rem;
-            font-weight: 600;
+        .model-toggle-button, .tts-button-style {
+            padding: 0.8rem 1.2rem;
+            font-weight: 700;
             border-radius: 0.75rem;
             cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: all 0.3s ease;
             white-space: nowrap; 
-            border: 2px solid transparent; /* Základný border pre všetky */
+            border: 2px solid transparent; 
             flex-shrink: 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
         
-        .model-toggle-button.standard {
+        /* Current Model - visual indicators */
+        #current-model-indicator {
+            font-weight: 700;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+            min-width: 150px;
+            text-align: center;
+        }
+
+        /* Model V1 */
+        .standard-style {
             background-color: #3d3d3d;
             color: #f0f0f0;
             border-color: #51A8E8;
         }
         
-        /* Nový štýl pre V4 Energy - Žltá/Oranžová Energia */
-        .model-toggle-button.energy {
+        /* Model V4 Energy/Pop */
+        .energy-style {
             background-color: #F9D423; 
             color: #1a1a1a;
             border-color: #F64F59;
-            box-shadow: 0 0 10px rgba(249, 212, 35, 0.8);
+            box-shadow: 0 0 15px rgba(249, 212, 35, 0.6);
+        }
+        
+        /* Model V4.1 Pop */
+        .pop-style {
+            background-color: #ff99e6; /* Lighter pink hue */
+            color: #1a1a1a;
+            border-color: #FF6B6B;
+            box-shadow: 0 0 15px rgba(255, 153, 230, 0.8);
         }
 
-
-        .model-toggle-button.boosted {
-            background-color: #FF6B6B; /* Červená farba pre BOOST */
+        /* Model V5 Pro (Bass Boosted) */
+        .boosted-style {
+            background-color: #FF6B6B; 
             color: #1a1a1a;
             border-color: #F88A6A;
             animation: pulse 1.5s infinite;
         }
         
+        .tts-button-style {
+            background: linear-gradient(135deg, #FF6B6B, #A87DFF);
+            color: white;
+        }
+        
+        .tts-button-style:disabled {
+             opacity: 0.6;
+             cursor: not-allowed;
+             background: gray;
+        }
+
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
             70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
@@ -262,115 +323,150 @@
 
         .chat-input {
             flex-grow: 1;
-            padding: 0.75rem 1rem;
+            padding: 1rem 1.25rem;
             border-radius: 0.75rem;
             background-color: #2c2c2c;
             border: 2px solid #3d3d3d;
             color: #f0f0f0;
             outline: none;
-            transition: border-color 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
             font-family: 'Inter', sans-serif;
         }
 
         .chat-input:focus {
-            border-color: #51A8E8;
+            border-color: #A87DFF;
+            box-shadow: 0 0 0 2px #A87DFF;
         }
 
         .generate-button {
-            padding: 0.75rem 1.5rem;
-            background: linear-gradient(135deg, #A87DFF, #D18CEB);
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #A87DFF, #51A8E8);
             color: #ffffff;
             font-weight: 700;
             border-radius: 0.75rem;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
             flex-shrink: 0;
+            border: none;
         }
 
-        .generate-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+        .generate-button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+        }
+        
+        .generate-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .loading-spinner {
             border: 4px solid rgba(255, 255, 255, 0.3);
             border-top: 4px solid #A87DFF;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
             animation: spin 1s linear infinite;
             display: none;
             flex-shrink: 0;
+            margin-left: -52px; /* Move behind the button for a modern effect */
+            z-index: 10;
         }
         
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .chat-input-container.loading .generate-button {
+            display: none;
         }
-        /* Media Query for responsiveness */
-        @media (max-width: 768px) {
+        
+        .chat-input-container.loading #loading-spinner {
+            display: block;
+        }
+        
+        /* Media Query for responsive design */
+        @media (max-width: 900px) {
+            .hero-title {
+                font-size: 3rem;
+            }
             .hero-section {
-                padding: 4rem 1rem;
+                padding: 5rem 1rem;
             }
             .chat-title {
-                font-size: 1.5rem;
+                font-size: 2rem;
+            }
+            .chat-input-container {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            .chat-input {
+                width: 100%;
+            }
+            .generate-button {
+                width: 100%;
+                padding: 1rem;
+            }
+            .loading-spinner {
+                margin-left: 0;
+                order: 3; /* Move spinner below the input */
             }
             .chat-controls-row {
                 flex-direction: column;
                 align-items: stretch;
                 gap: 0.75rem;
             }
-            .model-toggle-button {
+            .model-toggle-button, .tts-button-style {
                 width: 100%;
             }
         }
-
-        
     </style>
 </head>
 <body>
     <!-- 3D Background Canvas -->
     <canvas id="threejs-canvas"></canvas>
 
-    <!-- Wallpaper Control Button - Z-index 20 zabezpečí, že bude vždy navrchu -->
+    <!-- Wallpaper Control Button -->
     <button id="toggle-wallpaper" class="fixed bottom-4 right-4 z-20 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-full shadow-lg transition duration-300">
-        Zmeniť Tapetu (Nebula)
+        Wallpaper ON/OFF
     </button>
     
     <div class="container">
-        <!-- Engaging hero section with title and subtitle -->
+        <!-- Hero section -->
         <header class="hero-section">
-            <h1 class="text-5xl md:text-6xl font-bold mb-4 text-white drop-shadow-md">The Musical Universe</h1>
-            <p class="text-lg md:text-xl text-gray-300">Explore the endless palette of genres and their unique stories.</p>
+            <h1 class="hero-title mb-4">The Musical Universe</h1>
+            <p class="text-xl md:text-2xl text-gray-300 font-light">Discover the infinite palette of genres and their unique stories with AI.</p>
         </header>
 
+        <!-- Genre section -->
+        <h2 class="text-3xl font-bold text-center mb-10 text-gray-200">Catalogue of Lyrical Styles</h2>
         <div class="genre-list" id="genre-container">
-            <!-- Cards will be generated with JavaScript, each with its own description -->
+            <!-- Cards will be generated via JavaScript -->
         </div>
 
         <!-- Chat section -->
-        <section class="chat-section">
-            <h2 class="chat-title">Generate Music Lyrics with AI</h2>
+        <section class="chat-section mx-auto">
+            <h2 class="chat-title">AI Lyric Generator</h2>
             
-            <!-- Nová riadiaca sekcia pre prepínanie modelov -->
-            <div class="chat-controls-row">
-                <!-- Tlačidlo sa inicializuje v JS -->
-                <button id="model-toggle" class="model-toggle-button standard">
-                    Aktuálny Model: V1
+            <!-- Control section for model toggling and TTS -->
+            <div class="chat-info-row">
+                 <div id="current-model-indicator" class="standard-style">V1 Standard (Multi-Language)</div>
+                <button id="model-toggle" class="model-toggle-button standard-style">
+                    Toggle Model
                 </button>
-                <button id="tts-button" class="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-full transition duration-300">
-                    Prečítať Hlasom (TTS)
+                <button id="tts-button" class="tts-button-style" disabled>
+                    Read Aloud (TTS)
                 </button>
             </div>
             
-            <div id="chat-box" class="chat-box">
+            <div id="chat-box" class="chat-box" role="log" aria-live="polite">
                 <!-- Messages will appear here -->
+                <div class="message ai" style="animation: none; opacity: 1;">
+                    <span class="message-text">Hello! Enter a genre and a topic (e.g., Hardstyle Bass about cars). You can write in any language, the AI will adapt.</span>
+                </div>
             </div>
-            <div class="chat-input-container">
-                <input type="text" id="prompt-input" class="chat-input" placeholder="Enter your music genre or idea...">
-                <button id="generate-button" class="generate-button">Generate</button>
-                <div id="loading-spinner" class="loading-spinner"></div>
+            
+            <div class="chat-input-container" id="input-container">
+                <input type="text" id="prompt-input" class="chat-input" placeholder="Enter genre and topic. E.g.: French Pop about Paris (in French)...">
+                <button id="generate-button" class="generate-button">Generate Lyrics</button>
+                <div id="loading-spinner" class="loading-spinner" role="status" aria-label="Loading"></div>
             </div>
         </section>
     </div>
@@ -379,91 +475,193 @@
 
 
     <script>
-        // Definovanie stavov modelu
+        // --- CONFIGURATION AND DATA ---
         const MODEL_STATES = {
-            STANDARD: 0, // V1 - Štandardné kreatívne
-            ENERGY: 1,   // V4 Energy (EDM/Trap Energy)
-            BOOSTED: 2   // V5 Pro (Bass Boosted / Silné Basy bez vulgarizmov)
+            STANDARD: 0, // V1 - Standard creative
+            ENERGY: 1,   // V4 Energy/Pop (EDM/Trap)
+            POP: 2,      // V4.1 Pop (Melodic, Rhyme-focused)
+            BOOSTED: 3   // V5 Pro (Bass Boosted / Heavy Bass, no profanity)
         };
 
+        // Updated list of styles with NEW genres
         const styles = [
-            "Bass Boosted",
-            "Horrorcore", "Dark Ambient", "Drone", "Industrial", "Gothic Metal", 
-            "Doom Metal", "Black Metal", "Death Industrial", "Power Electronics", "Noise",
-            "Bass Boosted Trap", "Future Bass Drop", "Hardstyle Bass", "Dubstep Wobble",
-            "Vaporwave", "Synthwave", "Lofi Hip Hop", "Ambient", "Post-Rock", "Shoegaze",
-            "Chillwave", "Trip Hop", "Reggaeton", "Jungle",
-            "Ska Punk", "Gospel", "Celtic Music", "Minimalism", "Baroque Pop", "K-Pop", "Samba", "Flamenco", "Opera",
-            // Energetické štýly
-            "Hardcore Punk", "Drum and Bass", "Speedcore", "Power Metal",
-            "Metalcore Dark", 
-            "Aggressive Bass Boosted Energy",
-            // NOVÉ ŠTÝLY ZADANÉ UŽÍVATEĽOM
-            "Bass Boosted Hard",
-            "Dark Horror Darkness" 
+            // --- CORE BASS / POP MODELS ---
+            "Aggressive Bass Boosted Energy", 
+            "Bass Boosted Hard", 
+            "Mainstream Pop (Custom)", 
+            "Melodic Pop Ballad (New Pop Model)", 
+            
+            // --- NEW BASS / ENERGY GENRES ---
+            "Future Bass (Epic Drops)", 
+            "Brostep (Heavy & Skrillex Style)", 
+            "Hardcore Rave (90s Style)", 
+            "Psytrance (Hypnotic Rhythm)", 
+            "Heavy Drum and Bass (Neurofunk)", 
+            "Speedcore (Extremely Fast Tempo)", 
+            "J-Core (Japanese Hardcore)", 
+            "Hardstyle (Classic Hard Kicks)",
+            "Glitch Hop (Broken Beats)",
+            "Hyperpop (Sexton & Glitch)",
+
+            // --- NEW CHRISTMAS / HOLIDAY GENRES ---
+            "Christmas Pop (Holiday Ballad)",
+            "Trap Christmas (Dark Christmas)",
+            "Acoustic Christmas Jazz (Comfortable Tone)",
+
+            // --- NEW DANCE / URBAN GENRES ---
+            "Eurodance 90s (High Energy)",
+            "Latin Trap (Spanish/English)",
+            "Afrobeat Fusion (Dance Rhythm)",
+            "Kizomba (Romantic Dance)",
+
+            // --- ORIGINAL AND METAL/DARK GENRES ---
+            "Horrorcore", 
+            "Dark Horror Darkness", 
+            "Black Metal", 
+            "Doom Metal", 
+            "Gothic Metal", 
+            "Industrial",
+            "Viking Metal (Epic Sagas)", 
+            "Steampunk Opera (Victorian Tech)",
+            "Crunkcore (Screamo & Rap)", 
+
+            // --- RELAXING AND EXPERIMENTAL GENRES ---
+            "Vaporwave", 
+            "Synthwave", 
+            "Lofi Hip Hop", 
+            "Ambient", 
+            "Post-Rock", 
+            "Shoegaze", 
+            "Chillwave", 
+            "Trip Hop", 
+            "Minimalism", 
+            "Baroque Pop", 
+            "Chiptune (8-bit Soundtrack)",
+
+            // --- WORLD GENRES ---
+            "Reggaeton", 
+            "Jungle", 
+            "Ska Punk", 
+            "Celtic Music", 
+            "K-Pop", 
+            "Samba", 
+            "Flamenco", 
+            "Opera",
         ];
 
         const descriptions = {
-            "Bass Boosted": "Music specifically mixed and mastered to be played on powerful car audio systems, with a focus on deep, rumbling bass.",
-            "Horrorcore": "A blend of hip hop with horror themes, often featuring violent lyrics, eerie samples, and dark beats.",
-            "Dark Ambient": "Minimalistic and atmospheric music that creates a sense of dread, desolation, and unease.",
-            "Drone": "Music characterized by sustained tones or sound clusters, creating a hypnotic and often unsettling atmosphere.",
-            "Industrial": "A genre using harsh, abrasive sounds, often created from industrial equipment and electronic loops, to create a tense and cold atmosphere.",
-            "Gothic Metal": "A fusion of heavy metal with the dark, melancholic elements of gothic rock, including dramatic vocals and gloomy melodies.",
-            "Doom Metal": "Extremely slow and heavy metal music known for its gloomy, oppressive, and pessimistic themes.",
-            "Black Metal": "An extreme subgenre of metal defined by fast tempos, raw recording, and screeching vocals, often with themes of darkness and evil.",
-            "Death Industrial": "A genre combining the harsh soundscapes of industrial music with the dark, morbid themes of death and decay.",
-            "Power Electronics": "An extreme genre known for its distorted vocals and harsh, static noise, creating an aggressive and chaotic sound.",
-            "Noise": "Music characterized by the use of dissonant and often unsettling sounds, focusing on the texture and quality of noise itself.",
-            "Bass Boosted Trap": "A subgenre of Trap music where the primary focus is on extremely low-frequency sub-bass, often with distorted and heavy 808s.",
-            "Future Bass Drop": "Characterized by its signature 'drop' and a heavy, melodic bass line, often featuring wobbles and digital synth sounds.",
-            "Hardstyle Bass": "Known for its powerful and distorted kick drum, combined with raw, high-energy basslines that drive the track.",
-            "Dubstep Wobble": "Defined by its iconic 'wobble bass' sound, which is created by modulating the bassline, providing a rhythmic and pulsating feel.",
-            "Vaporwave": "A microgenre of electronic music with a nostalgic, surreal aesthetic, often incorporating slowed-down, pitch-shifted samples of smooth jazz and lounge music.",
-            "Synthwave": "A retro-futuristic genre inspired by 1980s film soundtracks and video games, featuring synthesizers and a nostalgic, vibrant sound.",
-            "Lofi Hip Hop": "A relaxing genre with muted, downtempo beats and often subtle background noise, ideal for studying or unwinding.",
-            "Ambient": "A genre focused on atmosphere and tone over traditional musical structure, creating a sense of calm and space.",
-            "Post-Rock": "Instrumental music that uses rock instrumentation and song structure but avoids typical rock conventions, focusing on building dramatic soundscapes.",
-            "Shoegaze": "A subgenre of alternative rock characterized by a fusion of obscured vocals, distorted guitars, and overwhelming sound.",
-            "Chillwave": "A style of electronic music with a lo-fi, hazy sound, often featuring relaxed rhythms and nostalgic synth melodies.",
-            "Trip Hop": "A downtempo electronic genre that blends hip hop rhythms with a dark, cinematic, and atmospheric sound.",
-            "Reggaeton": "A genre originating in Puerto Rico, blending Jamaican dancehall with Latin American and hip hop rhythms.",
-            "Jungle": "A fast-paced genre of electronic music characterized by breakbeats, heavy basslines, and samples.",
-            "Ska Punk": "A fusion of the energetic, upbeat rhythms of ska with the aggressive and fast-paced nature of punk rock.",
-            "Gospel": "Music written to express personal or communal belief in Christian life, often featuring powerful vocals and spiritual themes.",
-            "Celtic Music": "A broad genre encompassing traditional music from Celtic nations such as Ireland, Scotland, and Wales, known for its use of fiddles, flutes, and bagpipes.",
-            "Minimalism": "Characterized by a repetitive, hypnotic feel, often using simple melodic and rhythmic ideas that are repeated and slowly changed over time.",
-            "Baroque Pop": "A subgenre of pop and rock music that incorporates elements of classical music, such as strings, harpsichord, and multi-part vocal harmonies.",
-            "K-Pop": "A form of popular music originating in South Korea, often featuring a blend of diverse genres like pop, hip hop, R&B, and EDM.",
-            "Samba": "A Brazilian musical genre and dance style known for its rhythmic, lively beat and often celebratory themes.",
-            "Flamenco": "A traditional Spanish art form involving soulful singing, intricate guitar playing, and passionate dance.",
-            "Opera": "A dramatic stage work in which all or most of the text is sung, accompanied by an orchestra, combining music, theater, and sometimes dance.",
-            // Popisy pre energetické štýly
-            "Hardcore Punk": "Extrémne rýchly a agresívny subžáner punku, často s krátkymi piesňami a surovým zvukom.",
-            "Drum and Bass": "Vysokoenergetický žáner elektronickej hudby, charakteristický rýchlymi bicími slučkami a hlbokými basmi.",
-            "Speedcore": "Extrémne rýchly a intenzívny štýl elektronickej hudby, s tempom často presahujúcim 300 úderov za minútu.",
-            "Power Metal": "Subžáner heavy metalu, známy pre svoje rýchle melódie, melodické vokaly a fantasy témy.",
-            "Metalcore Dark": "A mix of heavy guitar riffs, fast drums, and melodic yet aggressive choruses, with screams/growls in the verses.",
-            "Aggressive Bass Boosted Energy": "A chaotic fusion blending Brutal Bass, Dubstep, Hardstyle, Neurostep, and Ravecore. Defined by its heavy, dark, explosive sound for peak festival energy and chaos.",
-            "Bass Boosted Hard": "Bass Boosted, EDM, Trap, Techno, Pop, Electric, Kawaii, House Energy, Extreme, Bass House – ultimate high-energy mix.",
-            // NOVÝ POPIS pre Dark Horror Darkness
-            "Dark Horror Darkness": "The ultimate fusion of dark ambient, horror soundtrack, cinematic horror, psychological horror, eerie atmosphere, suspense music, dark cinematic, thriller score, ambient horror, and dark soundtrack elements for maximum tension."
+            "Aggressive Bass Boosted Energy": "A chaotic fusion of Brutal Bass, Dubstep, Hardstyle, Neurostep, and Ravecore. Extremely heavy, dark, and explosive sound for festival energy.",
+            "Bass Boosted Hard": "Bass Boosted, EDM, Trap, Techno, Pop, Electric, Kawaii, House Energy – the ultimate high-energy mix with deep bass.",
+            "Mainstream Pop (Custom)": "Pop, upbeat, catchy, melodic, radio-friendly, danceable, emotional, youthful, mainstream, energetic, romantic, synth-pop, chart-topping. Ideal for modern radio hits and dance floors.",
+            "Melodic Pop Ballad (New Pop Model)": "New Model V4.1! Focused on clean, catchy, radio-ready Pop with an emphasis on strong rhymes, emotions, and fluent melody.",
+            
+            // --- NEW BASS / ENERGY DESCRIPTIONS ---
+            "Future Bass (Epic Drops)": "Genre defined by massive, emotive synths, fragmented vocals, and epic, usually sub-bass driven 'drops'.",
+            "Brostep (Heavy & Skrillex Style)": "Aggressive subgenre of Dubstep, known for its 'noisy', deep bass lines, robotic sounds, and heavy, distorted wobbles.",
+            "Hardcore Rave (90s Style)": "Fast tempo (150+ BPM), playful, and euphoric melodies, paired with breakbeats, perfect for the old Rave atmosphere.",
+            "Psytrance (Hypnotic Rhythm)": "High-energy Trance style with complex, repeating melodic loops that induce hypnotic states.",
+            "Heavy Drum and Bass (Neurofunk)": "Dark and futuristic Drum and Bass, utilizing complex, technical bass lines and sharp, mechanical drums.",
+            "Speedcore (Extremely Fast Tempo)": "One of the fastest genres of electronic music (up to 600 BPM), focused on raw, aggressive speed and sonic destruction.",
+            "J-Core (Japanese Hardcore)": "A mix of Japanese pop culture, Hardcore, Gabber, and Chiptune. Extremely fast, but often with a cute 'Kawaii' melody.",
+            "Hardstyle (Classic Hard Kicks)": "Extremely powerful, 'reverse bass' kicks and euphoric, anthemic melodies that dominate Hard Dance festivals.",
+            "Glitch Hop (Broken Beats)": "A fusion of Hip Hop and Glitch electronica. Utilizes 'broken' beats, digital artifacts, and complex rhythmic patterns.",
+            "Hyperpop (Sexton & Glitch)": "Avant-garde Pop with exaggerated aesthetics, auto-tuned vocals, loud mastering, and chaotic glitch effects.",
+
+            // --- NEW CHRISTMAS / HOLIDAY DESCRIPTIONS ---
+            "Christmas Pop (Holiday Ballad)": "A grand, emotional Pop ballad with traditional Christmas motifs, bells, and orchestra, suitable for holiday radio.",
+            "Trap Christmas (Dark Christmas)": "Christmas themes translated into a harsh, slow Trap beat. Holiday nostalgia with 808 bass.",
+            "Acoustic Christmas Jazz (Comfortable Tone)": "Gentle, warm Jazz with piano and double bass, ideal for a cozy, traditional Christmas atmosphere.",
+
+            // --- NEW DANCE / URBAN DESCRIPTIONS ---
+            "Eurodance 90s (High Energy)": "Classic 90s dance style: fast, catchy synth hooks, powerful female vocals, and male rap.",
+            "Latin Trap (Spanish/English)": "Fusion of Hip Hop and Latin rhythms. Slow, dark beat with themes of the street and luxury (ideally in Spanish).",
+            "Afrobeat Fusion (Dance Rhythm)": "A mix of modern Afrobeat, Dancehall, and Pop. Focus on complex but danceable and hypnotic rhythms and positive themes.",
+            "Kizomba (Romantic Dance)": "A slow and very sensual dance genre, originating from Angola. Lyrics are romantic, with gentle and fluid rhythms.",
+            
+            // --- ORIGINAL AND METAL/DARK DESCRIPTIONS ---
+            "Horrorcore": "A blend of hip hop with horror themes, creepy samples, and dark beats, focusing on terror.",
+            "Dark Horror Darkness": "A fusion of dark ambient, cinematic horror, psychological terror, and ambient horror for maximum suspense and dark atmosphere.",
+            "Black Metal": "An extreme metal subgenre defined by fast tempos, raw recording, and screeching vocals, with themes of darkness and evil.",
+            "Doom Metal": "Extremely slow and heavy metal music, known for its bleak, oppressive, and pessimistic themes.",
+            "Gothic Metal": "A fusion of heavy metal with dark, melancholic elements of gothic rock, including dramatic vocals.",
+            "Industrial": "A genre utilizing harsh, abrasive sounds, often created from industrial equipment and electronic loops.",
+            "Viking Metal (Epic Sagas)": "A metal genre with Nordic/pagan lyrical themes, often featuring epic, orchestral, and dramatic elements.",
+            "Steampunk Opera (Victorian Tech)": "Dramatic, orchestral music combining elements of Opera, Rock, and Steampunk aesthetics. About steam engines and the Victorian era.",
+            "Crunkcore (Screamo & Rap)": "A fusion of Screamo, Emo, and Crunk Hip Hop. Combines screaming with rap verses and dance beats.",
+            
+            // --- RELAXING AND EXPERIMENTAL DESCRIPTIONS ---
+            "Vaporwave": "A microgenre with a nostalgic, surreal aesthetic and slowed-down, pitch-shifted samples.",
+            "Synthwave": "A retro-futuristic genre inspired by the 80s, with prominent synthesizers and a vibrant sound.",
+            "Lofi Hip Hop": "A relaxing genre with muted, slow beats and a gentle background hum, ideal for studying.",
+            "Ambient": "A genre focused on atmosphere and tone, creating a sense of calm and space.",
+            "Post-Rock": "Instrumental music that uses rock instrumentation but avoids typical rock conventions, focusing on building dramatic soundscapes.",
+            "Shoegaze": "A subgenre of alternative rock characterized by a fusion of muffled vocals, distorted guitars, and an overwhelming sound.",
+            "Chillwave": "An electronic music style with a lo-fi, hazy sound, often with relaxed rhythms and nostalgic melodies.",
+            "Trip Hop": "A slow electronic genre that blends hip hop rhythms with a dark, cinematic, and atmospheric sound.",
+            "Minimalism": "Characterized by a repetitive, hypnotic feel, utilizing simple melodic ideas that slowly evolve over time.",
+            "Baroque Pop": "A subgenre of pop and rock that incorporates elements of classical music, such as strings and harpsichord.",
+            "Chiptune (8-bit Soundtrack)": "Music created with the sound chips of old computers and consoles, sounding like an 8-bit game soundtrack.",
+
+            // --- WORLD GENRES DESCRIPTIONS ---
+            "Reggaeton": "A genre originating from Puerto Rico, blending Jamaican dancehall with Latin American and hip hop rhythms.",
+            "Jungle": "A fast electronic music genre, characterized by breakbeats, heavy bass lines, and samples.",
+            "Ska Punk": "A fusion of the energetic, upbeat rhythms of ska with the aggressive and fast nature of punk rock.",
+            "Celtic Music": "A broad genre covering traditional music from the Celtic nations, known for the use of violins and bagpipes.",
+            "K-Pop": "Popular music from South Korea, often a fusion of various genres like pop, hip hop, R&B, and EDM.",
+            "Samba": "A Brazilian music genre and dance style, known for its rhythmic and lively beat.",
+            "Flamenco": "A traditional Spanish art form involving soulful singing, complex guitar playing, and passionate dancing.",
+            "Opera": "A dramatic stage work where all or most of the text is sung, accompanied by an orchestra."
         };
 
-        const container = document.getElementById('genre-container');
-        const colorClasses = ["grad-1", "grad-2", "grad-3", "grad-4", "grad-5", "grad-6", "grad-7", "grad-8"];
+        // Expanded list of colors for variety
+        const colorClasses = [
+            "grad-1", "grad-2", "grad-9", "grad-3", "grad-4", "grad-5", "grad-6", "grad-7", "grad-8",
+            "grad-10", "grad-11", "grad-12", "grad-13", "grad-14", "grad-15", "grad-16", "grad-17", "grad-18"
+        ];
 
-        // Generate genre cards with dynamic descriptions and color gradients
+        // --- INITIALIZATION AND CARD GENERATION ---
+        const container = document.getElementById('genre-container');
+        const promptInput = document.getElementById('prompt-input');
+        const generateButton = document.getElementById('generate-button');
+        const chatBox = document.getElementById('chat-box');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const inputContainer = document.getElementById('input-container');
+        const modelToggleButton = document.getElementById('model-toggle');
+        const currentModelIndicator = document.getElementById('current-model-indicator');
+        const ttsButton = document.getElementById('tts-button');
+        const audioPlayer = document.getElementById('audio-player');
+        
+        // **********************************************************************************************
+        // POZNÁMKA: Ak kód spúšťate mimo tohto prostredia, vložte sem svoj Gemini API kľúč.
+        // V tomto prostredí (Canvas) ho nechajte prázdny.
+        const apiKey = "AIzaSyBIzvYGiWGoFUxmxdz2qEYMpNdCnUN8DjE"; 
+        // **********************************************************************************************
+
+        // Models for toggling
+        const modelOrder = [
+            MODEL_STATES.STANDARD, 
+            MODEL_STATES.ENERGY, 
+            MODEL_STATES.POP, 
+            MODEL_STATES.BOOSTED
+        ];
+        let currentModelIndex = 0;
+        let currentModel = modelOrder[currentModelIndex];
+        
+        let lastGeneratedText = "";
+        const maxRetries = 5;
+
+        // Generate genre cards
         for (let i = 0; i < styles.length; i++) {
             const style = styles[i]; 
-            const description = descriptions[style] || "This is a long, but fictional description that characterizes the musical genre and its atmosphere. It is just placeholder text to fill the space and make the card look fuller and more professional.";
-            const colorClass = colorClasses[i % colorClasses.length];
+            const description = descriptions[style] || "The description for this style is currently unavailable. It's a unique musical universe worth exploring!";
             
-            // Pridanie triedy 'long' pre štýly s dlhým názvom (viac ako 30 znakov)
+            // Simple use of modulo for cyclic repetition of colors
+            const colorClass = colorClasses[i % colorClasses.length]; 
+            
             const titleClass = style.length > 30 ? 'long' : '';
 
             const cardHtml = `
-                <div class="genre-card ${colorClass}">
+                <div class="genre-card ${colorClass}" data-genre="${style}">
                     <h2 class="genre-title ${titleClass}">${style}</h2>
                     <p class="genre-description">${description}</p>
                 </div>
@@ -471,12 +669,15 @@
             container.innerHTML += cardHtml;
         }
 
-        // Animation for cards on scroll
+        // --- ANIMATIONS AND INTERSECTION OBSERVER ---
         const cards = document.querySelectorAll('.genre-card');
         const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
+            entries.forEach((entry, index) => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
+                    // Add delay for a cascading effect
+                    setTimeout(() => {
+                        entry.target.classList.add('is-visible');
+                    }, 100 * (index % 4)); 
                     observer.unobserve(entry.target);
                 }
             });
@@ -484,52 +685,223 @@
 
         cards.forEach(card => {
             observer.observe(card);
+            // Add click functionality to the card
+            card.addEventListener('click', () => {
+                const genre = card.getAttribute('data-genre');
+                // Remove the note in parentheses for a clean prompt
+                promptInput.value = genre.replace(/ \(.*\)/, '') + " about ";
+                promptInput.focus();
+                // Scroll to the chat box
+                chatBox.scrollIntoView({ behavior: 'smooth' });
+            });
         });
 
-        // Chat logic
-        const promptInput = document.getElementById('prompt-input');
-        const generateButton = document.getElementById('generate-button');
-        const chatBox = document.getElementById('chat-box');
-        const loadingSpinner = document.getElementById('loading-spinner');
-        const modelToggleButton = document.getElementById('model-toggle');
-        const ttsButton = document.getElementById('tts-button');
-        const audioPlayer = document.getElementById('audio-player');
+        // --- 3D BACKGROUND LOGIC ---
+        const canvas = document.getElementById('threejs-canvas');
+        const toggleButton = document.getElementById('toggle-wallpaper');
+        let isWallpaperOn = true;
 
+        let scene, camera, renderer, particles, particleCount = 10000;
+        let geometry, material;
 
-        let currentModel = MODEL_STATES.STANDARD; // Začíname so V1 (Štandard)
-        let lastGeneratedText = ""; // Uloží posledný AI text pre TTS
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.position.z = 5;
 
-        // Funkcia na prepínanie modelov
-        const toggleModelMode = () => {
-            currentModel = (currentModel + 1) % 3; // Cyklus 0 -> 1 -> 2 -> 0
+            // Create particle system (Nebula)
+            geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            const color = new THREE.Color();
+
+            for (let i = 0; i < particleCount * 3; i += 3) {
+                positions[i] = (Math.random() * 2 - 1) * 200;
+                positions[i + 1] = (Math.random() * 2 - 1) * 200;
+                positions[i + 2] = (Math.random() * 2 - 1) * 200;
+
+                // Blue, purple, and white shades
+                color.setHSL(Math.random() * 0.1 + 0.6, 0.5, 0.5 + Math.random() * 0.5); 
+                colors[i] = color.r;
+                colors[i + 1] = color.g;
+                colors[i + 2] = color.b;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            material = new THREE.PointsMaterial({
+                size: 0.15,
+                vertexColors: true,
+                blending: THREE.AdditiveBlending,
+                transparent: true,
+                sizeAttenuation: true
+            });
+
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
             
-            modelToggleButton.classList.remove('standard', 'energy', 'boosted');
+            animate();
+        }
+
+        function animate() {
+            if (!isWallpaperOn) return;
+
+            requestAnimationFrame(animate);
+
+            const time = Date.now() * 0.00005;
+
+            // Subtle particle/camera movement
+            particles.rotation.y = time * 0.2;
+            particles.rotation.x = time * 0.1;
+            camera.position.x = Math.sin(time * 0.5) * 0.5;
+            camera.position.y = Math.cos(time * 0.5) * 0.5;
+
+            renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+            if (camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        }
+
+        toggleButton.addEventListener('click', () => {
+            isWallpaperOn = !isWallpaperOn;
+            canvas.style.opacity = isWallpaperOn ? '0.25' : '0';
+            toggleButton.textContent = isWallpaperOn ? 'Wallpaper ON/OFF' : 'Wallpaper ON/OFF (OFF)';
+            if (isWallpaperOn) {
+                // Resume animation if stopped
+                if (!renderer) initThreeJS(); 
+                else animate();
+            }
+        });
+
+        window.addEventListener('resize', onWindowResize);
+        window.onload = initThreeJS;
+
+
+        // --- CHAT & AI LOGIC ---
+
+        // Helper function for rendering messages
+        function renderMessage(text, isUser, includeCopyButton = false) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.classList.add(isUser ? 'user' : 'ai');
+
+            const textContent = document.createElement('span');
+            textContent.classList.add('message-text');
+            // Use innerHTML to support formatting like **bold** or `code`
+            textContent.innerHTML = text.replace(/\n/g, '<br>');
+
+            messageElement.appendChild(textContent);
+
+            if (includeCopyButton) {
+                const copyButton = document.createElement('button');
+                copyButton.classList.add('copy-button');
+                copyButton.textContent = 'Copy Lyrics';
+                
+                copyButton.addEventListener('click', () => {
+                    // Remove HTML tags and newlines to copy clean text
+                    const plainText = text.replace(/<br>/g, '\n').replace(/<\/?(strong|em|code|pre)>/g, '').trim();
+                    
+                    // Clipboard copy implementation
+                    try {
+                        const tempInput = document.createElement('textarea');
+                        tempInput.value = plainText;
+                        document.body.appendChild(tempInput);
+                        tempInput.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(tempInput);
+
+                        copyButton.textContent = 'Copied!';
+                        copyButton.classList.add('copied');
+                        setTimeout(() => {
+                            copyButton.textContent = 'Copy Lyrics';
+                            copyButton.classList.remove('copied');
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy text:', err);
+                        // Display error
+                        copyButton.textContent = 'Copy Error';
+                    }
+                });
+                messageElement.appendChild(copyButton);
+            }
+
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
+        }
+
+        // Function to update model display
+        const updateModelUI = () => {
+            modelToggleButton.classList.remove('standard-style', 'energy-style', 'boosted-style', 'pop-style');
+            currentModelIndicator.classList.remove('standard-style', 'energy-style', 'boosted-style', 'pop-style');
 
             switch (currentModel) {
                 case MODEL_STATES.STANDARD:
-                    modelToggleButton.textContent = 'Aktuálny Model: V1';
-                    modelToggleButton.classList.add('standard');
+                    currentModelIndicator.textContent = 'V1 Standard (Multi-Language)';
+                    currentModelIndicator.classList.add('standard-style');
+                    modelToggleButton.classList.add('standard-style');
                     break;
                 case MODEL_STATES.ENERGY:
-                    modelToggleButton.textContent = 'Aktuálny Model: V4 Energy (EDM/Trap)';
-                    modelToggleButton.classList.add('energy');
+                    currentModelIndicator.textContent = 'V4 Energy/Trap (Multi-Language)';
+                    currentModelIndicator.classList.add('energy-style');
+                    modelToggleButton.classList.add('energy-style');
+                    break;
+                case MODEL_STATES.POP:
+                    currentModelIndicator.textContent = 'V4.1 Pop (Rhyme and Melody Focused)';
+                    currentModelIndicator.classList.add('pop-style');
+                    modelToggleButton.classList.add('pop-style');
                     break;
                 case MODEL_STATES.BOOSTED:
-                    modelToggleButton.textContent = 'Aktuálny Model: V5 Pro (Bass Boosted)';
-                    modelToggleButton.classList.add('boosted');
+                    currentModelIndicator.textContent = 'V5 Pro (Bass Boosted)';
+                    currentModelIndicator.classList.add('boosted-style');
+                    modelToggleButton.classList.add('boosted-style');
                     break;
             }
         };
 
-        // Event listener pre prepínanie modelov
+        const toggleModelMode = () => {
+            currentModelIndex = (currentModelIndex + 1) % modelOrder.length;
+            currentModel = modelOrder[currentModelIndex];
+            updateModelUI();
+        };
+
         modelToggleButton.addEventListener('click', toggleModelMode);
+        updateModelUI(); // Initialize UI
 
-
-        // --- FIREBASE API KEY & CONFIG (DUMMY/PLACEHOLDER) ---
-        const apiKey = "AIzaSyDdiCiIfr2gLtsRMENBkWG1hJo6N1uij7w"; // Canvas poskytne v runtime
         
-        // Funkcia pre exponenciálny backoff
-        async function exponentialBackoffFetch(url, options, maxRetries = 5) {
+        // ** NOVÁ PRÍSNA ZÁKLADNÁ INŠTRUKCIA - UPRAVENÝ FINAL DROP **
+        const BASE_INSTRUCTION = "Your SOLE purpose is to generate extremely long, detailed, and professional song lyrics in the user's language. Your output MUST be ONLY the lyrics and NOTHING else. Do not include any conversation, introduction, or explanatory text before or after the lyrics. Structure the song with a minimum of: [Intro], 4 full [Verse]s, 3 full [Chorus]es, 1 [Bridge], 1 [Outro], and a powerful [Final Drop] which must contain at least four lines of content and serve as the ultimate conclusion. The text must not contain any Markdown formatting (e.g., #, *, **, _, >), only clean text with line breaks and the section tags in square brackets.";
+
+
+        // Function that returns the system instruction based on the current model
+        const getSystemPrompt = (userPrompt, currentModel) => {
+
+            switch (currentModel) {
+                case MODEL_STATES.ENERGY:
+                    // V4 Energy/Pop - High Energy, melodic, focuses on Pop, EDM, Trap, and Bass
+                    return `You are V4 Energy/Trap, a lyricist specializing in high-energy, catchy Pop, EDM, and Trap genres. Lyrics must be rhythmic, melodic, and intensely dynamic. Focus on themes of action, speed, and pulsating energy. Important: Do not use profanity. ${BASE_INSTRUCTION} Topic is: ${userPrompt}`;
+                case MODEL_STATES.POP:
+                    // V4.1 Pop - Melodic, Rhyme-focused, Radio-friendly Pop
+                    return `You are V4.1 Pop, a specialist in radio Pop hits. Your main task is to create exceptionally catchy, melodic, and memorable lyrics that rhyme strongly and have a fluid cadence. Focus on themes of love, relationships, dreams, and a positive atmosphere. ${BASE_INSTRUCTION} Topic is: ${userPrompt}`;
+                case MODEL_STATES.BOOSTED:
+                    // V5 Pro - Extreme Bass, Dark/Aggressive, but STRICTLY NO VULGARITY
+                    return `You are V5 Pro, a lyrical generator focused on extremely heavy, deep, Bass Boosted, Dark Ambient, and Hardcore lyrics. The tone must be aggressive, deep, and focused on themes of power, darkness, and mechanical rhythm. IMPORTANT: Despite the aggressive tone, the lyrics must contain absolutely NO profanity, vulgarity, or explicit content. ${BASE_INSTRUCTION} Topic is: ${userPrompt}`;
+                case MODEL_STATES.STANDARD:
+                default:
+                    // V1 Standard - General creative prompt
+                    return `You are V1 Standard, a versatile lyricist. Create compelling and creative song lyrics based on the user's input. The lyrics must be very long, detailed, and well-structured. ${BASE_INSTRUCTION} Topic is: ${userPrompt}`;
+            }
+        };
+
+        // --- API & BACKOFF LOGIC ---
+        async function exponentialBackoffFetch(url, options) {
             for (let i = 0; i < maxRetries; i++) {
                 try {
                     const response = await fetch(url, options);
@@ -541,7 +913,9 @@
                         await new Promise(resolve => setTimeout(resolve, delay));
                         continue;
                     }
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    const errorJson = await response.json().catch(() => ({}));
+                    const errorMessage = errorJson.error?.message || `HTTP error! status: ${response.status}`;
+                    throw new Error(errorMessage);
                 } catch (error) {
                     if (i === maxRetries - 1) throw error;
                     const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
@@ -550,7 +924,97 @@
             }
         }
 
-        // Funkcie pre konverziu PCM na WAV (vyžadované pre TTS)
+        // Main function for generating lyrics
+        const generateLyrics = async () => {
+            const userPrompt = promptInput.value.trim();
+            if (!userPrompt) return;
+
+            // Display user message
+            renderMessage(userPrompt, true);
+            promptInput.value = '';
+
+            // UI State: Loading
+            generateButton.disabled = true;
+            inputContainer.classList.add('loading');
+
+            const systemPrompt = getSystemPrompt(userPrompt, currentModel);
+            // Používame prázdny apiKey, pretože sa v prostredí Canvas automaticky naplní.
+            // Ak by ste spúšťali lokálne, použite svoj kľúč.
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userPrompt }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+
+            try {
+                const response = await exponentialBackoffFetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                let text = result.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, failed to generate text. Please try again with a different topic.";
+                
+                // --- Client-side sanitation of text to remove unwanted Markdown characters ---
+                // Removes # (headings), * (bullets/bold), _ (italics/bold), and > (quotes)
+                text = text.replace(/#+ /g, '').replace(/(\*\*|__|\*|_|>)/g, '');
+                // -----------------------------------------------------------------------------------------
+
+                // Save generated text for TTS
+                lastGeneratedText = text;
+
+                // Render AI response
+                renderMessage(text, false, true);
+                
+                // Enable TTS button
+                ttsButton.disabled = false;
+
+            } catch (error) {
+                console.error("Generation failed:", error);
+                renderMessage(`**Generation Error:** Failed to contact the model. Reason: ${error.message}. Please try again.`, false);
+                ttsButton.disabled = true;
+            } finally {
+                // UI State: Ready
+                generateButton.disabled = false;
+                inputContainer.classList.remove('loading');
+            }
+        };
+        
+        generateButton.addEventListener('click', generateLyrics);
+        promptInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !generateButton.disabled) {
+                generateLyrics();
+            }
+        });
+
+
+        // --- TTS LOGIC ---
+        
+        // Helper function: Detect likely language (based on word frequency and simple character check)
+        const isLikelyEnglish = (text) => {
+            if (!text) return true; // Default to English if text is empty
+            const englishKeywords = ['the', 'and', 'a', 'to', 'in', 'is', 'it', 'that', 'with', 'for', 'you'];
+            const nonEnglishMarkers = /[čšžýáíéäôňťľŕ]/i; // Common Slovak/Czech characters
+
+            if (nonEnglishMarkers.test(text)) {
+                return false;
+            }
+
+            const lowerText = text.toLowerCase();
+            let matchCount = 0;
+            englishKeywords.forEach(word => {
+                const regex = new RegExp(`\\b${word}\\b`, 'g');
+                if (lowerText.match(regex)) {
+                    matchCount++;
+                }
+            });
+            // If we find more than 4 keywords AND no non-English markers, assume English.
+            return matchCount > 4; 
+        };
+
+        // Functions for converting PCM to WAV (required for TTS)
         function base64ToArrayBuffer(base64) {
             const binaryString = atob(base64);
             const len = binaryString.length;
@@ -565,30 +1029,23 @@
             const buffer = new ArrayBuffer(44 + pcmData.length * 2);
             const view = new DataView(buffer);
 
-            // RIFF chunk descriptor
             writeString(view, 0, 'RIFF');
             view.setUint32(4, 36 + pcmData.length * 2, true);
             writeString(view, 8, 'WAVE');
-
-            // FMT sub-chunk
             writeString(view, 12, 'fmt ');
             view.setUint32(16, 16, true);
-            view.setUint16(20, 1, true); // PCM format
-            view.setUint16(22, 1, true); // Monophonic
+            view.setUint16(20, 1, true); 
+            view.setUint16(22, 1, true); 
             view.setUint32(24, sampleRate, true);
-            view.setUint32(28, sampleRate * 2, true); // byte rate
-            view.setUint16(32, 2, true); // block align
-            view.setUint16(34, 16, true); // bits per sample
-
-            // data sub-chunk
+            view.setUint32(28, sampleRate * 2, true); 
+            view.setUint16(32, 2, true); 
+            view.setUint16(34, 16, true); 
             writeString(view, 36, 'data');
             view.setUint32(40, pcmData.length * 2, true);
 
-            // PCM data (Int16)
             for (let i = 0; i < pcmData.length; i++) {
                 view.setInt16(44 + i * 2, pcmData[i], true);
             }
-
             return new Blob([view], { type: 'audio/wav' });
         }
 
@@ -598,34 +1055,45 @@
             }
         }
 
-        // Funkcia na prečítanie posledného vygenerovaného textu
         const generateTts = async (text) => {
-            if (!text) {
-                console.error("No text available for TTS.");
-                return;
-            }
+            if (!text) return;
 
-            ttsButton.textContent = 'Generujem Hlas...';
+            ttsButton.textContent = 'Generating Voice...';
             ttsButton.disabled = true;
             audioPlayer.pause();
             audioPlayer.src = '';
             
+            // Remove section tags ([Verse 1], [Chorus] etc.) for clean text
+            const cleanText = text.replace(/\[.*?\]\n?/g, '').trim();
+            
+            // DYNAMIC TTS LOCALIZATION
+            const isEnglish = isLikelyEnglish(cleanText);
+            // Use Zephyr (Bright) for English and Puck (Upbeat) for other languages (e.g., Slovak)
+            const voiceName = isEnglish ? "Zephyr" : "Puck"; 
+            
+            let ttsPrompt;
+            if (isEnglish) {
+                // Instruction for the model: Speak in English with a bright, energetic tone
+                ttsPrompt = `Say in English with a bright, energetic, and melodic tone: ${cleanText}`;
+            } else {
+                // Instruction for the model: Speak in the detected language with an energetic and exciting tone
+                ttsPrompt = `Say with a high-energy, exciting, and melodic tone: ${cleanText}`;
+            }
+            
             const payload = {
-                contents: [{
-                    parts: [{ text: `Say with a high-energy, exciting, and melodic tone: ${text}` }]
-                }],
+                contents: [{ parts: [{ text: ttsPrompt }] }],
                 generationConfig: {
                     responseModalities: ["AUDIO"],
                     speechConfig: {
                         voiceConfig: {
-                            prebuiltVoiceConfig: { voiceName: "Puck" } // Upbeat voice
+                            prebuiltVoiceConfig: { voiceName: voiceName }
                         }
                     }
                 },
                 model: "gemini-2.5-flash-preview-tts"
             };
             
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
             try {
                 const response = await exponentialBackoffFetch(apiUrl, {
@@ -644,379 +1112,47 @@
                     const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 16000;
                     
                     const pcmData = base64ToArrayBuffer(audioData);
-                    // API vracia signed PCM16 audio dáta.
                     const pcm16 = new Int16Array(pcmData);
                     const wavBlob = pcmToWav(pcm16, sampleRate);
                     const audioUrl = URL.createObjectURL(wavBlob);
                     
                     audioPlayer.src = audioUrl;
                     audioPlayer.play();
-                    ttsButton.textContent = 'Prehrávam Hlas...';
+                    ttsButton.textContent = 'Playing Voice...';
                 } else {
                     console.error("TTS response missing audio data or invalid mime type.");
-                    ttsButton.textContent = 'Chyba TTS!';
+                    ttsButton.textContent = 'TTS Error!';
                 }
 
             } catch (error) {
                 console.error("Error generating TTS:", error);
-                ttsButton.textContent = 'Chyba TTS!';
+                ttsButton.textContent = 'TTS Error!';
             } finally {
+                // After playback ends or on error
+                audioPlayer.onended = () => {
+                    ttsButton.textContent = 'Read Aloud (TTS)';
+                };
                 ttsButton.disabled = false;
-                if(audioPlayer.paused && audioPlayer.src) {
-                     // Ak nie je chyba a prehrávanie sa nespustilo hneď, zobraziť "Prečítať"
-                    ttsButton.textContent = 'Prečítať Hlasom (TTS)';
-                }
             }
         };
 
-        // Event listener pre TTS tlačidlo
         ttsButton.addEventListener('click', () => {
-             // Očistiť text od sekcií ([Intro], [Drop] atď.)
-            const cleanText = lastGeneratedText.replace(/\[.*?\]\n?/g, '').trim();
-            generateTts(cleanText);
-        });
-
-        audioPlayer.onended = () => {
-             ttsButton.textContent = 'Prečítať Hlasom (TTS)';
-        };
-
-
-        // Function to add a message to the chat
-        const addMessage = (text, sender) => {
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', sender);
-            
-            const textContentDiv = document.createElement('div');
-            textContentDiv.classList.add('message-text');
-            textContentDiv.innerHTML = text.replace(/\n/g, '<br>');
-            messageDiv.appendChild(textContentDiv);
-
-            // Only add a copy button for AI messages
-            if (sender === 'ai') {
-                lastGeneratedText = text; // Uložiť text pre TTS
-                
-                const copyButton = document.createElement('button');
-                copyButton.textContent = 'Kopírovať';
-                copyButton.classList.add('copy-button');
-                
-                copyButton.addEventListener('click', () => {
-                    // Starší, ale spoľahlivejší spôsob kopírovania
-                    const textArea = document.createElement('textarea');
-                    textArea.value = text;
-                    document.body.appendChild(textArea);
-                    textArea.focus();
-                    textArea.select();
-                    try {
-                        document.execCommand('copy');
-                        copyButton.textContent = 'Skopírované!';
-                        copyButton.classList.add('copied');
-                        setTimeout(() => {
-                            copyButton.textContent = 'Kopírovať';
-                            copyButton.classList.remove('copied');
-                        }, 2000);
-                    } catch (err) {
-                        console.error('Failed to copy text: ', err);
-                    }
-                    document.body.removeChild(textArea);
-                });
-                messageDiv.appendChild(copyButton);
-            }
-            
-            chatBox.appendChild(messageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        };
-
-        // Function to send a request to the Gemini API
-        const generateText = async () => {
-            const userPrompt = promptInput.value.trim();
-            if (!userPrompt) return;
-
-            addMessage(userPrompt, 'user');
-            promptInput.value = '';
-            
-            loadingSpinner.style.display = 'block';
-            generateButton.disabled = true;
-
-            // --- Logika prepínania promptov ---
-            let systemPrompt = `You are a creative music lyricist. Generate a lyrical narrative that follows the requested structure.`;
-            
-            if (currentModel === MODEL_STATES.ENERGY) {
-                // V4 Energy: Zameranie na EDM, Trap, Hardcore EDM
-                systemPrompt = `You are 'Model V4 Energy', specializing in hyper-fast, high-energy, and aggressive EDM, Hardcore EDM, and Trap lyrics. Your style should be focused on speed, chaotic raves, unstoppable rhythm, pure energy, and massive drops. Use high-octane, intense, and dramatic language. Always follow the requested structure.`;
-            } else if (currentModel === MODEL_STATES.BOOSTED) {
-                // V5 Pro: Zameranie na Bass Boosted (EDM, Pop) - BEZ VULGARIZMOV
-                systemPrompt = `You are 'Model V5 Pro', specializing in powerful, heavy, and extremely bass-boosted music lyrics, including styles like **Bass Boosted (general), EDM Bass Boosted, and Pop Bass Boosted**. Your lyrics must emphasize the **physical feeling of deep sub-bass, heavy sound system energy, ground-shaking vibrations, and sonic distortion**. Focus on the intensity of the sound without using any explicit or vulgar language. Always follow the requested structure.`;
-            }
-
-            const structuredPrompt = `Generate a musical lyrical narrative based on the user's idea. The output must follow this exact structure, including the section titles in brackets:
-
-[Intro]
-A brief, atmospheric opening.
-[Verse 1]
-Develop the first part of the story or theme.
-[Build-up]
-Increase tension or energy, leading into the main section.
-[Drop]
-The climactic, most impactful part of the song (For V4/V5, this should be the peak of power/chaos).
-[Verse 2]
-Further develop the narrative or introduce a new perspective.
-[Bridge]
-A contrasting section that provides a change of pace or mood.
-[Final Build]
-A second build that brings the song towards its conclusion.
-[Final Drop]
-The final, powerful conclusion of the song, often with a final line or a sound effect.
-
-User's idea: ${userPrompt}
-`;
-
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            const payload = {
-                contents: [{ parts: [{ text: structuredPrompt }] }],
-                systemInstruction: {
-                    parts: [{ text: systemPrompt }]
-                }
-            };
-
-            try {
-                const response = await exponentialBackoffFetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-                
-                const result = await response.json();
-                const aiText = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                
-                if (aiText) {
-                    addMessage(aiText, 'ai');
-                } else {
-                    addMessage("Ľutujem, nepodarilo sa mi vygenerovať odpoveď. Skúste to prosím znova.", 'ai');
-                }
-
-            } catch (error) {
-                console.error("Error generating content:", error);
-                addMessage("Vyskytla sa chyba pri komunikácii s AI modelom. Skúste to prosím znova.", 'ai');
-            } finally {
-                loadingSpinner.style.display = 'none';
-                generateButton.disabled = false;
-            }
-        };
-
-        promptInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !generateButton.disabled) {
-                generateText();
-            }
-        });
-        generateButton.addEventListener('click', generateText);
-
-
-        // --- LOGIKA 3D TAPETY (Three.js) - Kozmické a Magické Režimy ---
-
-        const canvas = document.getElementById('threejs-canvas');
-        const toggleButton = document.getElementById('toggle-wallpaper');
-
-        // Deklarácia globálnych premenných
-        let scene, camera, renderer, particles, geometry, material, torusKnot, pointLight, planet1, planet2;
-        let currentWallpaperMode = 'nebula'; // Predvolený režim
-        let clock = new THREE.Clock();
-
-        function initThreeJS() {
-            // 1. Scéna
-            scene = new THREE.Scene();
-
-            // 2. Kamera
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 5;
-
-            // 3. Renderer
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.setClearColor(0x000000, 0); // Priehľadné pozadie
-
-            // Osvetlenie
-            const ambientLight = new THREE.AmbientLight(0x404040, 10); 
-            scene.add(ambientLight);
-            
-            // Bodové svetlo pre Torus Knot (Magický Uzol)
-            pointLight = new THREE.PointLight(0x7DE2D1, 15, 100);
-            pointLight.position.set(5, 5, 5);
-            pointLight.visible = false; 
-            scene.add(pointLight);
-
-            createCosmicNebula(); // Inicializácia predvoleného režimu
-            animate(); // Spustenie animačnej slučky
-            
-            // Nastavenie pre zmenu veľkosti okna
-            window.addEventListener('resize', onWindowResize, false);
-        }
-
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        // Pomocná funkcia na čistenie scény
-        function clearScene() {
-            const removableObjects = [];
-            scene.traverse(object => {
-                if (object.type === 'Mesh' || object.type === 'Points') {
-                    removableObjects.push(object);
-                }
-            });
-            removableObjects.forEach(object => {
-                scene.remove(object);
-                if (object.geometry) object.geometry.dispose();
-                if (object.material) {
-                    if (Array.isArray(object.material)) {
-                        object.material.forEach(m => m.dispose());
-                    } else {
-                        object.material.dispose();
-                    }
-                }
-            });
-        }
-
-        // Režim 1: Kozmická Hmla (Cosmic Nebula Mode) s planétami
-        function createCosmicNebula() {
-            clearScene();
-
-            // Vytvorenie galaxie/častíc
-            geometry = new THREE.BufferGeometry();
-            const vertices = [];
-            const particleCount = 15000;
-
-            for (let i = 0; i < particleCount; i++) {
-                const x = (Math.random() - 0.5) * 200;
-                const y = (Math.random() - 0.5) * 200;
-                const z = (Math.random() - 0.5) * 200;
-                vertices.push(x, y, z);
-            }
-            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-
-            material = new THREE.PointsMaterial({
-                size: 0.05,
-                color: 0x8888ff,
-                transparent: true,
-                opacity: 0.8,
-                sizeAttenuation: true
-            });
-
-            particles = new THREE.Points(geometry, material);
-            scene.add(particles);
-
-            // Vytvorenie dvoch planét pre vizuálny záujem
-            const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
-
-            // Planéta 1 (Modrý plyn)
-            const material1 = new THREE.MeshPhongMaterial({ color: 0x51A8E8, emissive: 0x111133, shininess: 50 });
-            planet1 = new THREE.Mesh(sphereGeometry, material1);
-            planet1.position.set(-3, 1, -10);
-            scene.add(planet1);
-
-            // Planéta 2 (Purpurová skala)
-            const material2 = new THREE.MeshStandardMaterial({ color: 0xD18CEB, metalness: 0.9, roughness: 0.1, emissive: 0x221133 });
-            planet2 = new THREE.Mesh(sphereGeometry, material2);
-            planet2.position.set(3, -2, -8);
-            scene.add(planet2);
-
-            if (pointLight) pointLight.visible = false;
-            currentWallpaperMode = 'nebula';
-            toggleButton.textContent = 'Zmeniť Tapetu (Nebula)';
-        }
-
-        // Režim 2: Magický Uzol (Magic Torus Mode)
-        function createMagicTorus() {
-            clearScene();
-
-            // Geometria a materiál pre Torus Knot
-            const torusGeometry = new THREE.TorusKnotGeometry(1.5, 0.4, 150, 20);
-            
-            // Magický, žiarivý materiál
-            const torusMaterial = new THREE.MeshPhysicalMaterial({
-                color: 0xff00ff, // Fialová farba
-                metalness: 0.9,
-                roughness: 0.1,
-                clearcoat: 1.0,
-                clearcoatRoughness: 0.1,
-                emissive: 0xaa00aa, // Žiara
-                emissiveIntensity: 0.8
-            });
-            torusKnot = new THREE.Mesh(torusGeometry, torusMaterial);
-            scene.add(torusKnot);
-
-            // Nastavenie bodového svetla
-            if (pointLight) {
-                pointLight.color.setHex(0x7DE2D1);
-                pointLight.intensity = 20;
-                pointLight.visible = true;
-            }
-
-            currentWallpaperMode = 'torus';
-            toggleButton.textContent = 'Zmeniť Tapetu (Torus)';
-        }
-
-        // Funkcia na prepínanie režimov
-        toggleButton.addEventListener('click', () => {
-            if (currentWallpaperMode === 'nebula') {
-                createMagicTorus();
+            // Must have generated text before running TTS
+            if (lastGeneratedText) {
+                generateTts(lastGeneratedText);
             } else {
-                createCosmicNebula();
+                 console.error("Please generate text first!");
             }
         });
+        
+        // Ensures the button resets even if playback ends outside of a click.
+        audioPlayer.onended = () => {
+            ttsButton.textContent = 'Read Aloud (TTS)';
+        };
 
-
-        // Animačná slučka
-        function animate() {
-            requestAnimationFrame(animate);
-            const delta = clock.getDelta();
-
-            if (currentWallpaperMode === 'nebula') {
-                // Rotácia častíc
-                if (particles) {
-                    particles.rotation.y += 0.0005 * delta * 60;
-                }
-                // Rotácia planét
-                if (planet1) {
-                    planet1.rotation.y += 0.005 * delta * 60;
-                    planet1.position.x = Math.sin(clock.elapsedTime * 0.1) * 3;
-                    planet1.position.y = Math.cos(clock.elapsedTime * 0.1) * 1.5;
-                }
-                if (planet2) {
-                    planet2.rotation.z -= 0.008 * delta * 60;
-                    planet2.position.z = -8 + Math.sin(clock.elapsedTime * 0.2) * 1;
-                }
-
-            } else if (currentWallpaperMode === 'torus') {
-                // Rotácia Torus Knot
-                if (torusKnot) {
-                    torusKnot.rotation.x += 0.005 * delta * 60;
-                    torusKnot.rotation.y += 0.01 * delta * 60;
-                    torusKnot.rotation.z += 0.007 * delta * 60;
-                }
-                // Pohyb bodového svetla
-                if (pointLight) {
-                    pointLight.position.x = Math.sin(clock.elapsedTime * 0.5) * 5;
-                    pointLight.position.y = Math.cos(clock.elapsedTime * 0.5) * 5;
-                }
-            }
-
-            renderer.render(scene, camera);
-        }
-
-        // Inicializácia pri načítaní okna
-        window.onload = function () {
-            initThreeJS();
-        }
     </script>
 </body>
 </html>
-
-
 
 
 
