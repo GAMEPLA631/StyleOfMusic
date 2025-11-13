@@ -110,6 +110,14 @@
         .grad-17 { background-image: linear-gradient(135deg, #A85A3F, #D7A795); } /* Bronze / Earth */
         .grad-18 { background-image: linear-gradient(135deg, #CC2936, #FF6B6B); } /* True Red */
         
+        /* NEW BASS BOOSTED GRADIENTS (Dark & Explosive) */
+        .grad-19 { background-image: linear-gradient(135deg, #0D0A1C, #2A0000); border: 2px solid #550000; } /* Deep Black/Red */
+        .grad-20 { background-image: linear-gradient(135deg, #000000, #100030); border: 2px solid #1A237E; } /* Dark Blue/Black */
+        .grad-21 { background-image: linear-gradient(135deg, #2C3E50, #4A4A4A); border: 2px solid #ECF0F1; } /* Dark Industrial */
+        .grad-22 { background-image: linear-gradient(135deg, #001219, #005F73); border: 2px solid #94D2BD; } /* Dark Aqua */
+        .grad-23 { background-image: linear-gradient(135deg, #000000, #3C0000); border: 2px solid #FF0000; } /* Pure Carnage */
+        .grad-24 { background-image: linear-gradient(135deg, #1E1E2C, #0A0A0A); border: 2px solid #8E44AD; } /* Deep Space */
+        
         .genre-card.is-visible {
             opacity: 1;
             transform: translateY(0);
@@ -483,15 +491,37 @@
             BOOSTED: 3   // V5 Pro (Bass Boosted / Heavy Bass, no profanity)
         };
 
-        // Updated list of styles with NEW genres
+        // Updated list of styles with NEW, EXTREME BASS genres
         const styles = [
             // --- CORE BASS / POP MODELS ---
             "Aggressive Bass Boosted Energy", 
             "Bass Boosted Hard", 
             "Mainstream Pop (Custom)", 
             "Melodic Pop Ballad (New Pop Model)", 
+
+            // --- 20 NEW EXTREME BASS / HARDCORE GENRES (Added per user request) ---
+            "Brutal Bass (Extreme Sub-Bass)",
+            "Gabba (Ultra-Fast Hardcore)",
+            "Doomcore (Dark & Slow Hardcore)",
+            "Tearout Dubstep (Chaos & Filth)",
+            "Riddim (Minimalistic & Repetitive Bass)",
+            "Heavy Midtempo Bass (Industrial)",
+            "Death Metal Rap (Aggressive & Dark)",
+            "Phonk (Cowbell & Lo-Fi Trap)",
+            "Drill (UK/Chicago Style)",
+            "Dark Trap (808 Bass & Horror Samples)",
+            "Witch House (Slowed & Dark Synth)",
+            "Wave (Atmospheric Trap)",
+            "Grime (UK Urban Bass)",
+            "Footwork/Juke (Fast Breakbeats)",
+            "Future Garage (Deep & Dark UKG)",
+            "Halftime Drum and Bass (Heavy Beat)",
+            "Sub-Focussed Techno (Minimal Bass)",
+            "Dark Ambient Drone (Deepest Sub)",
+            "Cyberpunk Industrial Metal (Robotic)",
+            "Future Pop (Heavy Bassline)",
             
-            // --- NEW BASS / ENERGY GENRES ---
+            // --- OTHER BASS / ENERGY GENRES ---
             "Future Bass (Epic Drops)", 
             "Brostep (Heavy & Skrillex Style)", 
             "Hardcore Rave (90s Style)", 
@@ -503,12 +533,12 @@
             "Glitch Hop (Broken Beats)",
             "Hyperpop (Sexton & Glitch)",
 
-            // --- NEW CHRISTMAS / HOLIDAY GENRES ---
+            // --- CHRISTMAS / HOLIDAY GENRES ---
             "Christmas Pop (Holiday Ballad)",
             "Trap Christmas (Dark Christmas)",
             "Acoustic Christmas Jazz (Comfortable Tone)",
 
-            // --- NEW DANCE / URBAN GENRES ---
+            // --- DANCE / URBAN GENRES ---
             "Eurodance 90s (High Energy)",
             "Latin Trap (Spanish/English)",
             "Afrobeat Fusion (Dance Rhythm)",
@@ -555,7 +585,29 @@
             "Mainstream Pop (Custom)": "Pop, upbeat, catchy, melodic, radio-friendly, danceable, emotional, youthful, mainstream, energetic, romantic, synth-pop, chart-topping. Ideal for modern radio hits and dance floors.",
             "Melodic Pop Ballad (New Pop Model)": "New Model V4.1! Focused on clean, catchy, radio-ready Pop with an emphasis on strong rhymes, emotions, and fluent melody.",
             
-            // --- NEW BASS / ENERGY DESCRIPTIONS ---
+            // --- NEW EXTREME BASS DESCRIPTIONS ---
+            "Brutal Bass (Extreme Sub-Bass)": "The deepest, most powerful subsonic bass focus. Minimalistic rhythm where the bass itself is the main melody. Use V5 Pro model.",
+            "Gabba (Ultra-Fast Hardcore)": "Extremely fast Hardcore Techno (180+ BPM) with distorted kick drums and aggressive, dark sounds. Use V5 Pro model.",
+            "Doomcore (Dark & Slow Hardcore)": "Very slow (often below 130 BPM) and dark Hardcore/Industrial. Deep, repetitive bass kicks create a crushing, apocalyptic atmosphere. Use V5 Pro model.",
+            "Tearout Dubstep (Chaos & Filth)": "Highly aggressive Dubstep subgenre with chaotic sound design, 'filthy' bass wobbles, and distorted screeches. Use V5 Pro model.",
+            "Riddim (Minimalistic & Repetitive Bass)": "Dubstep variant known for its simple, yet heavy, repetitive bass rhythm and complex sub-bass sound design. Use V5 Pro model.",
+            "Heavy Midtempo Bass (Industrial)": "Slowed-down, heavy electronic music (100-110 BPM) with industrial percussion and crushing bass lines. Use V5 Pro model.",
+            "Death Metal Rap (Aggressive & Dark)": "A fusion of aggressive, often shouted rap vocals over dark, slow beats with heavy metal influences and deep bass. Use V5 Pro model.",
+            "Phonk (Cowbell & Lo-Fi Trap)": "A subgenre of Trap that heavily samples 90s Memphis Rap, characterized by dark, lo-fi quality, often using the cowbell sample. Use V5 Pro model.",
+            "Drill (UK/Chicago Style)": "A subgenre of Trap music defined by dark, aggressive lyrics and distinct, often minimalist, sliding 808 bass lines. Use V5 Pro model.",
+            "Dark Trap (808 Bass & Horror Samples)": "Trap with a heavy focus on the 808 kick, often incorporating horror movie samples and very deep, dark themes. Use V5 Pro model.",
+            "Witch House (Slowed & Dark Synth)": "An electronic genre with heavily slowed tempos, pitched-down vocals, dark synth melodies, and a dominant sub-bass. Use V5 Pro model.",
+            "Wave (Atmospheric Trap)": "Atmospheric, melancholic music blending elements of Trap, Grime, and Ambient, characterized by deep reverb and sub-bass. Use V5 Pro model.",
+            "Grime (UK Urban Bass)": "UK-specific electronic music and rap genre, known for its sparse, syncopated rhythm and very heavy, prominent bass lines. Use V5 Pro model.",
+            "Footwork/Juke (Fast Breakbeats)": "Extremely fast (160 BPM+) dance music from Chicago, focusing on complex, choppy breakbeat samples and deep bass. Use V5 Pro model.",
+            "Future Garage (Deep & Dark UKG)": "A darker, more atmospheric evolution of UK Garage, characterized by spacious reverb, deep subs, and shuffled beats. Use V5 Pro model.",
+            "Halftime Drum and Bass (Heavy Beat)": "Drum and Bass tempo (170 BPM+) but with a half-time beat (85 BPM feel). Results in massive, head-nodding rhythmic density. Use V5 Pro model.",
+            "Sub-Focussed Techno (Minimal Bass)": "Techno where the main element is a constantly evolving, deep subsonic bassline. Minimalist and hypnotic. Use V5 Pro model.",
+            "Dark Ambient Drone (Deepest Sub)": "The slowest, most atmospheric music. Focuses only on very deep, low-frequency drones and sub-bass vibrations for psychological effect. Use V5 Pro model.",
+            "Cyberpunk Industrial Metal (Robotic)": "Heavy, mechanized metal with powerful bass drums, industrial samples, and dystopian, dark themes. Use V5 Pro model.",
+            "Future Pop (Heavy Bassline)": "Pop music focused on high-quality production, catchy hooks, but driven by a very heavy, powerful bassline. Use V5 Pro model.",
+
+            // --- OTHER BASS / ENERGY DESCRIPTIONS ---
             "Future Bass (Epic Drops)": "Genre defined by massive, emotive synths, fragmented vocals, and epic, usually sub-bass driven 'drops'.",
             "Brostep (Heavy & Skrillex Style)": "Aggressive subgenre of Dubstep, known for its 'noisy', deep bass lines, robotic sounds, and heavy, distorted wobbles.",
             "Hardcore Rave (90s Style)": "Fast tempo (150+ BPM), playful, and euphoric melodies, paired with breakbeats, perfect for the old Rave atmosphere.",
@@ -567,12 +619,12 @@
             "Glitch Hop (Broken Beats)": "A fusion of Hip Hop and Glitch electronica. Utilizes 'broken' beats, digital artifacts, and complex rhythmic patterns.",
             "Hyperpop (Sexton & Glitch)": "Avant-garde Pop with exaggerated aesthetics, auto-tuned vocals, loud mastering, and chaotic glitch effects.",
 
-            // --- NEW CHRISTMAS / HOLIDAY DESCRIPTIONS ---
+            // --- CHRISTMAS / HOLIDAY DESCRIPTIONS ---
             "Christmas Pop (Holiday Ballad)": "A grand, emotional Pop ballad with traditional Christmas motifs, bells, and orchestra, suitable for holiday radio.",
             "Trap Christmas (Dark Christmas)": "Christmas themes translated into a harsh, slow Trap beat. Holiday nostalgia with 808 bass.",
             "Acoustic Christmas Jazz (Comfortable Tone)": "Gentle, warm Jazz with piano and double bass, ideal for a cozy, traditional Christmas atmosphere.",
 
-            // --- NEW DANCE / URBAN DESCRIPTIONS ---
+            // --- DANCE / URBAN DESCRIPTIONS ---
             "Eurodance 90s (High Energy)": "Classic 90s dance style: fast, catchy synth hooks, powerful female vocals, and male rap.",
             "Latin Trap (Spanish/English)": "Fusion of Hip Hop and Latin rhythms. Slow, dark beat with themes of the street and luxury (ideally in Spanish).",
             "Afrobeat Fusion (Dance Rhythm)": "A mix of modern Afrobeat, Dancehall, and Pop. Focus on complex but danceable and hypnotic rhythms and positive themes.",
@@ -616,7 +668,9 @@
         // Expanded list of colors for variety
         const colorClasses = [
             "grad-1", "grad-2", "grad-9", "grad-3", "grad-4", "grad-5", "grad-6", "grad-7", "grad-8",
-            "grad-10", "grad-11", "grad-12", "grad-13", "grad-14", "grad-15", "grad-16", "grad-17", "grad-18"
+            "grad-10", "grad-11", "grad-12", "grad-13", "grad-14", "grad-15", "grad-16", "grad-17", "grad-18",
+            // New Bass Boosted Gradients
+            "grad-19", "grad-20", "grad-21", "grad-22", "grad-23", "grad-24"
         ];
 
         // --- INITIALIZATION AND CARD GENERATION ---
@@ -655,7 +709,7 @@
             const style = styles[i]; 
             const description = descriptions[style] || "The description for this style is currently unavailable. It's a unique musical universe worth exploring!";
             
-            // Simple use of modulo for cyclic repetition of colors
+            // Use an extended array of color classes, cycling through all of them
             const colorClass = colorClasses[i % colorClasses.length]; 
             
             const titleClass = style.length > 30 ? 'long' : '';
@@ -938,8 +992,8 @@
             inputContainer.classList.add('loading');
 
             const systemPrompt = getSystemPrompt(userPrompt, currentModel);
-            // Používame prázdny apiKey, pretože sa v prostredí Canvas automaticky naplní.
-            // Ak by ste spúšťali lokálne, použite svoj kľúč.
+            // POZNÁMKA: Ak kód spúšťate mimo tohto prostredia, vložte sem svoj Gemini API kľúč.
+            // V tomto prostredí (Canvas) ho nechajte prázdny.
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
             const payload = {
@@ -1153,7 +1207,6 @@
     </script>
 </body>
 </html>
-
 
 
 
