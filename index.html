@@ -1,1325 +1,520 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Musical Universe</title>
+    <title>Knižnica Extrémnych Hudobných Štýlov pre AI</title>
+    <!-- Načítanie Tailwind CSS pre rýchly a responzívny štýl -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Three.js Library for 3D Wallpaper -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#ef4444', /* Červená pre extrémy */
+                        'primary-dark': '#b91c1c',
+                        'bg-dark': '#0f172a',
+                        'card-dark': '#1e293b',
+                        'tooltip-bg': '#374151',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Inter:wght');
-        
-        /* Base styles: Dark, modern, fluid */
+        /* Nastavenie hlavného fontu a pozadia */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0a0a0a;
-            color: #f0f0f0;
-            line-height: 1.6;
-            overflow-x: hidden;
-            position: relative; 
-            z-index: 1;
-            scroll-behavior: smooth;
+            background-color: #0f172a;
         }
 
-        /* 3D Wallpaper Canvas Styles */
-        #threejs-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0; 
-            pointer-events: none; 
-            opacity: 0.25; /* Dark background to make content pop */
-            transition: opacity 0.5s ease;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem 1rem 5rem 1rem;
-            position: relative; 
-            z-index: 10; /* Ensure content is above the background */
-        }
-
-        /* Hero section with a new gradient and shadow */
-        .hero-section {
-            background: linear-gradient(135deg, #1f1f1f 0%, #0d0d0d 100%);
-            padding: 7rem 2rem;
-            border-radius: 1.5rem;
-            text-align: center;
-            margin-bottom: 4rem;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(255, 255, 255, 0.05);
-        }
-        
-        /* Title with distinctive font and subtle shadow */
-        .hero-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 4rem;
-            font-weight: 900;
-            background: linear-gradient(45deg, #A87DFF, #51A8E8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 15px rgba(168, 125, 255, 0.5);
-            line-height: 1.1;
-        }
-
-        /* Grid for genre cards */
-        .genre-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2.5rem;
-        }
-        
-        /* Styling and animation for genre cards */
-        .genre-card {
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            opacity: 0;
-            transform: translateY(30px);
-            border: 3px solid transparent;
+        /* Štýl pre kľúčové slovo/tag a jeho tooltip */
+        .style-tag {
             cursor: pointer;
-            position: relative; /* For the notification */
-        }
-        
-        /* Hover effect: slight 3D lift and pulsing shadow */
-        .genre-card:hover {
-            transform: translateY(-15px) scale(1.03);
-            box-shadow: 0 25px 50px rgba(168, 125, 255, 0.3), 0 0 0 3px rgba(168, 125, 255, 0.5);
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
 
-        /* Color gradients for cards */
-        .grad-1 { background-image: linear-gradient(135deg, #FF6B6B, #F88A6A); }
-        .grad-2 { background-image: linear-gradient(135deg, #51A8E8, #7DE2D1); }
-        .grad-3 { background-image: linear-gradient(135deg, #A87DFF, #D18CEB); }
-        .grad-4 { background-image: linear-gradient(135deg, #F9D423, #F64F59); }
-        .grad-5 { background-image: linear-gradient(135deg, #20E3B2, #6C5B7B); }
-        .grad-6 { background-image: linear-gradient(135deg, #B993D6, #8CA6DB); }
-        .grad-7 { background-image: linear-gradient(135deg, #FFDAB9, #FFC0CB); }
-        .grad-8 { background-image: linear-gradient(135deg, #ff00cc, #333399); } 
-        .grad-9 { background-image: linear-gradient(135deg, #ff99e6, #A87DFF); } /* New Pop */
-        .grad-10 { background-image: linear-gradient(135deg, #1D2B53, #1F6E8C); } /* Deep Blue */
-        .grad-11 { background-image: linear-gradient(135deg, #FFBD59, #FF7B59); } /* Orange / Sunset */
-        .grad-12 { background-image: linear-gradient(135deg, #4CAF50, #8BC34A); } /* Green / Nature */
-        .grad-13 { background-image: linear-gradient(135deg, #FF66A3, #E85D75); } /* Bright Pink */
-        .grad-14 { background-image: linear-gradient(135deg, #7A00CC, #C77DFF); } /* Dark Purple / Lavender */
-        .grad-15 { background-image: linear-gradient(135deg, #333333, #666666); } /* Dark Grey / Metal */
-        .grad-16 { background-image: linear-gradient(135deg, #00C9FF, #92FE9D); } /* Aqua / Mint */
-        .grad-17 { background-image: linear-gradient(135deg, #A85A3F, #D7A795); } /* Bronze / Earth */
-        .grad-18 { background-image: linear-gradient(135deg, #CC2936, #FF6B6B); } /* True Red */
-        
-        /* NEW BASS BOOSTED GRADIENTS (Dark & Explosive) */
-        .grad-19 { background-image: linear-gradient(135deg, #0D0A1C, #2A0000); border: 2px solid #550000; } /* Deep Black/Red */
-        .grad-20 { background-image: linear-gradient(135deg, #000000, #100030); border: 2px solid #1A237E; } /* Dark Blue/Black */
-        .grad-21 { background-image: linear-gradient(135deg, #2C3E50, #4A4A4A); border: 2px solid #ECF0F1; } /* Dark Industrial */
-        .grad-22 { background-image: linear-gradient(135deg, #001219, #005F73); border: 2px solid #94D2BD; } /* Dark Aqua */
-        .grad-23 { background-image: linear-gradient(135deg, #000000, #3C0000); border: 2px solid #FF0000; } /* Pure Carnage */
-        .grad-24 { background-image: linear-gradient(135deg, #1E1E2C, #0A0A0A); border: 2px solid #8E44AD; } /* Deep Space */
-        
-        .genre-card.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .genre-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.65rem;
-            font-weight: 700;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            transition: color 0.2s ease;
-            cursor: copy; /* Indicate copy action for title */
+        .style-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            background-color: #334155; /* tmavší odtieň pri hoveri */
         }
         
-        .genre-title:hover {
-            color: rgba(255, 255, 255, 0.9);
-        }
-        
-        .genre-title.long {
-            font-size: 1.2rem; 
-        }
-
-        .genre-description {
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            color: #eeeeee;
-            opacity: 0.9;
-            margin-top: 0.75rem;
-            cursor: copy; /* Indicate copy action for description */
-            transition: color 0.2s ease;
-        }
-
-        .genre-description:hover {
-            color: #d1d1d1;
-        }
-
-        /* Genre copied notification */
-        .copy-notification {
+        /* Skrytý tooltip - zobrazí sa pri hoveri */
+        .tooltip-text {
+            visibility: hidden;
+            background-color: #374151; /* tooltip-bg */
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 8px 12px;
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #20E3B2; /* Default for Title Copy */
-            color: #1a1a1a;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: 700;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            pointer-events: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            z-index: 20;
-        }
-
-        .copy-notification.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* Specific style for description copy notification */
-        .copy-notification.desc-copy {
-            background-color: #51A8E8;
-        }
-
-        /* Chat section styles */
-        .chat-section {
-            background-color: #1a1a1a;
-            border-radius: 1.5rem;
-            padding: 2rem;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
-            margin-top: 5rem;
-            max-width: 900px;
-        }
-
-        .chat-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            text-align: center;
-            color: #A87DFF;
-        }
-
-        .chat-box {
-            height: 450px;
-            overflow-y: auto;
-            background-color: #0d0d0d;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid #2c2c2c;
-        }
-
-        /* Hide scrollbar */
-        .chat-box::-webkit-scrollbar { display: none; }
-        .chat-box { -ms-overflow-style: none; scrollbar-width: none; }
-
-        .message {
-            max-width: 90%;
-            padding: 1rem 1.25rem;
-            border-radius: 1.25rem;
-            white-space: pre-wrap;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .message.user {
-            background-color: #51A8E8;
-            color: #1a1a1a;
-            align-self: flex-end;
-            border-bottom-right-radius: 0.5rem;
-        }
-
-        .message.ai {
-            background-color: #2c2c2c;
-            color: #f0f0f0;
-            align-self: flex-start;
-            border-bottom-left-radius: 0.5rem;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .message-text pre {
-            background-color: #3d3d3d;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            overflow-x: auto;
-            margin-top: 0.5rem;
-            font-family: monospace;
-            font-size: 0.9rem;
-        }
-        
-        .message-text {
-            word-wrap: break-word;
-        }
-
-        .copy-button {
-            margin-top: 1rem;
-            padding: 0.6rem 1.2rem;
-            background-color: #A87DFF;
-            color: #ffffff;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            border: none;
-        }
-
-        .copy-button:hover:not(.copied) {
-            background-color: #9266e7;
-            transform: translateY(-1px);
-        }
-
-        .copy-button.copied {
-            background-color: #20E3B2;
-        }
-        
-        .chat-info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem; 
-            gap: 1rem;
-            padding: 0 0.5rem;
-        }
-
-        .model-toggle-button, .tts-button-style {
-            padding: 0.8rem 1.2rem;
-            font-weight: 700;
-            border-radius: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap; 
-            border: 2px solid transparent; 
-            flex-shrink: 0;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-        
-        /* Current Model - visual indicators */
-        #current-model-indicator {
-            font-weight: 700;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            text-shadow: 0 0 5px rgba(0,0,0,0.5);
-            min-width: 150px;
-            text-align: center;
-        }
-
-        /* Model V1 */
-        .standard-style {
-            background-color: #3d3d3d;
-            color: #f0f0f0;
-            border-color: #51A8E8;
-        }
-        
-        /* Model V4 Energy/Pop */
-        .energy-style {
-            background-color: #F9D423; 
-            color: #1a1a1a;
-            border-color: #F64F59;
-            box-shadow: 0 0 15px rgba(249, 212, 35, 0.6);
-        }
-        
-        /* Model V4.1 Pop */
-        .pop-style {
-            background-color: #ff99e6; /* Lighter pink hue */
-            color: #1a1a1a;
-            border-color: #FF6B6B;
-            box-shadow: 0 0 15px rgba(255, 153, 230, 0.8);
-        }
-
-        /* Model V5 Pro (Bass Boosted) */
-        .boosted-style {
-            background-color: #FF6B6B; 
-            color: #1a1a1a;
-            border-color: #F88A6A;
-            animation: pulse 1.5s infinite;
-        }
-        
-        .tts-button-style {
-            background: linear-gradient(135deg, #FF6B6B, #A87DFF);
-            color: white;
-        }
-        
-        .tts-button-style:disabled {
-             opacity: 0.6;
-             cursor: not-allowed;
-             background: gray;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
-        }
-
-        .chat-input-container {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .chat-input {
-            flex-grow: 1;
-            padding: 1rem 1.25rem;
-            border-radius: 0.75rem;
-            background-color: #2c2c2c;
-            border: 2px solid #3d3d3d;
-            color: #f0f0f0;
-            outline: none;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .chat-input:focus {
-            border-color: #A87DFF;
-            box-shadow: 0 0 0 2px #A87DFF;
-        }
-
-        .generate-button {
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, #A87DFF, #51A8E8);
-            color: #ffffff;
-            font-weight: 700;
-            border-radius: 0.75rem;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-            flex-shrink: 0;
-            border: none;
-        }
-
-        .generate-button:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
-        }
-        
-        .generate-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .loading-spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #A87DFF;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            animation: spin 1s linear infinite;
-            display: none;
-            flex-shrink: 0;
-            margin-left: -52px; /* Move behind the button for a modern effect */
             z-index: 10;
+            bottom: 125%; /* Nad tagom */
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            width: 300px;
+            white-space: normal;
+            font-size: 0.85rem;
+            line-height: 1.3;
         }
-        
-        .chat-input-container.loading .generate-button {
-            display: none;
+
+        .style-tag:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
         }
-        
-        .chat-input-container.loading #loading-spinner {
-            display: block;
-        }
-        
-        /* Media Query for responsive design */
-        @media (max-width: 900px) {
-            .hero-title {
-                font-size: 3rem;
-            }
-            .hero-section {
-                padding: 5rem 1rem;
-            }
-            .chat-title {
-                font-size: 2rem;
-            }
-            .chat-input-container {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-            .chat-input {
-                width: 100%;
-            }
-            .generate-button {
-                width: 100%;
-                padding: 1rem;
-            }
-            .loading-spinner {
-                margin-left: 0;
-                order: 3; /* Move spinner below the input */
-            }
-            .chat-controls-row {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.75rem;
-            }
-            .model-toggle-button, .tts-button-style {
-                width: 100%;
-            }
+
+        /* Trojuholník pre tooltip */
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #374151 transparent transparent transparent;
         }
     </style>
 </head>
-<body>
-    <!-- 3D Background Canvas -->
-    <canvas id="threejs-canvas"></canvas>
+<body class="text-gray-100 min-h-screen p-4 sm:p-8">
 
-    <!-- Wallpaper Control Button -->
-    <button id="toggle-wallpaper" class="fixed bottom-4 right-4 z-20 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-full shadow-lg transition duration-300">
-        Wallpaper ON/OFF
-    </button>
-    
-    <div class="container">
-        <!-- Hero section -->
-        <header class="hero-section">
-            <h1 class="hero-title mb-4">The Musical Universe</h1>
-            <p class="text-xl md:text-2xl text-gray-300 font-light">Discover the infinite palette of genres and their unique stories with AI.</p>
-            <p class="text-lg text-gray-400 mt-4">TIP: Kliknite na názov žánru pre skopírovanie **názvu** alebo na popis pre skopírovanie **kľúčových slov**.</p>
+    <!-- Hlavný kontajner -->
+    <div class="max-w-7xl mx-auto">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-primary mb-2">Knižnica Hudobných Štýlov pre AI</h1>
+            <p class="text-gray-400 text-lg">Celkom 74 štýlov - Extrémny zvuk, Darkness a Bass!</p>
         </header>
 
-        <!-- Genre section -->
-        <h2 class="text-3xl font-bold text-center mb-10 text-gray-200">Catalogue of Lyrical Styles</h2>
-        <div class="genre-list" id="genre-container">
-            <!-- Cards will be generated via JavaScript -->
+        <!-- Informačné pole -->
+        <div id="info-box" class="bg-card-dark p-4 rounded-xl shadow-lg border border-primary-dark mb-8">
+            <p class="text-sm font-semibold text-primary">DÔLEŽITÉ:</p>
+            <p class="text-sm">Každé políčko obsahuje kompletný anglický prompt (zoznam žánrov/kľúčových slov), ktorý je pripravený na priame vloženie do AI. Skopíruje sa celý text, vrátane špecifikátorov modelu.</p>
         </div>
 
-        <!-- Chat section -->
-        <section class="chat-section mx-auto">
-            <h2 class="chat-title">AI Lyric Generator</h2>
-            
-            <!-- Control section for model toggling and TTS -->
-            <div class="chat-info-row">
-                 <div id="current-model-indicator" class="standard-style">V1 Standard (Multi-Language)</div>
-                <button id="model-toggle" class="model-toggle-button standard-style">
-                    Toggle Model
-                </button>
-                <button id="tts-button" class="tts-button-style" disabled>
-                    Read Aloud (TTS)
-                </button>
-            </div>
-            
-            <div id="chat-box" class="chat-box" role="log" aria-live="polite">
-                <!-- Messages will appear here -->
-                <div class="message ai" style="animation: none; opacity: 1;">
-                    <span class="message-text">Hello! Enter a genre and a topic (e.g., Hardstyle Bass about cars). You can write in any language, the AI will adapt.</span>
-                </div>
-            </div>
-            
-            <div class="chat-input-container" id="input-container">
-                <input type="text" id="prompt-input" class="chat-input" placeholder="Enter genre and topic. E.g.: French Pop about Paris (in French)...">
-                <button id="generate-button" class="generate-button">Generate Lyrics</button>
-                <div id="loading-spinner" class="loading-spinner" role="status" aria-label="Loading"></div>
-            </div>
-        </section>
+        <!-- Pole pre notifikácie o skopírovaní -->
+        <div id="notification" class="fixed top-5 right-5 z-50 p-3 bg-green-600 text-white rounded-lg shadow-xl hidden transition-opacity duration-300 opacity-0">
+            Skopírované!
+        </div>
+
+        <!-- Zoznam štýlov -->
+        <div id="style-list" class="space-y-12">
+            <!-- Dáta pre štýly (aktuálne 74 položiek) -->
+        </div>
     </div>
-    
-    <audio id="audio-player" style="display:none;"></audio>
 
+    <script type="text/javascript">
+        // Všetky štýly s kompletným anglickým promptom pre AI
+        const fullPrompts = {
+            // New and reorganized Extreme/Darkness
+            "Bass Boosted Hard": "Bass Boosted, EDM, Trap, Techno, Pop, Electric, Kawaii, House Energy, ultimate high-energy mix with deep bass",
+            "Aggressive Bass Boosted Energy": "Aggressive Bass Boosted, Brutal Bass, Dubstep, Hardstyle, Neurostep, Ravecore, Heavy, Dark, Explosive Festival Energy",
+            "Brutal Bass (Extreme Sub-Bass)": "Brutal Bass, Extreme Sub-Bass, Minimalistic Rhythm, Subsonic, V5 Pro",
+            "Hardbass (Russian/Slavic)": "Hardbass, Russian Style, Fast Tempo, Distorted Bass, Aggressive, Cheeki Breeki, Squatting, Adidas",
+            "Tearout Dubstep (Chaos & Filth)": "Tearout Dubstep, Highly Aggressive, Chaotic Sound Design, Dirty Bass Wobbles, V5 Pro",
+            "Riddim (Minimalistic & Repetitive Bass)": "Riddim, Dubstep, Minimalistic, Heavy, Repeating Bass Rhythm, Complex Sub-Bass, V5 Pro",
+            "Heavy Midtempo Bass (Industrial)": "Heavy Midtempo Bass, Industrial, 100-110 BPM, Industrial Percussion, Crushing Basslines, V5 Pro",
+            "Dark Trap (808 Bass & Horror Samples)": "Dark Trap, Heavy 808 Kick, Horror Samples, Deep Dark Themes, V5 Pro",
+            "Halftime Drum and Bass (Heavy Beat)": "Halftime Drum and Bass, Heavy Beat, 170+ BPM, Half-Time Rhythm, Massive Rhythmic Density, V5 Pro",
+            "Sub-Focussed Techno (Minimal Bass)": "Sub-Focussed Techno, Minimal Bass, Hypnotic, Evolving Subsonic Bassline, V5 Pro",
+            "Dark Ambient Drone (Deepest Sub)": "Dark Ambient Drone, Slowest, Atmospheric, Deep Low-Frequency Drones, Sub-Bass Vibrations, Psychological Effect, V5 Pro",
+            "Future Pop (Heavy Bassline)": "Future Pop, High Quality Production, Catchy Hooks, Heavy Bassline, V5 Pro",
+            "Future House (Bassline Focus)": "Future House, Deep House, Driving Bassline, High Quality, Catchy, Club Ready, Drop Focus",
+            "UK Bassline (Wobbly Energy)": "UK Bassline, High Energy, Wobbly Bass, Speed Garage, 130-140 BPM, Catchy Vocal Chops",
+            "Doomcore (Dark & Slow Hardcore)": "Doomcore, Dark Hardcore, Industrial, Slow, Under 130 BPM, Deep Repetitive Bass Kicks, Apocalyptic, V5 Pro",
+            "Death Metal Rap (Aggressive & Dark)": "Death Metal Rap, Aggressive, Screamed Rap, Dark Slow Beats, Heavy Metal Influence, Deep Bass, V5 Pro",
+            "Phonk (Cowbell & Lo-Fi Trap)": "Phonk, Cowbell, Lo-Fi Trap, Memphis Rap Sampled, Dark, Lo-fi Quality, V5 Pro",
+            "Drill (UK/Chicago Style)": "Drill, UK/Chicago Style, Dark, Aggressive Lyrics, Sliding 808 Basslines, V5 Pro",
+            "Witch House (Slowed & Dark Synth)": "Witch House, Slowed Tempo, Dark Synth Melodies, Pitched-Down Vocals, Dominant Sub-Bass, V5 Pro",
+            "Wave (Atmospheric Trap)": "Wave, Atmospheric Trap, Melancholic, Grime, Ambient, Deep Reverb, Sub-Bass, V5 Pro",
+            "Grime (UK Urban Bass)": "Grime, UK Urban Bass, Sparse, Syncopated Rhythm, Heavy Basslines, V5 Pro",
+            "Footwork/Juke (Fast Breakbeats)": "Footwork, Juke, Fast Breakbeats, 160+ BPM, Complex Chopped Samples, Deep Bass, V5 Pro",
+            "Future Garage (Deep & Dark UKG)": "Future Garage, Deep, Dark, UKG, Atmospheric, Spacious Reverb, Deep Sub-Bass, V5 Pro",
+            "Dark Techno (Industrial)": "Dark Techno, Industrial, Hypnotic, Heavy Distortion, Pulsing Rhythm, V5 Pro",
+            "EBM (Electronic Body Music)": "EBM, Electronic Body Music, Industrial Dance, Aggressive Synth Bassline, Military Percussion",
+            "Minimal Synth (Coldwave)": "Minimal Synth, Coldwave, Retro, Dark, Repetitive Synth Loops, Mechanical Rhythm",
+            "Horrorcore": "Horrorcore, Hip Hop, Horror Themes, Eerie Samples, Dark Beats, Terror",
+            "Dark Horror Darkness": "Dark Horror Darkness, Dark Ambient, Film Horror, Psychological Terror, Maximum Tension",
+            "Cyberpunk Industrial Metal (Robotic)": "Cyberpunk Industrial Metal, Heavy, Mechanized, Strong Bass Drums, Industrial Samples, Dystopian, Dark Themes, V5 Pro",
+            "Black Metal": "Black Metal, Extreme Metal, Fast Tempo, Screaming Vocals, Darkness Themes",
+            "Doom Metal": "Doom Metal, Extremely Slow, Heavy, Gloomy, Depressive Themes",
+            "Gothic Metal": "Gothic Metal, Heavy Metal, Dark Melancholic, Gothic Rock, Dramatic Vocals",
+            "Industrial": "Industrial, Harsh, Abrasive Sounds, Sampled Industrial Equipment, Electronic Loops",
+            "Viking Metal (Epic Sagas)": "Viking Metal, Epic Sagas, Norse/Pagan Themes, Orchestral Elements",
+            "Crunkcore (Screamo & Rap)": "Crunkcore, Screamo, Emo, Crunk Hip Hop, Screaming Vocals, Rap Verses, Dance Beats",
+            "Noise Music (Harsh, Static)": "Noise Music, Harsh Static, Experimental, Extreme Distortion, Unpleasant Sound, Anti-Music",
+            "Depressive Black Metal": "Depressive Suicidal Black Metal, Slow Tempo, Raw Production, Deep Despair Themes, Ambient",
+            "Deathcore (Heavy Breakdown)": "Deathcore, Extreme Metal, Heavy Breakdown, Deep Guttural Vocals, Blast Beats",
+            "Goregrind (Brutal, Fast)": "Goregrind, Brutal, Extremely Fast, Pitched Vocals, Medically Themed, V5 Pro",
+            "Dungeon Synth (Dark Ambient)": "Dungeon Synth, Dark Ambient, Medieval, Fantasy Themes, Lo-Fi, Atmospheric",
+            "Sludge Metal (Slow, Dirty)": "Sludge Metal, Slow Tempo, Dirty Guitar Tone, Southern Rock Influence, Heavy",
+            "Blackgaze (Shoegaze & Black Metal)": "Blackgaze, Shoegaze, Black Metal, Wall of Sound, Blast Beats, Melodic",
+            "Funeral Doom Metal (Slowest)": "Funeral Doom Metal, Extremely Slow, Massive Reverb, Somber, Long Compositions",
+            "Power Electronics (Harsh Industrial)": "Power Electronics, Harsh Noise, Industrial, Static Distortion, Aggressive Themes",
+            "Dark Ambient Ritual (Deep Drones)": "Dark Ambient Ritual, Deep Drones, Tribal Percussion, Occult Themes, Minimalistic",
+            "Techno Hardcore (Gabba)": "Techno Hardcore, Gabba, Extremely Fast, Distorted Kick Drum, Raw Energy, V5 Pro",
+            "Folk Horror OST (Eerie, Acoustic)": "Folk Horror OST, Eerie, Acoustic, Traditional Instruments, Unsettling Atmosphere",
+            
+            // High Energy & Special Genres
+            "Future Bass (Epic Drops)": "Future Bass, Epic Drops, Massive Emotional Synths, Fragmented Vocals, Sub-Bass Driven",
+            "Brostep (Heavy & Skrillex Style)": "Brostep, Heavy, Skrillex Style, Noise, Deep Basslines, Robotic Sounds, Wobbles",
+            "Hardcore Rave (90s Style)": "Hardcore Rave, 90s Style, Fast Tempo, 150+ BPM, Playful Melodies, Breakbeats, Euphoric",
+            "Psytrance (Hypnotic Rhythm)": "Psytrance, High-Energy Trance, Complex Repeating Melodic Loops, Hypnotic States",
+            "Heavy Drum and Bass (Neurofunk)": "Heavy Drum and Bass, Neurofunk, Dark, Futuristic, Technical Basslines, Sharp Mechanical Drums",
+            "Speedcore (Extremely Fast Tempo)": "Speedcore, Extremely Fast Tempo, Raw, Aggressive Speed, Up to 600 BPM",
+            "J-Core (Japanese Hardcore)": "J-Core, Japanese Hardcore, Pop Culture, Gabber, Chiptune, Kawaii Melody",
+            "Hardstyle (Classic Hard Kicks)": "Hardstyle, Classic Hard Kicks, Reverse Bass Kicks, Euphoric, Hymnic Melodies",
+            "Glitch Hop (Broken Beats)": "Glitch Hop, Broken Beats, Hip Hop, Glitch Electronic, Digital Artifacts, Complex Rhythmic Patterns",
+            "Hyperpop (Sexton & Glitch)": "Hyperpop, Avant-garde Pop, Over-the-Top Aesthetic, Auto-Tuned Vocals, Loud Mastering, Chaotic Glitch Effects",
 
-    <script>
-        // --- CONFIGURATION AND DATA ---
-        const MODEL_STATES = {
-            STANDARD: 0, // V1 - Standard creative
-            ENERGY: 1,   // V4 Energy/Pop (EDM/Trap)
-            POP: 2,      // V4.1 Pop (Melodic, Rhyme-focused)
-            BOOSTED: 3   // V5 Pro (Bass Boosted / Heavy Bass, no profanity)
+            // Atmospheric & Experimental
+            "Vaporwave": "Vaporwave, Nostalgic, Surreal Aesthetic, Slowed Samples, Pitched",
+            "Synthwave": "Synthwave, Retro-Futuristic, 80s Inspired, Prominent Synthesizers, Vibrant Sound",
+            "Lofi Hip Hop": "Lofi Hip Hop, Relaxing, Muffled, Slow Beats, Study Music",
+            "Ambient": "Ambient, Atmospheric, Tone-focused, Sense of Calm, Space",
+            "Post-Rock": "Post-Rock, Instrumental, Dramatic Soundscapes, Rock Instrumentation",
+            "Shoegaze": "Shoegaze, Alternative Rock, Muffled Vocals, Distorted Guitars, Wall of Sound",
+            "Chillwave": "Chillwave, Lo-Fi, Hazy Sound, Relaxed Rhythms, Electronic",
+            "Trip Hop": "Trip Hop, Slow Electronic, Hip Hop Rhythms, Dark, Cinematic, Atmospheric",
+            "Minimalism": "Minimalism, Repetitive, Hypnotic Feel, Simple Melodic Ideas, Slow Evolution",
+            "Baroque Pop": "Baroque Pop, Pop, Rock, Classical Music Elements, Strings, Harpsichord",
+            "Chiptune (8-bit Soundtrack)": "Chiptune, 8-bit Soundtrack, Old Computer Sound Chips, Console Music",
+            "Dark Jazz (Cinematic)": "Dark Jazz, Cinematic, Slow, Moody Saxophone, Film Noir, Heavy Reverb",
+            "Post-Punk (Goth Rock)": "Post-Punk, Goth Rock, Coldwave, Deep Baritone Vocals, Atmospheric Guitar",
+            "Darkwave (80s Goth)": "Darkwave, 80s Goth, Melancholic Synthpop, Deep Vocals, New Wave Influence",
+            
+            // Pop & General
+            "Mainstream Pop (Custom)": "Mainstream Pop, Catchy, Melodic, Radio-friendly, Dance, Emotional, Synth, Modern Hit",
+            "Melodic Pop Ballad (New Pop Model)": "Melodic Pop Ballad, Clean, Catchy, Radio Pop, Strong Rhymes, Emotional, Smooth Melody, V4.1 Model",
+            "Steampunk Opera (Victorian Tech)": "Steampunk Opera, Victorian Tech, Dramatic, Orchestral, Rock, Steampunk Aesthetic",
+
+            // World, Dance & Holiday
+            "Christmas Pop (Holiday Ballad)": "Christmas Pop, Holiday Ballad, Emotional, Traditional Christmas Motifs, Bells, Orchestra",
+            "Trap Christmas (Dark Christmas)": "Trap Christmas, Dark Christmas, Slow Trap Beat, 808 Bass, Nostalgic",
+            "Acoustic Christmas Jazz (Comfortable Tone)": "Acoustic Christmas Jazz, Gentle, Warm, Piano, Contrabass, Traditional Atmosphere",
+            "Eurodance 90s (High Energy)": "Eurodance 90s, High Energy, Classic 90s Dance, Fast, Catchy Synth Hooks, Energetic Vocals",
+            "Latin Trap (Spanish/English)": "Latin Trap, Spanish/English, Fusion, Slow, Dark Beat, Street/Luxury Themes",
+            "Afrobeat Fusion (Dance Rhythm)": "Afrobeat Fusion, Dancehall, Pop, Complex Dance Rhythms, Positive Themes",
+            "Kizomba (Romantic Dance)": "Kizomba, Romantic Dance, Slow, Sensual, Angolan Origin, Gentle Rhythms",
+            "Reggaeton": "Reggaeton, Puerto Rican Origin, Jamaican Dancehall, Latin Rhythms",
+            "Jungle": "Jungle, Fast Electronic, Breakbeats, Heavy Basslines, Samples",
+            "Ska Punk": "Ska Punk, Energetic, Optimistic Ska Rhythms, Punk Rock Aggression",
+            "Celtic Music": "Celtic Music, Traditional, Wide Genre, Fiddle, Bagpipes",
+            "K-Pop": "K-Pop, Korean Pop, Fusion of Pop, Hip Hop, R&B, EDM",
+            "Samba": "Samba, Brazilian, Rhythmic, Lively Beat, Dance Style",
+            "Flamenco": "Flamenco, Traditional Spanish, Soulful Singing, Complex Guitar, Passionate Dance",
+            "Opera": "Opera, Dramatic Stage Work, All Sung Text, Orchestra Accompaniment"
         };
 
-        // Updated list of styles with NEW, EXTREME BASS genres
-        const styles = [
-            // --- CORE BASS / POP MODELS ---
-            "Aggressive Bass Boosted Energy", 
-            "Bass Boosted Hard", 
-            "Mainstream Pop (Custom)", 
-            "Melodic Pop Ballad (New Pop Model)", 
 
-            // --- 20 NEW EXTREME BASS / HARDCORE GENRES (Added per user request) ---
-            "Brutal Bass (Extreme Sub-Bass)",
-            "Gabba (Ultra-Fast Hardcore)",
-            "Doomcore (Dark & Slow Hardcore)",
-            "Tearout Dubstep (Chaos & Filth)",
-            "Riddim (Minimalistic & Repetitive Bass)",
-            "Heavy Midtempo Bass (Industrial)",
-            "Death Metal Rap (Aggressive & Dark)",
-            "Phonk (Cowbell & Lo-Fi Trap)",
-            "Drill (UK/Chicago Style)",
-            "Dark Trap (808 Bass & Horror Samples)",
-            "Witch House (Slowed & Dark Synth)",
-            "Wave (Atmospheric Trap)",
-            "Grime (UK Urban Bass)",
-            "Footwork/Juke (Fast Breakbeats)",
-            "Future Garage (Deep & Dark UKG)",
-            "Halftime Drum and Bass (Heavy Beat)",
-            "Sub-Focussed Techno (Minimal Bass)",
-            "Dark Ambient Drone (Deepest Sub)",
-            "Cyberpunk Industrial Metal (Robotic)",
-            "Future Pop (Heavy Bassline)",
+        // Pôvodné slovenské popisy pre tooltipy
+        const slovakDescriptions = {
+            // Extreme Bass & Darkness (Reorganized and NEW)
+            "Bass Boosted Hard": "Bass Boosted, EDM, Trap, Techno, Pop, Electric, Kawaii, House Energy – ultimátny mix s hlbokými basmi a vysokou energiou.",
+            "Aggressive Bass Boosted Energy": "Chaotická fúzia Brutal Bass, Dubstep, Hardstyle, Neurostep, Ravecore. Extrémne ťažký, temný a výbušný zvuk pre festivalovú energiu.",
+            "Brutal Bass (Extreme Sub-Bass)": "Najhlbšie, najsilnejšie subsonické basy. Minimalistický rytmus, kde basa je hlavná melódia. Použite V5 Pro model.",
+            "Hardbass (Russian/Slavic)": "Hardbass, rýchly, východoeurópsky štýl s extrémne skreslenou basou. Agresívne a ideálne pre cvičenie.",
+            "Tearout Dubstep (Chaos & Filth)": "Vysoko agresívny Dubstep s chaotickým zvukovým dizajnom a 'špinavými' basovými výkyvmi. Použite V5 Pro model.",
+            "Riddim (Minimalistic & Repetitive Bass)": "Variant Dubstepu známy pre jednoduchý, ale ťažký, opakujúci sa basový rytmus a komplexný sub-basový zvuk. Použite V5 Pro model.",
+            "Heavy Midtempo Bass (Industrial)": "Spomalená, ťažká elektronická hudba (100-110 BPM) s industriálnymi perkusiami a drvivými basovými linkami. Použite V5 Pro model.",
+            "Dark Trap (808 Bass & Horror Samples)": "Trap s ťažkým zameraním na 808 kopák, často s použitím hororových samplov a veľmi hlbokými, temnými témami. Použite V5 Pro model.",
+            "Halftime Drum and Bass (Heavy Beat)": "Drum and Bass tempo (170 BPM+), ale s polovičným rytmom (85 BPM pocit). Výsledkom je masívna, rytmická hustota. Použite V5 Pro model.",
+            "Sub-Focussed Techno (Minimal Bass)": "Techno, kde hlavným prvkom je neustále sa vyvíjajúca, hlboká subsonická basová linka. Minimalistické a hypnotické. Použite V5 Pro model.",
+            "Dark Ambient Drone (Deepest Sub)": "Najpomalšia, najatmosférickejšia hudba. Zameriava sa len na veľmi hlboké, nízkofrekvenčné 'drony' a sub-basové vibrácie pre psychologický efekt. Použite V5 Pro model.",
+            "Future Pop (Heavy Bassline)": "Popová hudba zameraná na kvalitnú produkciu a chytľavé háčiky, ale poháňaná veľmi ťažkou, silnou basovou linkou. Použite V5 Pro model.",
+            "Future House (Bassline Focus)": "Future House so silným zameraním na hlbokú, chytľavú basovú linku. Perfektné pre moderné klubové hity.",
+            "UK Bassline (Wobbly Energy)": "Vysoko-energetický britský tanečný žáner s rýchlym tempom a výraznými, kolísavými basovými linkami (wobbles).",
+            "Doomcore (Dark & Slow Hardcore)": "Veľmi pomalé (často pod 130 BPM) a temné Hardcore/Industrial. Hlboké, repetitívne basové kopáky vytvárajú apokalyptickú atmosféru. Použite V5 Pro model.",
+            "Death Metal Rap (Aggressive & Dark)": "Fúzia agresívneho, často kričaného rapu cez temné, pomalé beaty s vplyvom heavy metalu a hlbokými basmi. Použite V5 Pro model.",
+            "Phonk (Cowbell & Lo-Fi Trap)": "Subžáner Trapu, ktorý silno sampluje Memphis Rap 90. rokov, charakterizovaný temnou, lo-fi kvalitou a často používa zvuk cowbellu. Použite V5 Pro model.",
+            "Drill (UK/Chicago Style)": "Subžáner Trapu definovaný temnými, agresívnymi textami a výraznými, kĺzavými basovými linkami 808. Použite V5 Pro model.",
+            "Witch House (Slowed & Dark Synth)": "Elektronický žáner s extrémne spomalenými tempami, hlboko posadenými vokálmi, temnými synth melódiami a dominantným sub-basom. Použite V5 Pro model.",
+            "Wave (Atmospheric Trap)": "Atmosférická, melancholická hudba miešajúca prvky Trapu, Grime a Ambientu, charakterizovaná hlbokým reverbom a sub-basom. Použite V5 Pro model.",
+            "Grime (UK Urban Bass)": "Britský elektronický a rapový žáner, známy svojím riedkym, synkopickým rytmom a veľmi ťažkými, výraznými basovými linkami. Použite V5 Pro model.",
+            "Footwork/Juke (Fast Breakbeats)": "Extrémne rýchla (160 BPM+) tanečná hudba z Chicaga, zameraná na komplexné, sekané breakbeatové sample a hlboké basy. Použite V5 Pro model.",
+            "Future Garage (Deep & Dark UKG)": "Tmavší, atmosférickejší vývoj UK Garage, charakterizovaný priestorovým reverbom a hlbokými sub-basmi. Použite V5 Pro model.",
+            "Dark Techno (Industrial)": "Temné Techno s industriálnym nádychom, ťažká distorzia, hypnotický a pulzujúci rytmus. Použite V5 Pro model.",
+            "EBM (Electronic Body Music)": "Industriálna tanečná hudba. Agresívne synth basové linky a militaristické perkusie.",
+            "Minimal Synth (Coldwave)": "Temná, repetitívna, mechanická hudba s minimálnym použitím syntetizátorov. Retro 'Coldwave' štýl.",
+            "Horrorcore": "Zmes hip hopu s hororovými témami, strašidelnými samplami a temnými beatmi, zameranými na teror.",
+            "Dark Horror Darkness": "Fúzia temného ambientu, filmového hororu a psychologického teroru pre maximálne napätie.",
+            "Cyberpunk Industrial Metal (Robotic)": "Ťažký, mechanizovaný metal so silnými basovými bubnami, industriálnymi samplami a dystopickými, temnými témami. Použite V5 Pro model.",
+            "Black Metal": "Extrémny metalový subžáner s rýchlymi tempami a škriekajúcimi vokálmi, s tematikou temnoty.",
+            "Doom Metal": "Extrémne pomalá a ťažká metalová hudba, známa svojimi pochmúrnymi, depresívnymi témami.",
+            "Gothic Metal": "Fúzia heavy metalu s temnými, melancholickými prvkami gothic rocku, vrátane dramatických vokálov.",
+            "Industrial": "Žáner využívajúci drsné, abrazívne zvuky, často vytvorené z industriálneho vybavenia a elektronických slučiek.",
+            "Viking Metal (Epic Sagas)": "Metalový žáner s severskou/pohanskou lyrickou tematikou, často s epickými a orchestrálnymi prvkami.",
+            "Crunkcore (Screamo & Rap)": "Fúzia Screamo, Emo a Crunk Hip Hop. Kombinuje krik s rapovými veršami a tanečnými beatmi.",
+            "Noise Music (Harsh, Static)": "Extrémna experimentálna hudba, drsný hluk, statika a extrémna distorzia. Anti-hudba.",
+            "Depressive Black Metal": "Extrémne pomalý a surový Black Metal, zameraný na témy zúfalstva a depresie. Atmosférický a dlhý.",
+            "Deathcore (Heavy Breakdown)": "Fúzia Death Metalu a Hardcore. Extrémne ťažké 'breakdowny' a hlboké hrdelné vokály.",
+            "Goregrind (Brutal, Fast)": "Najbrutálnejší a najrýchlejší Grindcore, často s medicínskymi/hororovými témami. Použite V5 Pro model.",
+            "Dungeon Synth (Dark Ambient)": "Temný ambient inšpirovaný fantasy hrami a stredovekom, lo-fi zvuk a atmosféra. Dlhé dróny.",
+            "Sludge Metal (Slow, Dirty)": "Pomalý, ťažký, 'špinavý' metal s vplyvmi Southern Rock a extrémne špinavým gitarovým tónom.",
+            "Blackgaze (Shoegaze & Black Metal)": "Fúzia Black Metalu a Shoegaze. Melodická stena zvuku s blast beatmi.",
+            "Funeral Doom Metal (Slowest)": "Najpomalší Doom Metal. Masívny reverb, pochmúrnosť a extrémne dlhé kompozície.",
+            "Power Electronics (Harsh Industrial)": "Najdrsnejšia industriálna hudba, zameraná na statický hluk a agresívne témy. Extrémna hlasitosť.",
+            "Dark Ambient Ritual (Deep Drones)": "Hlboké dróny s kmeňovými perkusiami a okultnými témami. Minimalistické a atmosférické.",
+            "Techno Hardcore (Gabba)": "Extrémne rýchle (180+ BPM) Techno s veľmi skresleným kopákom. Surová, nekompromisná energia. Použite V5 Pro model.",
+            "Folk Horror OST (Eerie, Acoustic)": "Hudba z folkových hororov. Strašidelné, akustické tóny, tradičné nástroje a znepokojujúca atmosféra.",
             
-            // --- OTHER BASS / ENERGY GENRES ---
-            "Future Bass (Epic Drops)", 
-            "Brostep (Heavy & Skrillex Style)", 
-            "Hardcore Rave (90s Style)", 
-            "Psytrance (Hypnotic Rhythm)", 
-            "Heavy Drum and Bass (Neurofunk)", 
-            "Speedcore (Extremely Fast Tempo)", 
-            "J-Core (Japanese Hardcore)", 
-            "Hardstyle (Classic Hard Kicks)",
-            "Glitch Hop (Broken Beats)",
-            "Hyperpop (Sexton & Glitch)",
+            // Pop & General (zmena kategórie)
+            "Mainstream Pop (Custom)": "Pop, chytľavý, melodický, rádiový, tanečný, emocionálny, syntetický. Ideálny pre moderné hity a tanečné parkety.",
+            "Melodic Pop Ballad (New Pop Model)": "Nová verzia V4.1! Zameraná na čistý, chytľavý, rádiový Pop s dôrazom na silné rýmy, emócie a plynulú melódiu.",
+            "Steampunk Opera (Victorian Tech)": "Dramatická, orchestrálna hudba kombinujúca prvky Opery, Rocku a Steampunk estetiky. O viktoriánskej dobe a parných strojoch.",
 
-            // --- CHRISTMAS / HOLIDAY GENRES ---
-            "Christmas Pop (Holiday Ballad)",
-            "Trap Christmas (Dark Christmas)",
-            "Acoustic Christmas Jazz (Comfortable Tone)",
+            // High Energy & Special Genres
+            "Future Bass (Epic Drops)": "Žáner definovaný masívnymi, emotívnymi syntetizátormi, fragmentovanými vokálmi a epickými 'dropmi' poháňanými sub-basmi.",
+            "Brostep (Heavy & Skrillex Style)": "Agresívny subžáner Dubstepu, známy svojimi 'hlukmi', hlbokými basovými linkami, robotickými zvukmi a ťažkými wobblami.",
+            "Hardcore Rave (90s Style)": "Rýchle tempo (150+ BPM), hravé a euforické melódie, spárované s breakbeats, ideálne pre atmosféru starého Rave.",
+            "Psytrance (Hypnotic Rhythm)": "Vysoko-energetický Trance s komplexnými, opakujúcimi sa melodickými slučkami, ktoré vyvolávajú hypnotické stavy.",
+            "Heavy Drum and Bass (Neurofunk)": "Temný a futuristický Drum and Bass, využívajúci komplexné, technické basové linky a ostré, mechanické bicie.",
+            "Speedcore (Extremely Fast Tempo)": "Jeden z najrýchlejších žánrov elektronickej hudby (až do 600 BPM), zameraný na surovú, agresívnu rýchlosť.",
+            "J-Core (Japanese Hardcore)": "Zmes japonskej pop kultúry, Hardcore, Gabber a Chiptune. Extrémne rýchly, ale často s 'Kawaii' melódiou.",
+            "Hardstyle (Classic Hard Kicks)": "Extrémne silné 'reverse bass' kopy a euforické, hymnické melódie, ktoré dominujú Hard Dance festivalom.",
+            "Glitch Hop (Broken Beats)": "Fúzia Hip Hopu a Glitch elektroniky. Využíva 'zlomené' beaty, digitálne artefakty a komplexné rytmické vzory.",
+            "Hyperpop (Sexton & Glitch)": "Avantgardný Pop s prehnanou estetikou, auto-tuned vokálmi, hlasným masteringom a chaotickými glitch efektmi.",
 
-            // --- DANCE / URBAN GENRES ---
-            "Eurodance 90s (High Energy)",
-            "Latin Trap (Spanish/English)",
-            "Afrobeat Fusion (Dance Rhythm)",
-            "Kizomba (Romantic Dance)",
+            // Atmospheric & Experimental
+            "Vaporwave": "Mikrožáner s nostalgickou, surrealistickou estetikou a spomalenými, posunutými samplami.",
+            "Synthwave": "Retro-futuristický žáner inšpirovaný 80. rokmi, s výraznými syntetizátormi a živým zvukom.",
+            "Lofi Hip Hop": "Relaxačný žáner s tlmenými, pomalými beatmi, ideálny na štúdium.",
+            "Ambient": "Žáner zameraný na atmosféru a tón, vytvárajúci pocit pokoja a priestoru.",
+            "Post-Rock": "Inštrumentálna hudba, ktorá používa rockovú inštrumentáciu, ale zameriava sa na budovanie dramatických zvukových scén.",
+            "Shoegaze": "Subžáner alternatívneho rocku charakterizovaný fúziou tlmených vokálov a skreslených gitár.",
+            "Chillwave": "Elektronický hudobný štýl s lo-fi, hmlistým zvukom a uvoľnenými rýtmy.",
+            "Trip Hop": "Pomalý elektronický žáner, ktorý kombinuje hip hop rytmy s temným, filmovým a atmosférickým zvukom.",
+            "Minimalism": "Charakterizovaný opakujúcim sa, hypnotickým pocitom, využívajúcim jednoduché melodické nápady, ktoré sa pomaly vyvíjajú.",
+            "Baroque Pop": "Subžáner popu a rocku, ktorý zahŕňa prvky klasickej hudby, ako sú sláčiky a čembalo.",
+            "Chiptune (8-bit Soundtrack)": "Hudba vytvorená so zvukovými čipmi starých počítačov a konzol, znejúca ako 8-bitový soundtrack.",
+            "Dark Jazz (Cinematic)": "Pomalý, náladový Jazz s ťažkým reverbom a tónmi film noir, často s temným saxofónom.",
+            "Post-Punk (Goth Rock)": "Atmosférický rock s hlbokými barytónovými vokálmi, chladnými vlnami a temnými gitarami.",
+            "Darkwave (80s Goth)": "Melancholický synthpop inšpirovaný 80. rokmi, s hlbokými vokálmi a vplyvom New Wave.",
 
-            // --- ORIGINAL AND METAL/DARK GENRES ---
-            "Horrorcore", 
-            "Dark Horror Darkness", 
-            "Black Metal", 
-            "Doom Metal", 
-            "Gothic Metal", 
-            "Industrial",
-            "Viking Metal (Epic Sagas)", 
-            "Steampunk Opera (Victorian Tech)",
-            "Crunkcore (Screamo & Rap)", 
 
-            // --- RELAXING AND EXPERIMENTAL GENRES ---
-            "Vaporwave", 
-            "Synthwave", 
-            "Lofi Hip Hop", 
-            "Ambient", 
-            "Post-Rock", 
-            "Shoegaze", 
-            "Chillwave", 
-            "Trip Hop", 
-            "Minimalism", 
-            "Baroque Pop", 
-            "Chiptune (8-bit Soundtrack)",
+            // World, Dance & Holiday
+            "Christmas Pop (Holiday Ballad)": "Veľká, emocionálna Pop balada s tradičnými vianočnými motívmi, zvonmi a orchestrom.",
+            "Trap Christmas (Dark Christmas)": "Vianočné témy prevedené do drsného, pomalého Trap beatu. Pridáva nostalgiu k 808 basom.",
+            "Acoustic Christmas Jazz (Comfortable Tone)": "Jemný, teplý Jazz s klavírom a kontrabasom, ideálny pre útulnú, tradičnú vianočnú atmosféru.",
+            "Eurodance 90s (High Energy)": "Klasický 90. rokov tanečný štýl: rýchle, chytľavé synth háčiky a energické vokály.",
+            "Latin Trap (Spanish/English)": "Fúzia Hip Hopu a Latinských rytmov. Pomalý, temný beat s témami ulice a luxusu (ideálne v španielčine).",
+            "Afrobeat Fusion (Dance Rhythm)": "Mix moderného Afrobeatu, Dancehallu a Popu. Zameranie na komplexné, ale tanečné rytmy a pozitívne témy.",
+            "Kizomba (Romantic Dance)": "Pomalý a veľmi zmyselný tanečný žáner, pôvodom z Angoly. Texty sú romantické s jemnými rytmami.",
+            "Reggaeton": "Žáner pôvodom z Puerto Rica, miešajúci jamajský dancehall s latinskoamerickými rytmami.",
+            "Jungle": "Rýchly elektronický hudobný žáner, charakterizovaný breakbeats, ťažkými basovými linkami a samplami.",
+            "Ska Punk": "Fúzia energických, optimistických rytmov ska s agresívnou povahou punk rocku.",
+            "Celtic Music": "Široký žáner pokrývajúci tradičnú hudbu z keltských národov, známy pre použitie huslí a gájd.",
+            "K-Pop": "Populárna hudba z Južnej Kórey, často fúzia popu, hip hopu, R&B a EDM.",
+            "Samba": "Brazílsky hudobný žáner a tanečný štýl, známy svojím rytmickým a živým beatom.",
+            "Flamenco": "Tradičná španielska umelecká forma zahŕňajúca oduševnený spev, komplexnú hru na gitaru a vášnivý tanec.",
+            "Opera": "Dramatické javiskové dielo, kde je všetok text alebo väčšina textu spievaná, sprevádzaná orchestrom."
+        };
 
-            // --- WORLD GENRES ---
-            "Reggaeton", 
-            "Jungle", 
-            "Ska Punk", 
-            "Celtic Music", 
-            "K-Pop", 
-            "Samba", 
-            "Flamenco", 
-            "Opera",
+
+        // Definovanie štruktúry kategórií
+        const structuredStyleKeys = [
+            {
+                category: "1. EXTRÉMNE BASY, DARKNESS a HARDCORE (46 štýlov)",
+                keys: [
+                    // Extrémne Basy a Trap
+                    "Bass Boosted Hard",
+                    "Aggressive Bass Boosted Energy",
+                    "Brutal Bass (Extreme Sub-Bass)",
+                    "Hardbass (Russian/Slavic)",
+                    "Tearout Dubstep (Chaos & Filth)",
+                    "Riddim (Minimalistic & Repetitive Bass)",
+                    "Heavy Midtempo Bass (Industrial)",
+                    "Dark Trap (808 Bass & Horror Samples)",
+                    "Halftime Drum and Bass (Heavy Beat)",
+                    "Sub-Focussed Techno (Minimal Bass)",
+                    "Dark Ambient Drone (Deepest Sub)",
+                    "Future Pop (Heavy Bassline)",
+                    "Future House (Bassline Focus)",
+                    "UK Bassline (Wobbly Energy)",
+                    "Doomcore (Dark & Slow Hardcore)",
+                    "Death Metal Rap (Aggressive & Dark)",
+                    "Phonk (Cowbell & Lo-Fi Trap)",
+                    "Drill (UK/Chicago Style)",
+                    "Witch House (Slowed & Dark Synth)",
+                    "Wave (Atmospheric Trap)",
+                    "Grime (UK Urban Bass)",
+                    "Footwork/Juke (Fast Breakbeats)",
+                    "Future Garage (Deep & Dark UKG)",
+                    "Dark Techno (Industrial)",
+                    "EBM (Electronic Body Music)",
+                    "Minimal Synth (Coldwave)",
+
+                    // Darkness, Metal a Noise (New Additions)
+                    "Horrorcore",
+                    "Dark Horror Darkness",
+                    "Cyberpunk Industrial Metal (Robotic)",
+                    "Black Metal",
+                    "Doom Metal",
+                    "Gothic Metal",
+                    "Industrial",
+                    "Viking Metal (Epic Sagas)",
+                    "Crunkcore (Screamo & Rap)",
+                    "Noise Music (Harsh, Static)",
+                    "Depressive Black Metal",
+                    "Deathcore (Heavy Breakdown)",
+                    "Goregrind (Brutal, Fast)",
+                    "Dungeon Synth (Dark Ambient)",
+                    "Sludge Metal (Slow, Dirty)",
+                    "Blackgaze (Shoegaze & Black Metal)",
+                    "Funeral Doom Metal (Slowest)",
+                    "Power Electronics (Harsh Industrial)",
+                    "Dark Ambient Ritual (Deep Drones)",
+                    "Techno Hardcore (Gabba)",
+                    "Folk Horror OST (Eerie, Acoustic)",
+
+                ]
+            },
+            {
+                category: "2. VYSOKÁ ENERGIA a ŠPECIÁLNE ŽÁNRE (10 štýlov)",
+                keys: [
+                    "Future Bass (Epic Drops)",
+                    "Brostep (Heavy & Skrillex Style)",
+                    "Hardcore Rave (90s Style)",
+                    "Psytrance (Hypnotic Rhythm)",
+                    "Heavy Drum and Bass (Neurofunk)",
+                    "Speedcore (Extremely Fast Tempo)",
+                    "J-Core (Japanese Hardcore)",
+                    "Hardstyle (Classic Hard Kicks)",
+                    "Glitch Hop (Broken Beats)",
+                    "Hyperpop (Sexton & Glitch)",
+                ]
+            },
+            {
+                category: "3. ATMOSFÉRICKÉ & EXPERIMENTÁLNE (14 štýlov)",
+                keys: [
+                    "Vaporwave",
+                    "Synthwave",
+                    "Lofi Hip Hop",
+                    "Ambient",
+                    "Post-Rock",
+                    "Shoegaze",
+                    "Chillwave",
+                    "Trip Hop",
+                    "Minimalism",
+                    "Baroque Pop",
+                    "Chiptune (8-bit Soundtrack)",
+                    "Dark Jazz (Cinematic)",
+                    "Post-Punk (Goth Rock)",
+                    "Darkwave (80s Goth)",
+                ]
+            },
+            {
+                category: "4. POP & GENERICKÉ (3 štýly)",
+                keys: [
+                    "Mainstream Pop (Custom)",
+                    "Melodic Pop Ballad (New Pop Model)",
+                    "Steampunk Opera (Victorian Tech)", // Unikátny žáner, nechávame tu
+                ]
+            },
+            {
+                category: "5. SVETOVÉ, TANEČNÉ a HOLIDAY ŽÁNRE (15 štýlov)",
+                keys: [
+                    "Christmas Pop (Holiday Ballad)",
+                    "Trap Christmas (Dark Christmas)",
+                    "Acoustic Christmas Jazz (Comfortable Tone)",
+                    "Eurodance 90s (High Energy)",
+                    "Latin Trap (Spanish/English)",
+                    "Afrobeat Fusion (Dance Rhythm)",
+                    "Kizomba (Romantic Dance)",
+                    "Reggaeton",
+                    "Jungle",
+                    "Ska Punk",
+                    "Celtic Music",
+                    "K-Pop",
+                    "Samba",
+                    "Flamenco",
+                    "Opera",
+                ]
+            }
         ];
 
-        const descriptions = {
-            "Aggressive Bass Boosted Energy": "A chaotic fusion of Brutal Bass, Dubstep, Hardstyle, Neurostep, and Ravecore. Extremely heavy, dark, and explosive sound for festival energy.",
-            "Bass Boosted Hard": "Bass Boosted, EDM, Trap, Techno, Pop, Electric, Kawaii, House Energy – the ultimate high-energy mix with deep bass.",
-            "Mainstream Pop (Custom)": "Pop, upbeat, catchy, melodic, radio-friendly, danceable, emotional, youthful, mainstream, energetic, romantic, synth-pop, chart-topping. Ideal for modern radio hits and dance floors.",
-            "Melodic Pop Ballad (New Pop Model)": "New Model V4.1! Focused on clean, catchy, radio-ready Pop with an emphasis on strong rhymes, emotions, and fluent melody.",
+        // Funkcia na skopírovanie textu
+        function copyToClipboard(text, event) {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            // Zobrazenie notifikácie (skrátenie textu pre notifikáciu)
+            const notification = document.getElementById('notification');
+            const displayNotificationText = text.length > 50 ? text.substring(0, 50) + '...' : text;
+            notification.textContent = `${displayNotificationText} - Skopírované!`;
             
-            // --- NEW EXTREME BASS DESCRIPTIONS ---
-            "Brutal Bass (Extreme Sub-Bass)": "The deepest, most powerful subsonic bass focus. Minimalistic rhythm where the bass itself is the main melody. Use V5 Pro model.",
-            "Gabba (Ultra-Fast Hardcore)": "Extremely fast Hardcore Techno (180+ BPM) with distorted kick drums and aggressive, dark sounds. Use V5 Pro model.",
-            "Doomcore (Dark & Slow Hardcore)": "Very slow (often below 130 BPM) and dark Hardcore/Industrial. Deep, repetitive bass kicks create a crushing, apocalyptic atmosphere. Use V5 Pro model.",
-            "Tearout Dubstep (Chaos & Filth)": "Highly aggressive Dubstep subgenre with chaotic sound design, 'filthy' bass wobbles, and distorted screeches. Use V5 Pro model.",
-            "Riddim (Minimalistic & Repetitive Bass)": "Dubstep variant known for its simple, yet heavy, repetitive bass rhythm and complex sub-bass sound design. Use V5 Pro model.",
-            "Heavy Midtempo Bass (Industrial)": "Slowed-down, heavy electronic music (100-110 BPM) with industrial percussion and crushing bass lines. Use V5 Pro model.",
-            "Death Metal Rap (Aggressive & Dark)": "A fusion of aggressive, often shouted rap vocals over dark, slow beats with heavy metal influences and deep bass. Use V5 Pro model.",
-            "Phonk (Cowbell & Lo-Fi Trap)": "A subgenre of Trap that heavily samples 90s Memphis Rap, characterized by dark, lo-fi quality, often using the cowbell sample. Use V5 Pro model.",
-            "Drill (UK/Chicago Style)": "A subgenre of Trap music defined by dark, aggressive lyrics and distinct, often minimalist, sliding 808 bass lines. Use V5 Pro model.",
-            "Dark Trap (808 Bass & Horror Samples)": "Trap with a heavy focus on the 808 kick, often incorporating horror movie samples and very deep, dark themes. Use V5 Pro model.",
-            "Witch House (Slowed & Dark Synth)": "An electronic genre with heavily slowed tempos, pitched-down vocals, dark synth melodies, and a dominant sub-bass. Use V5 Pro model.",
-            "Wave (Atmospheric Trap)": "Atmospheric, melancholic music blending elements of Trap, Grime, and Ambient, characterized by deep reverb and sub-bass. Use V5 Pro model.",
-            "Grime (UK Urban Bass)": "UK-specific electronic music and rap genre, known for its sparse, syncopated rhythm and very heavy, prominent bass lines. Use V5 Pro model.",
-            "Footwork/Juke (Fast Breakbeats)": "Extremely fast (160 BPM+) dance music from Chicago, focusing on complex, choppy breakbeat samples and deep bass. Use V5 Pro model.",
-            "Future Garage (Deep & Dark UKG)": "A darker, more atmospheric evolution of UK Garage, characterized by spacious reverb, deep subs, and shuffled beats. Use V5 Pro model.",
-            "Halftime Drum and Bass (Heavy Beat)": "Drum and Bass tempo (170 BPM+) but with a half-time beat (85 BPM feel). Results in massive, head-nodding rhythmic density. Use V5 Pro model.",
-            "Sub-Focussed Techno (Minimal Bass)": "Techno where the main element is a constantly evolving, deep subsonic bassline. Minimalist and hypnotic. Use V5 Pro model.",
-            "Dark Ambient Drone (Deepest Sub)": "The slowest, most atmospheric music. Focuses only on very deep, low-frequency drones and sub-bass vibrations for psychological effect. Use V5 Pro model.",
-            "Cyberpunk Industrial Metal (Robotic)": "Heavy, mechanized metal with powerful bass drums, industrial samples, and dystopian, dark themes. Use V5 Pro model.",
-            "Future Pop (Heavy Bassline)": "Pop music focused on high-quality production, catchy hooks, but driven by a very heavy, powerful bassline. Use V5 Pro model.",
-
-            // --- OTHER BASS / ENERGY DESCRIPTIONS ---
-            "Future Bass (Epic Drops)": "Genre defined by massive, emotive synths, fragmented vocals, and epic, usually sub-bass driven 'drops'.",
-            "Brostep (Heavy & Skrillex Style)": "Aggressive subgenre of Dubstep, known for its 'noisy', deep bass lines, robotic sounds, and heavy, distorted wobbles.",
-            "Hardcore Rave (90s Style)": "Fast tempo (150+ BPM), playful, and euphoric melodies, paired with breakbeats, perfect for the old Rave atmosphere.",
-            "Psytrance (Hypnotic Rhythm)": "High-energy Trance style with complex, repeating melodic loops that induce hypnotic states.",
-            "Heavy Drum and Bass (Neurofunk)": "Dark and futuristic Drum and Bass, utilizing complex, technical bass lines and sharp, mechanical drums.",
-            "Speedcore (Extremely Fast Tempo)": "One of the fastest genres of electronic music (up to 600 BPM), focused on raw, aggressive speed and sonic destruction.",
-            "J-Core (Japanese Hardcore)": "A mix of Japanese pop culture, Hardcore, Gabber, and Chiptune. Extremely fast, but often with a cute 'Kawaii' melody.",
-            "Hardstyle (Classic Hard Kicks)": "Extremely powerful, 'reverse bass' kicks and euphoric, anthemic melodies that dominate Hard Dance festivals.",
-            "Glitch Hop (Broken Beats)": "A fusion of Hip Hop and Glitch electronica. Utilizes 'broken' beats, digital artifacts, and complex rhythmic patterns.",
-            "Hyperpop (Sexton & Glitch)": "Avant-garde Pop with exaggerated aesthetics, auto-tuned vocals, loud mastering, and chaotic glitch effects.",
-
-            // --- CHRISTMAS / HOLIDAY DESCRIPTIONS ---
-            "Christmas Pop (Holiday Ballad)": "A grand, emotional Pop ballad with traditional Christmas motifs, bells, and orchestra, suitable for holiday radio.",
-            "Trap Christmas (Dark Christmas)": "Christmas themes translated into a harsh, slow Trap beat. Holiday nostalgia with 808 bass.",
-            "Acoustic Christmas Jazz (Comfortable Tone)": "Gentle, warm Jazz with piano and double bass, ideal for a cozy, traditional Christmas atmosphere.",
-
-            // --- DANCE / URBAN GENRES ---
-            "Eurodance 90s (High Energy)": "Classic 90s dance style: fast, catchy synth hooks, powerful female vocals, and male rap.",
-            "Latin Trap (Spanish/English)": "Fusion of Hip Hop and Latin rhythms. Slow, dark beat with themes of the street and luxury (ideally in Spanish).",
-            "Afrobeat Fusion (Dance Rhythm)": "A mix of modern Afrobeat, Dancehall, and Pop. Focus on complex but danceable and hypnotic rhythms and positive themes.",
-            "Kizomba (Romantic Dance)": "A slow and very sensual dance genre, originating from Angola. Lyrics are romantic, with gentle and fluid rhythms.",
+            notification.classList.remove('hidden', 'opacity-0');
+            notification.classList.add('opacity-100');
             
-            // --- ORIGINAL AND METAL/DARK GENRES ---
-            "Horrorcore": "A blend of hip hop with horror themes, creepy samples, and dark beats, focusing on terror.",
-            "Dark Horror Darkness": "A fusion of dark ambient, cinematic horror, psychological terror, and ambient horror for maximum suspense and dark atmosphere.",
-            "Black Metal": "An extreme metal subgenre defined by fast tempos, raw recording, and screeching vocals, with themes of darkness and evil.",
-            "Doom Metal": "Extremely slow and heavy metal music, known for its bleak, oppressive, and pessimistic themes.",
-            "Gothic Metal": "A fusion of heavy metal with dark, melancholic elements of gothic rock, including dramatic vocals.",
-            "Industrial": "A genre utilizing harsh, abrasive sounds, often created from industrial equipment and electronic loops.",
-            "Viking Metal (Epic Sagas)": "A metal genre with Nordic/pagan lyrical themes, often featuring epic, orchestral, and dramatic elements.",
-            "Steampunk Opera (Victorian Tech)": "Dramatic, orchestral music combining elements of Opera, Rock, and Steampunk aesthetics. About steam engines and the Victorian era.",
-            "Crunkcore (Screamo & Rap)": "A fusion of Screamo, Emo, and Crunk Hip Hop. Combines screaming with rap verses and dance beats.",
-            
-            // --- RELAXING AND EXPERIMENTAL GENRES ---
-            "Vaporwave": "A microgenre with a nostalgic, surreal aesthetic and slowed-down, pitch-shifted samples.",
-            "Synthwave": "A retro-futuristic genre inspired by the 80s, with prominent synthesizers and a vibrant sound.",
-            "Lofi Hip Hop": "A relaxing genre with muted, slow beats and a gentle background hum, ideal for studying.",
-            "Ambient": "A genre focused on atmosphere and tone, creating a sense of calm and space.",
-            "Post-Rock": "Instrumental music that uses rock instrumentation but avoids typical rock conventions, focusing on building dramatic soundscapes.",
-            "Shoegaze": "A subgenre of alternative rock characterized by a fusion of muffled vocals, distorted guitars, and an overwhelming sound.",
-            "Chillwave": "An electronic music style with a lo-fi, hazy sound, often with relaxed rhythms and nostalgic melodies.",
-            "Trip Hop": "A slow electronic genre that blends hip hop rhythms with a dark, cinematic, and atmospheric sound.",
-            "Minimalism": "Characterized by a repetitive, hypnotic feel, utilizing simple melodic ideas that slowly evolve over time.",
-            "Baroque Pop": "A subgenre of pop and rock that incorporates elements of classical music, such as strings and harpsichord.",
-            "Chiptune (8-bit Soundtrack)": "Music created with the sound chips of old computers and consoles, sounding like an 8-bit game soundtrack.",
-
-            // --- WORLD GENRES ---
-            "Reggaeton": "A genre originating from Puerto Rico, blending Jamaican dancehall with Latin American and hip hop rhythms.",
-            "Jungle": "A fast electronic music genre, characterized by breakbeats, heavy bass lines, and samples.",
-            "Ska Punk": "A fusion of the energetic, upbeat rhythms of ska with the aggressive and fast nature of punk rock.",
-            "Celtic Music": "A broad genre covering traditional music from the Celtic nations, known for the use of violins and bagpipes.",
-            "K-Pop": "Popular music from South Korea, often a fusion of various genres like pop, hip hop, R&B, and EDM.",
-            "Samba": "A Brazilian music genre and dance style, known for its rhythmic and lively beat.",
-            "Flamenco": "A traditional Spanish art form involving soulful singing, complex guitar playing, and passionate dancing.",
-            "Opera": "A dramatic stage work where all or most of the text is sung, accompanied by an orchestra."
-        };
-
-        // Expanded list of colors for variety
-        const colorClasses = [
-            "grad-1", "grad-2", "grad-9", "grad-3", "grad-4", "grad-5", "grad-6", "grad-7", "grad-8",
-            "grad-10", "grad-11", "grad-12", "grad-13", "grad-14", "grad-15", "grad-16", "grad-17", "grad-18",
-            // New Bass Boosted Gradients
-            "grad-19", "grad-20", "grad-21", "grad-22", "grad-23", "grad-24"
-        ];
-
-        // --- INITIALIZATION AND CARD GENERATION ---
-        const container = document.getElementById('genre-container');
-        const promptInput = document.getElementById('prompt-input');
-        const generateButton = document.getElementById('generate-button');
-        const chatBox = document.getElementById('chat-box');
-        const loadingSpinner = document.getElementById('loading-spinner');
-        const inputContainer = document.getElementById('input-container');
-        const modelToggleButton = document.getElementById('model-toggle');
-        const currentModelIndicator = document.getElementById('current-model-indicator');
-        const ttsButton = document.getElementById('tts-button');
-        const audioPlayer = document.getElementById('audio-player');
-        
-        // **********************************************************************************************
-        // POZNÁMKA: Ak kód spúšťate mimo tohto prostredia, vložte sem svoj Gemini API kľúč.
-        // V tomto prostredí (Canvas) ho nechajte prázdny.
-        const apiKey = "AIzaSyBIzvYGiWGoFUxmxdz2qEYMpNdCnUN8DjE"; 
-        // **********************************************************************************************
-
-        // Models for toggling
-        const modelOrder = [
-            MODEL_STATES.STANDARD, 
-            MODEL_STATES.ENERGY, 
-            MODEL_STATES.POP, 
-            MODEL_STATES.BOOSTED
-        ];
-        let currentModelIndex = 0;
-        let currentModel = modelOrder[currentModelIndex];
-        
-        let lastGeneratedText = "";
-        const maxRetries = 5;
-
-        // Generate genre cards
-        for (let i = 0; i < styles.length; i++) {
-            const style = styles[i]; 
-            const description = descriptions[style] || "The description for this style is currently unavailable. It's a unique musical universe worth exploring!";
-            
-            // Use an extended array of color classes, cycling through all of them
-            const colorClass = colorClasses[i % colorClasses.length]; 
-            
-            const titleClass = style.length > 30 ? 'long' : '';
-
-            const cardHtml = `
-                <div class="genre-card ${colorClass}" data-genre="${style}" data-full-genre="${style}">
-                    <h2 class="genre-title ${titleClass}" data-genre-copy="${style}">
-                        ${style}
-                    </h2>
-                    <p class="genre-description" data-description-copy="${description}">
-                        ${description}
-                    </p>
-                    <div class="copy-notification" id="copy-notif-${i}">SKOPÍROVANÉ!</div>
-                </div>
-            `;
-            container.innerHTML += cardHtml;
+            setTimeout(() => {
+                notification.classList.remove('opacity-100');
+                notification.classList.add('opacity-0');
+                setTimeout(() => notification.classList.add('hidden'), 300);
+            }, 1500); // Zobrazenie notifikácie na 1.5 sekundy
         }
 
-        // --- ANIMATIONS AND INTERSECTION OBSERVER ---
-        const cards = document.querySelectorAll('.genre-card');
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    // Add delay for a cascading effect
-                    setTimeout(() => {
-                        entry.target.classList.add('is-visible');
-                    }, 100 * (index % 4)); 
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
+        // Funkcia na generovanie obsahu
+        function generateStylesList() {
+            const listContainer = document.getElementById('style-list');
 
-        cards.forEach((card, index) => {
-            observer.observe(card);
-            
-            // 1. CLICK NA CELÚ KARTU: Vyplní input
-            card.addEventListener('click', (e) => {
-                // Ak sa kliklo priamo na title alebo description, preskočí sa táto časť a vykoná sa len kopírovanie
-                if (e.target.classList.contains('genre-title') || e.target.classList.contains('genre-description')) return;
-                
-                const genre = card.getAttribute('data-genre');
-                // Odstránenie poznámky v zátvorkách pre čistý prompt
-                promptInput.value = genre.replace(/ \(.*\)/, '') + " about ";
-                promptInput.focus();
-                // Scroll na chat box
-                chatBox.scrollIntoView({ behavior: 'smooth' });
-            });
-            
-            // FUNKCIA PRE KOPÍROVANIE A NOTIFIKÁCIU
-            const performCopy = (textToCopy, notificationText, notificationColor, resetText) => {
-                const copyNotification = document.getElementById(`copy-notif-${index}`);
-                try {
-                    // Použitie dočasného inputu na skopírovanie textu
-                    const tempInput = document.createElement('textarea');
-                    tempInput.value = textToCopy;
-                    document.body.appendChild(tempInput);
-                    tempInput.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(tempInput);
+            // Odstránenie starého obsahu
+            listContainer.innerHTML = ''; 
 
-                    // Zobrazenie notifikácie
-                    copyNotification.textContent = notificationText;
-                    copyNotification.style.backgroundColor = notificationColor;
-                    copyNotification.classList.remove('desc-copy'); // Reset class for title copy
-                    if(notificationColor === '#51A8E8') {
-                        copyNotification.classList.add('desc-copy'); // Set class for description copy
-                    }
-                    copyNotification.classList.add('visible');
-                    
-                    setTimeout(() => {
-                        copyNotification.classList.remove('visible');
-                        // Reset to default state
-                        copyNotification.textContent = resetText;
-                        copyNotification.style.backgroundColor = '#20E3B2';
-                        copyNotification.classList.remove('desc-copy');
-                    }, 1500);
+            structuredStyleKeys.forEach(section => {
+                // Vytvorenie nadpisu kategórie
+                const categoryHeader = document.createElement('h2');
+                categoryHeader.className = "text-2xl sm:text-3xl font-bold text-primary border-b-2 border-gray-700 pb-3 mb-6 mt-10";
+                categoryHeader.textContent = section.category;
+                listContainer.appendChild(categoryHeader);
 
-                } catch (err) {
-                    console.error('Nepodarilo sa skopírovať:', err);
-                    // Prípadná chyba notifikácia
-                    copyNotification.textContent = 'CHYBA KOPÍROVANIA';
-                    copyNotification.classList.add('visible');
-                    copyNotification.style.backgroundColor = '#FF6B6B';
-                    setTimeout(() => {
-                        copyNotification.classList.remove('visible');
-                        copyNotification.style.backgroundColor = '#20E3B2';
-                        copyNotification.textContent = resetText;
-                    }, 2000);
-                }
-            };
-            
-            // 2. CLICK NA NÁZOV ŽÁNRU: Skopíruje názov
-            const genreTitle = card.querySelector('.genre-title');
-            genreTitle.addEventListener('click', (e) => {
-                e.stopPropagation(); 
-                const genreToCopy = genreTitle.getAttribute('data-genre-copy');
-                performCopy(genreToCopy, 'NÁZOV SKOPÍROVANÝ!', '#20E3B2', 'SKOPÍROVANÉ!');
-            });
-            
-            // 3. CLICK NA POPIS ŽÁNRU (Kľúčové slová): Skopíruje popis
-            const genreDescription = card.querySelector('.genre-description');
-            genreDescription.addEventListener('click', (e) => {
-                e.stopPropagation(); 
-                const descriptionToCopy = genreDescription.getAttribute('data-description-copy').trim();
-                performCopy(descriptionToCopy, 'KĽÚČOVÉ SLOVÁ SKOPÍROVANÉ!', '#51A8E8', 'SKOPÍROVANÉ!');
-            });
-        });
+                // Kontajner pre tagy
+                const tagsContainer = document.createElement('div');
+                tagsContainer.className = "flex flex-wrap gap-4";
 
-        // --- 3D BACKGROUND LOGIC ---
-        const canvas = document.getElementById('threejs-canvas');
-        const toggleButton = document.getElementById('toggle-wallpaper');
-        let isWallpaperOn = true;
+                section.keys.forEach(key => {
+                    const promptText = fullPrompts[key];
+                    const tooltipText = slovakDescriptions[key] || "Popis nie je k dispozícii.";
 
-        let scene, camera, renderer, particles, particleCount = 10000;
-        let geometry, material;
+                    const tag = document.createElement('span');
+                    // Pridanie 'break-words' pre lepšiu čitateľnosť dlhých tagov na menších obrazovkách
+                    tag.className = "style-tag bg-card-dark text-gray-300 hover:bg-primary hover:text-white px-4 py-2 rounded-full font-medium text-sm sm:text-base whitespace-normal break-words group relative max-w-full sm:max-w-none";
+                    tag.textContent = promptText;
+                    tag.title = key; // Krátky názov ako titul pre jednoduchšiu identifikáciu
 
-        function initThreeJS() {
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            camera.position.z = 5;
+                    // Vytvorenie Tooltipu
+                    const tooltip = document.createElement('span');
+                    tooltip.className = "tooltip-text";
+                    // Popis tooltitu používa krátky názov + slovenský popis
+                    tooltip.innerHTML = `<span class="font-bold text-base">${key}</span><br/>${tooltipText}`;
+                    tag.appendChild(tooltip);
 
-            // Create particle system (Nebula)
-            geometry = new THREE.BufferGeometry();
-            const positions = new Float32Array(particleCount * 3);
-            const colors = new Float32Array(particleCount * 3);
-            const color = new THREE.Color();
+                    // Pridanie event listenera pre kopírovanie
+                    tag.addEventListener('click', (event) => {
+                        copyToClipboard(promptText, event);
+                    });
 
-            for (let i = 0; i < particleCount * 3; i += 3) {
-                positions[i] = (Math.random() * 2 - 1) * 200;
-                positions[i + 1] = (Math.random() * 2 - 1) * 200;
-                positions[i + 2] = (Math.random() * 2 - 1) * 200;
-
-                // Blue, purple, and white shades
-                color.setHSL(Math.random() * 0.1 + 0.6, 0.5, 0.5 + Math.random() * 0.5); 
-                colors[i] = color.r;
-                colors[i + 1] = color.g;
-                colors[i + 2] = color.b;
-            }
-
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-            material = new THREE.PointsMaterial({
-                size: 0.15,
-                vertexColors: true,
-                blending: THREE.AdditiveBlending,
-                transparent: true,
-                sizeAttenuation: true
-            });
-
-            particles = new THREE.Points(geometry, material);
-            scene.add(particles);
-            
-            animate();
-        }
-
-        function animate() {
-            if (!isWallpaperOn) return;
-
-            requestAnimationFrame(animate);
-
-            const time = Date.now() * 0.00005;
-
-            // Subtle particle/camera movement
-            particles.rotation.y = time * 0.2;
-            particles.rotation.x = time * 0.1;
-            camera.position.x = Math.sin(time * 0.5) * 0.5;
-            camera.position.y = Math.cos(time * 0.5) * 0.5;
-
-            renderer.render(scene, camera);
-        }
-
-        function onWindowResize() {
-            if (camera && renderer) {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            }
-        }
-
-        toggleButton.addEventListener('click', () => {
-            isWallpaperOn = !isWallpaperOn;
-            canvas.style.opacity = isWallpaperOn ? '0.25' : '0';
-            toggleButton.textContent = isWallpaperOn ? 'Wallpaper ON/OFF' : 'Wallpaper ON/OFF (OFF)';
-            if (isWallpaperOn) {
-                // Resume animation if stopped
-                if (!renderer) initThreeJS(); 
-                else animate();
-            }
-        });
-
-        window.addEventListener('resize', onWindowResize);
-        window.onload = initThreeJS;
-
-
-        // --- CHAT & AI LOGIC ---
-
-        // Helper function for rendering messages
-        function renderMessage(text, isUser, includeCopyButton = false) {
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
-            messageElement.classList.add(isUser ? 'user' : 'ai');
-
-            const textContent = document.createElement('span');
-            textContent.classList.add('message-text');
-            // Use innerHTML to support formatting like **bold** or `code`
-            textContent.innerHTML = text.replace(/\n/g, '<br>');
-
-            messageElement.appendChild(textContent);
-
-            if (includeCopyButton) {
-                const copyButton = document.createElement('button');
-                copyButton.classList.add('copy-button');
-                copyButton.textContent = 'Copy Lyrics';
-                
-                copyButton.addEventListener('click', () => {
-                    // Remove HTML tags and newlines to copy clean text
-                    const plainText = text.replace(/<br>/g, '\n').replace(/<\/?(strong|em|code|pre)>/g, '').trim();
-                    
-                    // Clipboard copy implementation
-                    try {
-                        const tempInput = document.createElement('textarea');
-                        tempInput.value = plainText;
-                        document.body.appendChild(tempInput);
-                        tempInput.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(tempInput);
-
-                        copyButton.textContent = 'Copied!';
-                        copyButton.classList.add('copied');
-                        setTimeout(() => {
-                            copyButton.textContent = 'Copy Lyrics';
-                            copyButton.classList.remove('copied');
-                        }, 2000);
-                    } catch (err) {
-                        console.error('Failed to copy text:', err);
-                        // Display error
-                        copyButton.textContent = 'Copy Error';
-                    }
+                    tagsContainer.appendChild(tag);
                 });
-                messageElement.appendChild(copyButton);
-            }
-
-            chatBox.appendChild(messageElement);
-            chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
-        }
-
-        // Function to update model display
-        const updateModelUI = () => {
-            modelToggleButton.classList.remove('standard-style', 'energy-style', 'boosted-style', 'pop-style');
-            currentModelIndicator.classList.remove('standard-style', 'energy-style', 'boosted-style', 'pop-style');
-
-            switch (currentModel) {
-                case MODEL_STATES.STANDARD:
-                    currentModelIndicator.textContent = 'V1 Standard (Multi-Language)';
-                    currentModelIndicator.classList.add('standard-style');
-                    modelToggleButton.classList.add('standard-style');
-                    break;
-                case MODEL_STATES.ENERGY:
-                    currentModelIndicator.textContent = 'V4 Energy/Trap (Multi-Language)';
-                    currentModelIndicator.classList.add('energy-style');
-                    modelToggleButton.classList.add('energy-style');
-                    break;
-                case MODEL_STATES.POP:
-                    currentModelIndicator.textContent = 'V4.1 Pop (Rhyme and Melody Focused)';
-                    currentModelIndicator.classList.add('pop-style');
-                    modelToggleButton.classList.add('pop-style');
-                    break;
-                case MODEL_STATES.BOOSTED:
-                    currentModelIndicator.textContent = 'V5 Pro (Bass Boosted)';
-                    currentModelIndicator.classList.add('boosted-style');
-                    modelToggleButton.classList.add('boosted-style');
-                    break;
-            }
-        };
-
-        const toggleModelMode = () => {
-            currentModelIndex = (currentModelIndex + 1) % modelOrder.length;
-            currentModel = modelOrder[currentModelIndex];
-            updateModelUI();
-        };
-
-        modelToggleButton.addEventListener('click', toggleModelMode);
-        updateModelUI(); // Initialize UI
-
-        
-        // ** NOVÁ PRÍSNA ZÁKLADNÁ INŠTRUKCIA - UPRAVENÝ FINAL DROP **
-        const BASE_INSTRUCTION = "Your SOLE purpose is to generate extremely long, detailed, and professional song lyrics in the user's language. Your output MUST be ONLY the lyrics and NOTHING else. Do not include any conversation, introduction, or explanatory text before or after the lyrics. Structure the song with a minimum of: [Intro], 4 full [Verse]s, 3 full [Chorus]es, 1 [Bridge], 1 [Outro], and a powerful [Final Drop] which must contain at least four lines of content and serve as the ultimate conclusion. The text must not contain any Markdown formatting (e.g., #, *, **, _, >), only clean text with line breaks and the section tags in square brackets.";
-
-
-        // Function that returns the system instruction based on the current model
-        const getSystemPrompt = (userPrompt, currentModel) => {
-
-            switch (currentModel) {
-                case MODEL_STATES.ENERGY:
-                    // V4 Energy/Pop - High Energy, melodic, focuses on Pop, EDM, Trap, and Bass
-                    return `You are V4 Energy/Trap, a lyricist specializing in high-energy, catchy Pop, EDM, and Trap genres. Lyrics must be rhythmic, melodic, and intensely dynamic. Focus on themes of action, speed, and pulsating energy. Important: Do not use profanity. ${BASE_INSTRUCTION} Topic is: ${userPrompt}`;
-                case MODEL_STATES.POP:
-                    // V4.1 Pop - Melodic, Rhyme-focused, Radio-friendly Pop
-                    return `You are V4.1 Pop, a specialist in radio Pop hits. Your main task is to create exceptionally catchy, melodic, and memorable lyrics that rhyme strongly and have a fluid cadence. Focus on themes of love, relationships, dreams, and a positive atmosphere. ${BASE_INSTRUCTION} Topic is: ${userPrompt}`;
-                case MODEL_STATES.BOOSTED:
-                    // V5 Pro - Extreme Bass, Dark/Aggressive, but STRICTLY NO VULGARITY
-                    return `You are V5 Pro, a lyrical generator focused on extremely heavy, deep, Bass Boosted, Dark Ambient, and Hardcore lyrics. The tone must be aggressive, deep, and focused on themes of power, darkness, and mechanical rhythm. IMPORTANT: Despite the aggressive tone, the lyrics must contain absolutely NO profanity, vulgarity, or explicit content. ${BASE_INSTRUCTION} Topic is: ${userPrompt}`;
-                case MODEL_STATES.STANDARD:
-                default:
-                    // V1 Standard - General creative prompt
-                    return `You are V1 Standard, a versatile lyricist. Create compelling and creative song lyrics based on the user's input. The lyrics must be very long, detailed, and well-structured. ${BASE_INSTRUCTION} Topic is: ${userPrompt}`;
-            }
-        };
-
-        // --- API & BACKOFF LOGIC ---
-        async function exponentialBackoffFetch(url, options) {
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const response = await fetch(url, options);
-                    if (response.ok) {
-                        return response;
-                    }
-                    if (response.status === 429 || response.status >= 500) {
-                        const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        continue;
-                    }
-                    const errorJson = await response.json().catch(() => ({}));
-                    const errorMessage = errorJson.error?.message || `HTTP error! status: ${response.status}`;
-                    throw new Error(errorMessage);
-                } catch (error) {
-                    if (i === maxRetries - 1) throw error;
-                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                }
-            }
-        }
-
-        // Main function for generating lyrics
-        const generateLyrics = async () => {
-            const userPrompt = promptInput.value.trim();
-            if (!userPrompt) return;
-
-            // Display user message
-            renderMessage(userPrompt, true);
-            promptInput.value = '';
-
-            // UI State: Loading
-            generateButton.disabled = true;
-            inputContainer.classList.add('loading');
-
-            const systemPrompt = getSystemPrompt(userPrompt, currentModel);
-            // POZNÁMKA: Ak kód spúšťate mimo tohto prostredia, vložte sem svoj Gemini API kľúč.
-            // V tomto prostredí (Canvas) ho nechajte prázdny.
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userPrompt }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-            };
-
-            try {
-                const response = await exponentialBackoffFetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-                let text = result.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, failed to generate text. Please try again with a different topic.";
-                
-                // --- Client-side sanitation of text to remove unwanted Markdown characters ---
-                // Removes # (headings), * (bullets/bold), _ (italics/bold), and > (quotes)
-                text = text.replace(/#+ /g, '').replace(/(\*\*|__|\*|_|>)/g, '');
-                // -----------------------------------------------------------------------------------------
-
-                // Save generated text for TTS
-                lastGeneratedText = text;
-
-                // Render AI response
-                renderMessage(text, false, true);
-                
-                // Enable TTS button
-                ttsButton.disabled = false;
-
-            } catch (error) {
-                console.error("Generation failed:", error);
-                renderMessage(`**Generation Error:** Failed to contact the model. Reason: ${error.message}. Please try again.`, false);
-                ttsButton.disabled = true;
-            } finally {
-                // UI State: Ready
-                generateButton.disabled = false;
-                inputContainer.classList.remove('loading');
-            }
-        };
-        
-        generateButton.addEventListener('click', generateLyrics);
-        promptInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !generateButton.disabled) {
-                generateLyrics();
-            }
-        });
-
-
-        // --- TTS LOGIC ---
-        
-        // Helper function: Detect likely language (based on word frequency and simple character check)
-        const isLikelyEnglish = (text) => {
-            if (!text) return true; // Default to English if text is empty
-            const englishKeywords = ['the', 'and', 'a', 'to', 'in', 'is', 'it', 'that', 'with', 'for', 'you'];
-            const nonEnglishMarkers = /[čšžýáíéäôňťľŕ]/i; // Common Slovak/Czech characters
-
-            if (nonEnglishMarkers.test(text)) {
-                return false;
-            }
-
-            const lowerText = text.toLowerCase();
-            let matchCount = 0;
-            englishKeywords.forEach(word => {
-                const regex = new RegExp(`\\b${word}\\b`, 'g');
-                if (lowerText.match(regex)) {
-                    matchCount++;
-                }
+                listContainer.appendChild(tagsContainer);
             });
-            // If we find more than 4 keywords AND no non-English markers, assume English.
-            return matchCount > 4; 
-        };
-
-        // Functions for converting PCM to WAV (required for TTS)
-        function base64ToArrayBuffer(base64) {
-            const binaryString = atob(base64);
-            const len = binaryString.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
-            }
-            return bytes.buffer;
         }
 
-        function pcmToWav(pcmData, sampleRate) {
-            const buffer = new ArrayBuffer(44 + pcmData.length * 2);
-            const view = new DataView(buffer);
-
-            writeString(view, 0, 'RIFF');
-            view.setUint32(4, 36 + pcmData.length * 2, true);
-            writeString(view, 8, 'WAVE');
-            writeString(view, 12, 'fmt ');
-            view.setUint32(16, 16, true);
-            view.setUint16(20, 1, true); 
-            view.setUint16(22, 1, true); 
-            view.setUint32(24, sampleRate, true);
-            view.setUint32(28, sampleRate * 2, true); 
-            view.setUint16(32, 2, true); 
-            view.setUint16(34, 16, true); 
-            writeString(view, 36, 'data');
-            view.setUint32(40, pcmData.length * 2, true);
-
-            for (let i = 0; i < pcmData.length; i++) {
-                view.setInt16(44 + i * 2, pcmData[i], true);
-            }
-            return new Blob([view], { type: 'audio/wav' });
-        }
-
-        function writeString(view, offset, string) {
-            for (let i = 0; i < string.length; i++) {
-                view.setUint8(offset + i, string.charCodeAt(i));
-            }
-        }
-
-        const generateTts = async (text) => {
-            if (!text) return;
-
-            ttsButton.textContent = 'Generating Voice...';
-            ttsButton.disabled = true;
-            audioPlayer.pause();
-            audioPlayer.src = '';
-            
-            // Remove section tags ([Verse 1], [Chorus] etc.) for clean text
-            const cleanText = text.replace(/\[.*?\]\n?/g, '').trim();
-            
-            // DYNAMIC TTS LOCALIZATION
-            const isEnglish = isLikelyEnglish(cleanText);
-            // Use Zephyr (Bright) for English and Puck (Upbeat) for other languages (e.g., Slovak)
-            const voiceName = isEnglish ? "Zephyr" : "Puck"; 
-            
-            let ttsPrompt;
-            if (isEnglish) {
-                // Instruction for the model: Speak in English with a bright, energetic tone
-                ttsPrompt = `Say in English with a bright, energetic, and melodic tone: ${cleanText}`;
-            } else {
-                // Instruction for the model: Speak in the detected language with an energetic and exciting tone
-                ttsPrompt = `Say with a high-energy, exciting, and melodic tone: ${cleanText}`;
-            }
-            
-            const payload = {
-                contents: [{ parts: [{ text: ttsPrompt }] }],
-                generationConfig: {
-                    responseModalities: ["AUDIO"],
-                    speechConfig: {
-                        voiceConfig: {
-                            prebuiltVoiceConfig: { voiceName: voiceName }
-                        }
-                    }
-                },
-                model: "gemini-2.5-flash-preview-tts"
-            };
-            
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-
-            try {
-                const response = await exponentialBackoffFetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-                const part = result?.candidates?.[0]?.content?.parts?.[0];
-                const audioData = part?.inlineData?.data;
-                const mimeType = part?.inlineData?.mimeType;
-
-                if (audioData && mimeType && mimeType.startsWith("audio/")) {
-                    const sampleRateMatch = mimeType.match(/rate=(\d+)/);
-                    const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 16000;
-                    
-                    const pcmData = base64ToArrayBuffer(audioData);
-                    const pcm16 = new Int16Array(pcmData);
-                    const wavBlob = pcmToWav(pcm16, sampleRate);
-                    const audioUrl = URL.createObjectURL(wavBlob);
-                    
-                    audioPlayer.src = audioUrl;
-                    audioPlayer.play();
-                    ttsButton.textContent = 'Playing Voice...';
-                } else {
-                    console.error("TTS response missing audio data or invalid mime type.");
-                    ttsButton.textContent = 'TTS Error!';
-                }
-
-            } catch (error) {
-                console.error("Error generating TTS:", error);
-                ttsButton.textContent = 'TTS Error!';
-            } finally {
-                // After playback ends or on error
-                audioPlayer.onended = () => {
-                    ttsButton.textContent = 'Read Aloud (TTS)';
-                };
-                ttsButton.disabled = false;
-            }
-        };
-
-        ttsButton.addEventListener('click', () => {
-            // Musí byť vygenerovaný text pred spustením TTS
-            if (lastGeneratedText) {
-                generateTts(lastGeneratedText);
-            } else {
-                 console.error("Please generate text first!");
-            }
-        });
-        
-        // Zabezpečí resetovanie tlačidla aj v prípade, že prehrávanie skončí mimo click eventu.
-        audioPlayer.onended = () => {
-            ttsButton.textContent = 'Read Aloud (TTS)';
-        };
-
+        // Spustenie generovania po načítaní okna
+        window.onload = generateStylesList;
     </script>
 </body>
 </html>
-
-
 
 
 
