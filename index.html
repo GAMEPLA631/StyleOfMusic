@@ -90,7 +90,7 @@
     <div class="max-w-7xl mx-auto">
         <header class="text-center mb-10">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-primary mb-2">Knižnica Hudobných Štýlov pre AI</h1>
-            <p class="text-gray-400 text-lg">Celkom 74 štýlov - Extrémny zvuk, Darkness a Bass!</p>
+            <p class="text-gray-400 text-lg">Celkom 106 štýlov - Extrémny zvuk, Darkness a Bass!</p>
         </header>
 
         <!-- Informačné pole (S PRIDANÝM LINKOM) -->
@@ -112,14 +112,14 @@
 
         <!-- Zoznam štýlov -->
         <div id="style-list" class="space-y-12">
-            <!-- Dáta pre štýly (aktuálne 74 položiek) -->
+            <!-- Dáta pre štýly (aktuálne 106 položiek) -->
         </div>
     </div>
 
     <script type="text/javascript">
         // Všetky štýly s kompletným anglickým promptom pre AI
         const fullPrompts = {
-            // New and reorganized Extreme/Darkness
+            // New and reorganized Extreme/Darkness (15 new)
             "Bass Boosted Hard": "Bass Boosted, EDM, Trap, Techno, Pop, Electric, Kawaii, House Energy, ultimate high-energy mix with deep bass",
             "Aggressive Bass Boosted Energy": "Aggressive Bass Boosted, Brutal Bass, Dubstep, Hardstyle, Neurostep, Ravecore, Heavy, Dark, Explosive Festival Energy",
             "Brutal Bass (Extreme Sub-Bass)": "Brutal Bass, Extreme Sub-Bass, Minimalistic Rhythm, Subsonic, V5 Pro",
@@ -168,7 +168,24 @@
             "Techno Hardcore (Gabba)": "Techno Hardcore, Gabba, Extremely Fast, Distorted Kick Drum, Raw Energy, V5 Pro",
             "Folk Horror OST (Eerie, Acoustic)": "Folk Horror OST, Eerie, Acoustic, Traditional Instruments, Unsettling Atmosphere",
             
-            // High Energy & Special Genres
+            // New Extreme/Darkness Styles (15 total new in this category)
+            "Breakcore (Complex Breakbeats)": "Breakcore, Extreme Breakbeats, Fast Tempo, Sampling, Noise, IDM, Chaotic Energy",
+            "Digital Hardcore (Noise & Punk)": "Digital Hardcore, Noise, Industrial, Punk Rock, Harsh Vocals, Extremely Distorted Synth, Fast Paced",
+            "Post-Metal (Atmospheric Sludge)": "Post-Metal, Atmospheric Sludge, Long Instrumental Passages, Crescendos, Heavy Distortion, Epic Soundscapes",
+            "Mathcore (Complex Rhythm)": "Mathcore, Extreme Metal, Highly Complex Time Signatures, Dissonant Riffs, Chaotic Structure, Technical Drumming",
+            "Cybergrind (Digital & Brutal)": "Cybergrind, Grindcore, Electronic Drums, Robotic Vocals, Harsh Noise, Digital Distortion, Very Fast",
+            "Harsh EBM (Aggressive Body Music)": "Harsh EBM, Aggressive Electronic Body Music, Heavy Kick Drums, Repetitive Synth Loops, Dark Themed, Dancefloor Focused",
+            "Dark Psytrance (Forest/Hi-Tech)": "Dark Psytrance, Forest Psy, Hi-Tech, Extremely Fast, Dark Atmosphere, Chaotic Arpeggios, Deep Bassline",
+            "Noise Rock (Dissonant, Feedback)": "Noise Rock, Dissonant, Abrasive, Guitar Feedback, Repetitive Rhythms, Punk Energy, Loud Production",
+            "Crust Punk (Metal & Anarchism)": "Crust Punk, Anarchism, D-beat Rhythms, Heavy Metal Influence, Growling Vocals, Raw Production",
+            "Drone Metal (Extremely Slow Drones)": "Drone Metal, Minimalism, Extreme Slow Tempo, Heavy Distortion, Sustained Tones, Ambient, Meditative",
+            "Vapor-Trap (Ambient Trap)": "Vapor-Trap, Vaporwave, Trap, Slow Beat, Heavy 808 Kick, Lo-Fi, Nostalgic, Deep Reverb",
+            "Horror Ambient (Cursed Soundscape)": "Horror Ambient, Dark Ambient, Soundscape, Eerie, Distorted Samples, Maximum Psychological Tension, Cursed Atmosphere",
+            "Power Noise (Rhythmic Industrial)": "Power Noise, Rhythmic Industrial, Heavy Percussion, Distorted Loops, Aggressive, Danceable Industrial",
+            "Rhythmic Noise (Industrial Beat)": "Rhythmic Noise, Industrial, Experimental, Repetitive, Heavy Distortion, Pulsing Beat, Dark Atmosphere",
+            "Industrial Ambient (Cold Drones)": "Industrial Ambient, Cold Drones, Soundscape, Mechanical Sounds, Minimalist, Isolated Feel",
+
+            // High Energy & Special Genres (10 + 3 new = 13 total)
             "Future Bass (Epic Drops)": "Future Bass, Epic Drops, Massive Emotional Synths, Fragmented Vocals, Sub-Bass Driven",
             "Brostep (Heavy & Skrillex Style)": "Brostep, Heavy, Skrillex Style, Noise, Deep Basslines, Robotic Sounds, Wobbles",
             "Hardcore Rave (90s Style)": "Hardcore Rave, 90s Style, Fast Tempo, 150+ BPM, Playful Melodies, Breakbeats, Euphoric",
@@ -179,8 +196,13 @@
             "Hardstyle (Classic Hard Kicks)": "Hardstyle, Classic Hard Kicks, Reverse Bass Kicks, Euphoric, Hymnic Melodies",
             "Glitch Hop (Broken Beats)": "Glitch Hop, Broken Beats, Hip Hop, Glitch Electronic, Digital Artifacts, Complex Rhythmic Patterns",
             "Hyperpop (Sexton & Glitch)": "Hyperpop, Avant-garde Pop, Over-the-Top Aesthetic, Auto-Tuned Vocals, Loud Mastering, Chaotic Glitch Effects",
+            // New High Energy
+            "Speed Garage (UK Jackin' Bass)": "Speed Garage, UK Jackin' Bass, Fast Garage Beat, Heavy Sub-Bass, Vocal Chops, Hypnotic Rhythm",
+            "Progressive House (Long Build-ups)": "Progressive House, Long Build-ups, Cinematic, Melodic, Emotional Progression, Powerful Drop, Festival Anthem",
+            "Afro House (Tribal Percussion)": "Afro House, Tribal Percussion, Deep House, African Rhythms, Hypnotic Beat, Warm and Energetic",
 
-            // Atmospheric & Experimental
+
+            // Atmospheric & Experimental (14 + 5 new = 19 total)
             "Vaporwave": "Vaporwave, Nostalgic, Surreal Aesthetic, Slowed Samples, Pitched",
             "Synthwave": "Synthwave, Retro-Futuristic, 80s Inspired, Prominent Synthesizers, Vibrant Sound",
             "Lofi Hip Hop": "Lofi Hip Hop, Relaxing, Muffled, Slow Beats, Study Music",
@@ -195,13 +217,27 @@
             "Dark Jazz (Cinematic)": "Dark Jazz, Cinematic, Slow, Moody Saxophone, Film Noir, Heavy Reverb",
             "Post-Punk (Goth Rock)": "Post-Punk, Goth Rock, Coldwave, Deep Baritone Vocals, Atmospheric Guitar",
             "Darkwave (80s Goth)": "Darkwave, 80s Goth, Melancholic Synthpop, Deep Vocals, New Wave Influence",
-            
-            // Pop & General
+            // New Atmospheric
+            "Krautrock (Motorik Beat)": "Krautrock, Motorik Beat, Repetitive Drum Rhythm, Minimalist, Psychedelic, Long Instrumental Journey",
+            "New Age (Meditative Ambient)": "New Age, Meditative Ambient, Relaxing, Nature Sounds, Synth Pads, Calm, Spiritual Themes",
+            "Dream Pop (Hazy, Ethereal)": "Dream Pop, Hazy, Ethereal, Reverb-Drenched Guitars, Soft Vocals, Melancholic Atmosphere",
+            "Lo-Fi Indie (Bedroom Pop)": "Lo-Fi Indie, Bedroom Pop, DIY Aesthetic, Muffled Sound, Simple Melodies, Intimate and Personal",
+            "Jazz Fusion (Complex Harmony)": "Jazz Fusion, Complex Harmony, Virtuoso Improvisation, Rock Rhythms, High Technical Skill, Electric Instruments",
+
+
+            // Pop & General (3 + 5 new = 8 total)
             "Mainstream Pop (Custom)": "Mainstream Pop, Catchy, Melodic, Radio-friendly, Dance, Emotional, Synth, Modern Hit",
             "Melodic Pop Ballad (New Pop Model)": "Melodic Pop Ballad, Clean, Catchy, Radio Pop, Strong Rhymes, Emotional, Smooth Melody, V4.1 Model",
             "Steampunk Opera (Victorian Tech)": "Steampunk Opera, Victorian Tech, Dramatic, Orchestral, Rock, Steampunk Aesthetic",
+            // New Pop & Urban
+            "Hip Hop (Golden Era)": "Hip Hop, Golden Era, Boom Bap, Vinyl Cracks, Sampled Jazz Loops, Conscious Lyrics, Raw Production",
+            "Future R&B (Vocal Focused)": "Future R&B, Vocal Focused, Minimalistic Beat, Smooth Vocals, Trap Influence, Spacey Atmosphere",
+            "Neo-Soul (Smooth & Groovy)": "Neo-Soul, Smooth, Groovy, Soul Music, Hip Hop Rhythm, Jazz Harmony, Organic Instruments, Retro Vibe",
+            "Synth Pop (80s Aesthetic)": "Synth Pop, 80s Aesthetic, Catchy Melodies, Synth Bassline, Drum Machines, Clean Production",
+            "Symphonic Metal (Opera Vocals)": "Symphonic Metal, Opera Vocals, Orchestral Arrangement, Heavy Guitar Riffs, Epic, Dramatic",
 
-            // World, Dance & Holiday
+
+            // World, Dance & Holiday (15 + 4 new = 19 total)
             "Christmas Pop (Holiday Ballad)": "Christmas Pop, Holiday Ballad, Emotional, Traditional Christmas Motifs, Bells, Orchestra",
             "Trap Christmas (Dark Christmas)": "Trap Christmas, Dark Christmas, Slow Trap Beat, 808 Bass, Nostalgic",
             "Acoustic Christmas Jazz (Comfortable Tone)": "Acoustic Christmas Jazz, Gentle, Warm, Piano, Contrabass, Traditional Atmosphere",
@@ -216,11 +252,16 @@
             "K-Pop": "K-Pop, Korean Pop, Fusion of Pop, Hip Hop, R&B, EDM",
             "Samba": "Samba, Brazilian, Rhythmic, Lively Beat, Dance Style",
             "Flamenco": "Flamenco, Traditional Spanish, Soulful Singing, Complex Guitar, Passionate Dance",
-            "Opera": "Opera, Dramatic Stage Work, All Sung Text, Orchestra Accompaniment"
+            "Opera": "Opera, Dramatic Stage Work, All Sung Text, Orchestra Accompaniment",
+            // New World
+            "GTA San Andreas Style (West Coast G-Funk)": "West Coast G-Funk, GTA San Andreas Style, Lazy Grooves, Mellow Synths, High-Pitched Vocals, Heavy Bassline, Summer Vibe",
+            "Afro Trap (African Rhythms)": "Afro Trap, African Rhythms, Trap Beat, 808 Bass, African Vocal Samples, Energetic, Danceable",
+            "Bollywood Pop (Indian Cinematic)": "Bollywood Pop, Indian Cinematic, Traditional Instruments, Dance Pop, Energetic, Film Soundtrack, Hindi Vocals",
+            "Latin Pop (Reggaeton & Pop Fusion)": "Latin Pop, Reggaeton & Pop Fusion, Spanish Vocals, Catchy Hooks, Dembow Rhythm, Radio Hit",
         };
 
 
-        // Pôvodné slovenské popisy pre tooltipy
+        // Pôvodné slovenské popisy pre tooltipy (aktualizované o 32 nových)
         const slovakDescriptions = {
             // Extreme Bass & Darkness (Reorganized and NEW)
             "Bass Boosted Hard": "Bass Boosted, EDM, Trap, Techno, Pop, Electric, Kawaii, House Energy – ultimátny mix s hlbokými basmi a vysokou energiou.",
@@ -242,7 +283,7 @@
             "Phonk (Cowbell & Lo-Fi Trap)": "Subžáner Trapu, ktorý silno sampluje Memphis Rap 90. rokov, charakterizovaný temnou, lo-fi kvalitou a často používa zvuk cowbellu. Použite V5 Pro model.",
             "Drill (UK/Chicago Style)": "Subžáner Trapu definovaný temnými, agresívnymi textami a výraznými, kĺzavými basovými linkami 808. Použite V5 Pro model.",
             "Witch House (Slowed & Dark Synth)": "Elektronický žáner s extrémne spomalenými tempami, hlboko posadenými vokálmi, temnými synth melódiami a dominantným sub-basom. Použite V5 Pro model.",
-            "Wave (Atmospheric Trap)": "Atmosférická, melancholická hudba miešajúca prvky Trapu, Grime a Ambientu, charakterizovaná hlbokým reverbom a sub-basom. Použite V5 Pro model.",
+            "Wave (Atmospheric Trap)": "Wave, Atmosférická Trap, Melancholická hudba miešajúca prvky Trapu, Grime a Ambientu, charakterizovaná hlbokým reverbom a sub-basom. Použite V5 Pro model.",
             "Grime (UK Urban Bass)": "Britský elektronický a rapový žáner, známy svojím riedkym, synkopickým rytmom a veľmi ťažkými, výraznými basovými linkami. Použite V5 Pro model.",
             "Footwork/Juke (Fast Breakbeats)": "Extrémne rýchla (160 BPM+) tanečná hudba z Chicaga, zameraná na komplexné, sekané breakbeatové sample a hlboké basy. Použite V5 Pro model.",
             "Future Garage (Deep & Dark UKG)": "Tmavší, atmosférickejší vývoj UK Garage, charakterizovaný priestorovým reverbom a hlbokými sub-basmi. Použite V5 Pro model.",
@@ -271,10 +312,34 @@
             "Techno Hardcore (Gabba)": "Extrémne rýchle (180+ BPM) Techno s veľmi skresleným kopákom. Surová, nekompromisná energia. Použite V5 Pro model.",
             "Folk Horror OST (Eerie, Acoustic)": "Hudba z folkových hororov. Strašidelné, akustické tóny, tradičné nástroje a znepokojujúca atmosféra.",
             
+            // New Extreme/Darkness Styles (15 total new in this category)
+            "Breakcore (Complex Breakbeats)": "Extrémne rýchle a komplexné Breakbeats, chaotická energia, hluk a intenzívne samplovanie.",
+            "Digital Hardcore (Noise & Punk)": "Fúzia Industriálu, Punk Rocku a Hlukovej hudby. Extrémne rýchle, skreslené syntetizátory a drsné vokály.",
+            "Post-Metal (Atmospheric Sludge)": "Dlhé inštrumentálne pasáže, mohutné crescendá a ťažká distorzia. Atmosférické a epické zvukové scenérie.",
+            "Mathcore (Complex Rhythm)": "Extrémny metal s veľmi komplexnými rytmickými štruktúrami, disonantnými riffmi a technickými bicími.",
+            "Cybergrind (Digital & Brutal)": "Brutálny Grindcore s elektronickými bicími, robotickými vokálmi, digitálnou distorziou a extrémnou rýchlosťou.",
+            "Harsh EBM (Aggressive Body Music)": "Agresívnejšia verzia EBM, zameraná na tanečný parket s ťažkými kopákmi a repetitívnymi, temnými synth slučkami.",
+            "Dark Psytrance (Forest/Hi-Tech)": "Extrémne rýchly Psytrance s temnou, lesnou/futuristickou atmosférou. Chaotické arpeggiá a hlboká basa.",
+            "Noise Rock (Dissonant, Feedback)": "Rocková hudba s disonantnými tónmi, gitarovou spätnou väzbou a hlučnou, abrazívnou produkciou.",
+            "Crust Punk (Metal & Anarchism)": "Punk Rock s prvkami Heavy Metalu, typickými D-beat rytmami, growling vokálmi a surovou produkciou.",
+            "Drone Metal (Extremely Slow Drones)": "Extrémne pomalá, minimalistická hudba tvorená dlhotrvajúcimi, skreslenými tónmi. Meditatívna a ambientná.",
+            "Vapor-Trap (Ambient Trap)": "Spomalený Trap s ťažkým 808 kopákom, spojený s estetikou Vaporwave (Lo-Fi, nostalgia, hlboký reverb).",
+            "Horror Ambient (Cursed Soundscape)": "Extrémne temná ambientná hudba s rušivými samplami a skreslením, zameraná na maximálne psychologické napätie.",
+            "Power Noise (Rhythmic Industrial)": "Rytmický Industrial Hluk. Agresívne, tanečné slučky s ťažkými perkusiami a distorziou.",
+            "Rhythmic Noise (Industrial Beat)": "Rytmický Hluk s industriálnym zameraním. Repetitívne, ťažké skreslenie a pulzujúci, temný beat.",
+            "Industrial Ambient (Cold Drones)": "Studené drony a zvukové scenérie s mechanickými zvukmi, minimalistické a vytvárajúce pocit izolácie.",
+
             // Pop & General (zmena kategórie)
             "Mainstream Pop (Custom)": "Pop, chytľavý, melodický, rádiový, tanečný, emocionálny, syntetický. Ideálny pre moderné hity a tanečné parkety.",
             "Melodic Pop Ballad (New Pop Model)": "Nová verzia V4.1! Zameraná na čistý, chytľavý, rádiový Pop s dôrazom na silné rýmy, emócie a plynulú melódiu.",
             "Steampunk Opera (Victorian Tech)": "Dramatická, orchestrálna hudba kombinujúca prvky Opery, Rocku a Steampunk estetiky. O viktoriánskej dobe a parných strojoch.",
+            
+            // New Pop & Urban (5 total new in this category)
+            "Hip Hop (Golden Era)": "Klasický zvuk 90. rokov: Boom Bap, praskanie vinylu, samplované jazzové slučky, surová produkcia a texty svedomia.",
+            "Future R&B (Vocal Focused)": "R&B zamerané na hladké, moderné vokály cez minimalistický beat, často s vplyvom Trapu a priestorovou atmosférou.",
+            "Neo-Soul (Smooth & Groovy)": "Moderný Soul s Hip Hop rytmami a Jazz harmóniou. Hladký, 'groovy' zvuk s organickými nástrojmi a retro atmosférou.",
+            "Synth Pop (80s Aesthetic)": "Pop 80. rokov. Chytľavé melódie, synth basové linky, bicie automaty a čistá produkcia.",
+            "Symphonic Metal (Opera Vocals)": "Metal s mohutnými orchestrálnymi aranžmánmi, ťažkými gitarovými riffmi a opernými (ženskými) vokálmi. Dramatické a epické.",
 
             // High Energy & Special Genres
             "Future Bass (Epic Drops)": "Žáner definovaný masívnymi, emotívnymi syntetizátormi, fragmentovanými vokálmi a epickými 'dropmi' poháňanými sub-basmi.",
@@ -287,6 +352,11 @@
             "Hardstyle (Classic Hard Kicks)": "Extrémne silné 'reverse bass' kopy a euforické, hymnické melódie, ktoré dominujú Hard Dance festivalom.",
             "Glitch Hop (Broken Beats)": "Fúzia Hip Hopu a Glitch elektroniky. Využíva 'zlomené' beaty, digitálne artefakty a komplexné rytmické vzory.",
             "Hyperpop (Sexton & Glitch)": "Avantgardný Pop s prehnanou estetikou, auto-tuned vokálmi, hlasným masteringom a chaotickými glitch efektmi.",
+            // New High Energy
+            "Speed Garage (UK Jackin' Bass)": "Veľmi rýchly UK Garage beat s ťažkým sub-basom, sekanými vokálmi a hypnotickým rytmom.",
+            "Progressive House (Long Build-ups)": "House s dlhými inštrumentálnymi pasážami, filmovou melódiou a silnými emóciami pred mohutným 'dropom'.",
+            "Afro House (Tribal Percussion)": "Deep House obohatený o africké rytmy a kmeňové perkusie. Teplý a hypnoticky energický.",
+
 
             // Atmospheric & Experimental
             "Vaporwave": "Mikrožáner s nostalgickou, surrealistickou estetikou a spomalenými, posunutými samplami.",
@@ -303,6 +373,12 @@
             "Dark Jazz (Cinematic)": "Pomalý, náladový Jazz s ťažkým reverbom a tónmi film noir, často s temným saxofónom.",
             "Post-Punk (Goth Rock)": "Atmosférický rock s hlbokými barytónovými vokálmi, chladnými vlnami a temnými gitarami.",
             "Darkwave (80s Goth)": "Melancholický synthpop inšpirovaný 80. rokmi, s hlbokými vokálmi a vplyvom New Wave.",
+            // New Atmospheric
+            "Krautrock (Motorik Beat)": "Nemecký rock 70. rokov. Hypnotický, opakujúci sa 'Motorik Beat', minimalistické a dlhé inštrumentálne cesty.",
+            "New Age (Meditative Ambient)": "Relaxačná, meditatívna hudba s použitím syntetizátorov, prírodných zvukov a pokojných, spirituálnych tém.",
+            "Dream Pop (Hazy, Ethereal)": "Zahmlený, éterický pop s gitarami plnými reverbu, jemnými vokálmi a melancholickou atmosférou.",
+            "Lo-Fi Indie (Bedroom Pop)": "Domácky nahrávaný Pop s 'urob si sám' estetikou (DIY), tlmeným zvukom a jednoduchými, intímnymi melódiami.",
+            "Jazz Fusion (Complex Harmony)": "Fúzia Jazzu s Rockom a inými žánrami. Komplexná harmónia, virtuózna improvizácia a elektrické nástroje.",
 
 
             // World, Dance & Holiday
@@ -320,16 +396,21 @@
             "K-Pop": "Populárna hudba z Južnej Kórey, často fúzia popu, hip hopu, R&B a EDM.",
             "Samba": "Brazílsky hudobný žáner a tanečný štýl, známy svojím rytmickým a živým beatom.",
             "Flamenco": "Tradičná španielska umelecká forma zahŕňajúca oduševnený spev, komplexnú hru na gitaru a vášnivý tanec.",
-            "Opera": "Dramatické javiskové dielo, kde je všetok text alebo väčšina textu spievaná, sprevádzaná orchestrom."
+            "Opera": "Dramatické javiskové dielo, kde je všetok text alebo väčšina textu spievaná, sprevádzaná orchestrom.",
+            // New World
+            "GTA San Andreas Style (West Coast G-Funk)": "G-Funk štýl zo Západného Pobrežia, uvoľnené drážky, melancholické synthy, ťažká basa. Atmosféra Los Santos.",
+            "Afro Trap (African Rhythms)": "Trap beat s 808 basom, obohatený o africké rytmy a vokálne sample. Energické a tanečné.",
+            "Bollywood Pop (Indian Cinematic)": "Indická filmová hudba. Energetický Dance Pop s tradičnými indickými nástrojmi a Hindi vokálmi.",
+            "Latin Pop (Reggaeton & Pop Fusion)": "Fúzia moderného Popu a Reggaetonu. Chytľavé háčiky, Dembow rytmus a španielske vokály. Rádiový hit.",
         };
 
 
         // Definovanie štruktúry kategórií
         const structuredStyleKeys = [
             {
-                category: "1. EXTRÉMNE BASY, DARKNESS a HARDCORE (46 štýlov)",
+                category: "1. EXTRÉMNE BASY, DARKNESS a HARDCORE (61 štýlov)",
                 keys: [
-                    // Extrémne Basy a Trap
+                    // Pôvodné extrémne štýly (46)
                     "Bass Boosted Hard",
                     "Aggressive Bass Boosted Energy",
                     "Brutal Bass (Extreme Sub-Bass)",
@@ -356,8 +437,6 @@
                     "Dark Techno (Industrial)",
                     "EBM (Electronic Body Music)",
                     "Minimal Synth (Coldwave)",
-
-                    // Darkness, Metal a Noise (New Additions)
                     "Horrorcore",
                     "Dark Horror Darkness",
                     "Cyberpunk Industrial Metal (Robotic)",
@@ -380,10 +459,26 @@
                     "Techno Hardcore (Gabba)",
                     "Folk Horror OST (Eerie, Acoustic)",
 
+                    // NOVÉ EXTRÉMNE (15)
+                    "Breakcore (Complex Breakbeats)",
+                    "Digital Hardcore (Noise & Punk)",
+                    "Post-Metal (Atmospheric Sludge)",
+                    "Mathcore (Complex Rhythm)",
+                    "Cybergrind (Digital & Brutal)",
+                    "Harsh EBM (Aggressive Body Music)",
+                    "Dark Psytrance (Forest/Hi-Tech)",
+                    "Noise Rock (Dissonant, Feedback)",
+                    "Crust Punk (Metal & Anarchism)",
+                    "Drone Metal (Extremely Slow Drones)",
+                    "Vapor-Trap (Ambient Trap)",
+                    "Horror Ambient (Cursed Soundscape)",
+                    "Power Noise (Rhythmic Industrial)",
+                    "Rhythmic Noise (Industrial Beat)",
+                    "Industrial Ambient (Cold Drones)",
                 ]
             },
             {
-                category: "2. VYSOKÁ ENERGIA a ŠPECIÁLNE ŽÁNRE (10 štýlov)",
+                category: "2. VYSOKÁ ENERGIA a ŠPECIÁLNE ŽÁNRE (13 štýlov)",
                 keys: [
                     "Future Bass (Epic Drops)",
                     "Brostep (Heavy & Skrillex Style)",
@@ -395,10 +490,14 @@
                     "Hardstyle (Classic Hard Kicks)",
                     "Glitch Hop (Broken Beats)",
                     "Hyperpop (Sexton & Glitch)",
+                    // NOVÉ VYSOKÁ ENERGIA (3)
+                    "Speed Garage (UK Jackin' Bass)",
+                    "Progressive House (Long Build-ups)",
+                    "Afro House (Tribal Percussion)",
                 ]
             },
             {
-                category: "3. ATMOSFÉRICKÉ & EXPERIMENTÁLNE (14 štýlov)",
+                category: "3. ATMOSFÉRICKÉ & EXPERIMENTÁLNE (19 štýlov)",
                 keys: [
                     "Vaporwave",
                     "Synthwave",
@@ -414,18 +513,30 @@
                     "Dark Jazz (Cinematic)",
                     "Post-Punk (Goth Rock)",
                     "Darkwave (80s Goth)",
+                    // NOVÉ ATMOSFÉRICKÉ (5)
+                    "Krautrock (Motorik Beat)",
+                    "New Age (Meditative Ambient)",
+                    "Dream Pop (Hazy, Ethereal)",
+                    "Lo-Fi Indie (Bedroom Pop)",
+                    "Jazz Fusion (Complex Harmony)",
                 ]
             },
             {
-                category: "4. POP & GENERICKÉ (3 štýly)",
+                category: "4. POP, URBAN a R&B (8 štýlov)",
                 keys: [
                     "Mainstream Pop (Custom)",
                     "Melodic Pop Ballad (New Pop Model)",
-                    "Steampunk Opera (Victorian Tech)", // Unikátny žáner, nechávame tu
+                    "Steampunk Opera (Victorian Tech)",
+                    // NOVÉ URBAN A POP (5)
+                    "Hip Hop (Golden Era)",
+                    "Future R&B (Vocal Focused)",
+                    "Neo-Soul (Smooth & Groovy)",
+                    "Synth Pop (80s Aesthetic)",
+                    "Symphonic Metal (Opera Vocals)",
                 ]
             },
             {
-                category: "5. SVETOVÉ, TANEČNÉ a HOLIDAY ŽÁNRE (15 štýlov)",
+                category: "5. SVETOVÉ, TANEČNÉ a HOLIDAY ŽÁNRE (19 štýlov)",
                 keys: [
                     "Christmas Pop (Holiday Ballad)",
                     "Trap Christmas (Dark Christmas)",
@@ -442,6 +553,11 @@
                     "Samba",
                     "Flamenco",
                     "Opera",
+                    // NOVÉ SVETOVÉ (4)
+                    "GTA San Andreas Style (West Coast G-Funk)",
+                    "Afro Trap (African Rhythms)",
+                    "Bollywood Pop (Indian Cinematic)",
+                    "Latin Pop (Reggaeton & Pop Fusion)",
                 ]
             }
         ];
@@ -495,14 +611,14 @@
                     const tag = document.createElement('span');
                     // Pridanie 'break-words' pre lepšiu čitateľnosť dlhých tagov na menších obrazovkách
                     tag.className = "style-tag bg-card-dark text-gray-300 hover:bg-primary hover:text-white px-4 py-2 rounded-full font-medium text-sm sm:text-base whitespace-normal break-words group relative max-w-full sm:max-w-none";
-                    tag.textContent = promptText;
+                    tag.textContent = key; // Zobrazujeme len krátky kľúč
                     tag.title = key; // Krátky názov ako titul pre jednoduchšiu identifikáciu
 
                     // Vytvorenie Tooltipu
                     const tooltip = document.createElement('span');
                     tooltip.className = "tooltip-text";
                     // Popis tooltitu používa krátky názov + slovenský popis
-                    tooltip.innerHTML = `<span class="font-bold text-base">${key}</span><br/>${tooltipText}`;
+                    tooltip.innerHTML = `<span class="font-bold text-base">${key}</span><br/>${tooltipText}<br/><hr class="my-1 border-gray-500"><span class="text-xs font-mono">${promptText}</span>`;
                     tag.appendChild(tooltip);
 
                     // Pridanie event listenera pre kopírovanie
