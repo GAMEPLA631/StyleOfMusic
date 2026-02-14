@@ -104,28 +104,28 @@
                 </span>
                 Premium Database Ready
             </div>
-            <h1 class="text-6xl md:text-8xl font-black mb-6 leading-[0.9] uppercase italic tracking-tighter">INDEXED<span class="text-brand-primary">DB</span> PRO</h1>
+            <h1 class="text-6xl md:text-8xl font-black mb-6 leading-[0.9] uppercase italic tracking-tighter text-white">PRO <span class="text-brand-primary tracking-tighter">KEYWORDS</span></h1>
             <p class="text-slate-400 text-lg md:text-xl mb-10 leading-relaxed font-medium">
-                Bezpečné ukladanie nákupov v premium databáze. <br class="hidden md:block"> Prístup k 256+ unikátnym štýlom pre AI generovanie.
+                Kompletný zoznam 256+ PRO žánrov. Každé okienko teraz obsahuje exkluzívne kľúčové slová pre tvoju produkciu.
             </p>
         </div>
     </header>
 
     <!-- Notifikácia -->
     <div id="notification" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] px-8 py-4 rounded-2xl bg-white text-black font-black shadow-2xl hidden transform transition-all duration-300 uppercase tracking-tighter text-sm">
-        Prompt skopírovaný!
+        PRO Prompt skopírovaný!
     </div>
 
     <!-- Knižnica -->
     <section id="library" class="max-w-7xl mx-auto px-6 py-20">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-brand-border pb-8 gap-6">
             <div>
-                <h2 class="text-4xl font-black mb-2 uppercase italic tracking-tighter">Štýly pre náročných</h2>
-                <p class="text-slate-500 text-sm font-medium">Každý štýl vyžaduje aktívnu licenciu PRO.</p>
+                <h2 class="text-4xl font-black mb-2 uppercase italic tracking-tighter">Prémiová Knižnica</h2>
+                <p class="text-slate-500 text-sm font-medium uppercase tracking-widest">Všetky okienka obsahujú PRO kľúčové slová.</p>
             </div>
             <div class="flex items-center gap-4">
                 <div class="bg-brand-card border border-brand-border px-5 py-3 rounded-2xl text-xs font-black tracking-widest flex items-center gap-3">
-                    STAV LICENCIE: 
+                    LICENCIA: 
                     <span class="text-red-500 uppercase px-2 py-1 bg-red-500/10 rounded-lg" id="account-status">NEAKTÍVNA</span>
                 </div>
             </div>
@@ -140,19 +140,18 @@
     <section id="pricing" class="bg-brand-card/30 border-y border-brand-border py-32 px-6">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-20">
-                <h2 class="text-5xl md:text-7xl font-black mb-4 uppercase italic tracking-tighter">Získaj PRO balík</h2>
-                <p class="text-slate-400 text-lg">Záznam o nákupe bude trvalo uložený v IndexedDB tvojho prehliadača.</p>
+                <h2 class="text-5xl md:text-7xl font-black mb-4 uppercase italic tracking-tighter">Odomkni PRO okienka</h2>
+                <p class="text-slate-400 text-lg">Získaj prístup ku kľúčovým slovám v každom balíku.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
-                <!-- Starter -->
+                <!-- Plány zostávajú rovnaké, ukladajú sa do IndexedDB -->
                 <div class="pricing-card glass p-10 rounded-[2.5rem] border border-brand-border flex flex-col">
                     <h3 class="font-black mb-2 text-slate-500 uppercase text-xs tracking-widest italic">Starter Pack</h3>
                     <div class="text-5xl font-black mb-8 text-white tracking-tighter">4.99€</div>
                     <p class="text-[10px] text-slate-500 uppercase font-bold mb-8">Trvanie: 30 Dní</p>
                     <button onclick="openPayment('STARTER', '4.99€', 30)" class="w-full bg-brand-border hover:bg-slate-700 text-white py-4 rounded-2xl font-black transition uppercase text-xs tracking-widest">Aktivovať</button>
                 </div>
-                <!-- Producer -->
                 <div class="pricing-card glass p-10 rounded-[2.5rem] border-2 border-brand-primary flex flex-col relative overflow-hidden bg-brand-primary/5">
                     <div class="absolute top-6 -right-12 bg-brand-primary text-white text-[10px] font-black py-1 px-14 rotate-45 uppercase tracking-widest">TOP</div>
                     <h3 class="font-black mb-2 text-brand-primary uppercase text-xs tracking-widest italic">Producer</h3>
@@ -160,21 +159,18 @@
                     <p class="text-[10px] text-slate-500 uppercase font-bold mb-8">Trvanie: 30 Dní</p>
                     <button onclick="openPayment('PRODUCER', '9.99€', 30)" class="w-full bg-brand-primary hover:bg-red-600 text-white py-4 rounded-2xl font-black transition uppercase text-xs tracking-widest shadow-xl shadow-red-600/20">Aktivovať</button>
                 </div>
-                <!-- Elite -->
                 <div class="pricing-card glass p-10 rounded-[2.5rem] border border-brand-border flex flex-col">
                     <h3 class="font-black mb-2 text-yellow-500 uppercase text-xs tracking-widest italic">Elite VIP</h3>
                     <div class="text-5xl font-black mb-8 text-white tracking-tighter">19.99€</div>
                     <p class="text-[10px] text-slate-500 uppercase font-bold mb-8">Trvanie: 30 Dní</p>
                     <button onclick="openPayment('ELITE', '19.99€', 30)" class="w-full bg-brand-border hover:bg-slate-700 text-white py-4 rounded-2xl font-black transition uppercase text-xs tracking-widest">Aktivovať</button>
                 </div>
-                <!-- Darkness -->
                 <div class="pricing-card glass p-10 rounded-[2.5rem] border-2 border-red-900 flex flex-col bg-red-950/20">
                     <h3 class="font-black mb-2 text-red-600 uppercase text-xs tracking-widest italic">Darkness Pass</h3>
                     <div class="text-5xl font-black mb-8 text-white tracking-tighter">24.99€</div>
                     <p class="text-[10px] text-slate-500 uppercase font-bold mb-8">Trvanie: 365 Dní</p>
                     <button onclick="openPayment('DARKNESS', '24.99€', 365)" class="w-full bg-red-700 hover:bg-red-800 text-white py-4 rounded-2xl font-black transition uppercase text-xs tracking-widest">Aktivovať</button>
                 </div>
-                <!-- Ultimate -->
                 <div class="pricing-card glass p-10 rounded-[2.5rem] border border-brand-border flex flex-col bg-gradient-to-br from-transparent to-brand-primary/20">
                     <h3 class="font-black mb-2 text-white uppercase text-[10px] tracking-[0.3em] italic">Ultimate Lifetime</h3>
                     <div class="text-5xl font-black mb-8 text-white tracking-tighter">99€</div>
@@ -185,136 +181,73 @@
         </div>
     </section>
 
-    <!-- Platobná brána -->
+    <!-- Platobná brána a Modaly zostávajú rovnaké -->
     <div id="payment-modal" class="fixed inset-0 z-[200] items-center justify-center bg-black/95 px-4 hidden">
         <div class="glass max-w-lg w-full p-12 rounded-[3rem] border border-brand-border animate-fade">
             <div class="flex justify-between items-center mb-10">
                 <h2 class="text-3xl font-black uppercase tracking-tighter">Premium Checkout</h2>
                 <button onclick="closePayment()" class="text-slate-500 hover:text-white p-2">✕</button>
             </div>
-            
             <div class="mb-10 bg-brand-bg/80 p-6 rounded-3xl border border-brand-border flex justify-between items-center">
-                <div>
-                    <p class="text-[10px] text-slate-500 uppercase font-black mb-1 tracking-widest">Balík</p>
-                    <span id="modal-plan-name" class="font-black text-2xl text-brand-primary uppercase italic tracking-tighter">PLAN</span>
-                </div>
-                <div class="text-right">
-                    <p class="text-[10px] text-slate-500 uppercase font-black mb-1 tracking-widest">Suma</p>
-                    <span id="modal-plan-price" class="font-black text-3xl tracking-tighter">0.00€</span>
-                </div>
+                <div><p class="text-[10px] text-slate-500 uppercase font-black tracking-widest">Balík</p><span id="modal-plan-name" class="font-black text-2xl text-brand-primary uppercase italic tracking-tighter">PLAN</span></div>
+                <div class="text-right"><p class="text-[10px] text-slate-500 uppercase font-black tracking-widest">Suma</p><span id="modal-plan-price" class="font-black text-3xl tracking-tighter text-white">0.00€</span></div>
             </div>
-
             <div class="space-y-6">
-                <div class="grid grid-cols-1 gap-6">
-                    <div>
-                        <label class="text-[10px] uppercase font-black text-slate-500 ml-2 mb-2 block tracking-widest">Číslo karty</label>
-                        <input type="text" placeholder="5342 8812 0031 9928" class="w-full bg-brand-bg border border-brand-border rounded-2xl px-6 py-5 focus:border-brand-primary outline-none text-white text-lg font-bold tracking-widest">
-                    </div>
-                    <div class="flex gap-6">
-                        <div class="flex-grow">
-                            <label class="text-[10px] uppercase font-black text-slate-500 ml-2 mb-2 block tracking-widest">Expirácia</label>
-                            <input type="text" placeholder="MM / YY" class="w-full bg-brand-bg border border-brand-border rounded-2xl px-6 py-5 focus:border-brand-primary outline-none text-white text-center font-bold">
-                        </div>
-                        <div class="w-1/3">
-                            <label class="text-[10px] uppercase font-black text-slate-500 ml-2 mb-2 block tracking-widest">CVC</label>
-                            <input type="password" placeholder="***" class="w-full bg-brand-bg border border-brand-border rounded-2xl px-6 py-5 focus:border-brand-primary outline-none text-white text-center font-bold">
-                        </div>
-                    </div>
+                <input type="text" placeholder="Číslo karty" class="w-full bg-brand-bg border border-brand-border rounded-2xl px-6 py-5 focus:border-brand-primary outline-none text-white text-lg font-bold tracking-widest">
+                <div class="flex gap-6">
+                    <input type="text" placeholder="MM / YY" class="flex-grow bg-brand-bg border border-brand-border rounded-2xl px-6 py-5 focus:border-brand-primary outline-none text-white text-center font-bold">
+                    <input type="password" placeholder="CVC" class="w-1/3 bg-brand-bg border border-brand-border rounded-2xl px-6 py-5 focus:border-brand-primary outline-none text-white text-center font-bold">
                 </div>
                 <button onclick="processPayment()" class="w-full bg-brand-primary text-white py-6 rounded-3xl font-black text-xl mt-8 shadow-[0_20px_50px_rgba(255,62,62,0.3)] active:scale-95 transition-all uppercase tracking-widest italic">Zaplatiť a Aktivovať</button>
             </div>
-            <p class="text-[9px] text-center text-slate-600 mt-10 uppercase font-bold tracking-[0.2em]">Secured by Musical Universe Systems &copy;</p>
         </div>
     </div>
 
-    <!-- Success Modal -->
     <div id="success-modal" class="fixed inset-0 z-[300] items-center justify-center bg-black/98 px-4 hidden text-center">
         <div class="animate-fade">
-            <div class="w-32 h-32 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-[0_0_80px_rgba(34,197,94,0.4)]">
-                <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M5 13l4 4L19 7"></path></svg>
-            </div>
-            <h2 class="text-6xl font-black mb-4 uppercase italic tracking-tighter">PRÍSTUP ODOMKNUTÝ</h2>
-            <p class="text-slate-400 text-xl mb-12 font-medium">Tvoja licencia bola úspešne zapísaná do IndexedDB.</p>
-            <button onclick="closeSuccess()" class="bg-white text-black px-16 py-5 rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-105 transition-transform shadow-2xl">Vstúpiť do knižnice</button>
+            <div class="w-32 h-32 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-[0_0_80px_rgba(34,197,94,0.4)]"><svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M5 13l4 4L19 7"></path></svg></div>
+            <h2 class="text-6xl font-black mb-4 uppercase italic tracking-tighter text-white">PRÍSTUP UDELENÝ</h2>
+            <p class="text-slate-400 text-xl mb-12 font-medium">Tvoj premium status bol zapísaný do databázy.</p>
+            <button onclick="closeSuccess()" class="bg-white text-black px-16 py-5 rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-105 transition-transform shadow-2xl">Vstúpiť</button>
         </div>
     </div>
 
-    <footer class="py-20 border-t border-brand-border text-center">
-        <div class="flex items-center justify-center gap-3 mb-6 opacity-30">
-            <div class="w-12 h-[1px] bg-white"></div>
-            <span class="text-xs font-black uppercase tracking-[0.5em]">The Musical Universe PRO</span>
-            <div class="w-12 h-[1px] bg-white"></div>
-        </div>
-        <div class="text-slate-600 text-[10px] font-bold uppercase tracking-widest">
-            Handcrafted for Premium Producers &copy; 2026
-        </div>
-    </footer>
-
     <script>
-        // --- PREMIUM INDEXEDDB LOGIKA ---
+        // --- INDEXEDDB LOGIKA ---
         const DB_NAME = 'MusicalUniverseDB';
         const DB_VERSION = 1;
         const STORE_NAME = 'premium_sub';
         let db;
 
         const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-        request.onupgradeneeded = (event) => {
-            const dbInstance = event.target.result;
-            if (!dbInstance.objectStoreNames.contains(STORE_NAME)) {
-                dbInstance.createObjectStore(STORE_NAME, { keyPath: 'id' });
-            }
+        request.onupgradeneeded = (e) => {
+            const dbInstance = e.target.result;
+            if (!dbInstance.objectStoreNames.contains(STORE_NAME)) dbInstance.createObjectStore(STORE_NAME, { keyPath: 'id' });
         };
-
-        request.onsuccess = (event) => {
-            db = event.target.result;
-            checkSubscriptionFromDB();
-        };
-
-        request.onerror = (event) => {
-            console.error('IndexedDB Error:', event.target.error);
-        };
+        request.onsuccess = (e) => { db = e.target.result; checkSubscriptionFromDB(); };
 
         function saveSubscriptionToDB(subData) {
             const transaction = db.transaction([STORE_NAME], 'readwrite');
-            const store = transaction.objectStore(STORE_NAME);
-            store.put({ id: 'current_user', ...subData });
-            
-            transaction.oncomplete = () => {
-                window.isProActive = true;
-                updateUIAfterPayment(subData.planName, subData.expiresAt);
-            };
+            transaction.objectStore(STORE_NAME).put({ id: 'current_user', ...subData });
+            transaction.oncomplete = () => { window.isProActive = true; updateUIAfterPayment(subData.planName, subData.expiresAt); };
         }
 
         function checkSubscriptionFromDB() {
             if (!db) return;
             const transaction = db.transaction([STORE_NAME], 'readonly');
-            const store = transaction.objectStore(STORE_NAME);
-            const request = store.get('current_user');
-
-            request.onsuccess = () => {
-                const sub = request.result;
-                if (sub) {
-                    const now = Date.now();
-                    // PRÍSNA KONTROLA EXPIRÁCIE
-                    if (sub.expiresAt > now) {
-                        window.isProActive = true;
-                        updateUIAfterPayment(sub.planName, sub.expiresAt);
-                    } else {
-                        // LICENCIA EXPIROVALA - ZABLOKOVAŤ PRÍSTUP
-                        window.isProActive = false;
-                        resetUIToBasic();
-                    }
+            transaction.objectStore(STORE_NAME).get('current_user').onsuccess = (e) => {
+                const sub = e.target.result;
+                if (sub && sub.expiresAt > Date.now()) {
+                    window.isProActive = true;
+                    updateUIAfterPayment(sub.planName, sub.expiresAt);
+                } else {
+                    resetUIToBasic();
                 }
             };
         }
 
-        // Kontrolovať každých 30 sekúnd, či licencia neexpitovala počas prehliadania
-        setInterval(() => {
-            checkSubscriptionFromDB();
-        }, 30000);
+        setInterval(checkSubscriptionFromDB, 30000);
 
-        // --- ZVYŠOK LOGIKY ---
         window.isProActive = false;
         let selectedPlan = { name: '', days: 0 };
 
@@ -441,71 +374,115 @@
             "Afro Trap (African Rhythms)": "Afro Trap, African Rhythms, Trap Beat, 808 Bass, African Vocal Samples, Energetic, Danceable",
             "Bollywood Pop (Indian Cinematic)": "Bollywood Pop, Indian Cinematic, Traditional Instruments, Dance Pop, Energetic, Film Soundtrack, Hindi Vocals",
             "Latin Pop (Reggaeton & Pop Fusion)": "Latin Pop, Reggaeton & Pop Fusion, Spanish Vocals, Catchy Hooks, Dembow Rhythm, Radio Hit",
+            "Extreme Bassline House": "Bassline House, Aggressive Sub, Speed Garage Beat, Distorted Bass, High Octane, UK Sound",
+            "Melodic Dubstep (Emotional)": "Melodic Dubstep, Huge Emotional Drops, Sustained Chords, Liquid Sub, Serene Breakdown",
+            "Rawstyle (Brutal Kicks)": "Rawstyle, Hardstyle Variant, Brutal Distorted Kicks, Screech Leads, Aggressive Energy, Dark",
+            "Uptempo Hardcore": "Uptempo Hardcore, 200+ BPM, Heavy Distortion, Fast Aggressive Beats, No Melodies, Industrial",
+            "Color Bass (Vibrant)": "Color Bass, Melodic Riddim, Saturated Vocoders, Bright Sound Design, Harmonic Bass Wobbles",
+            "Hybrid Trap (EDM Focus)": "Hybrid Trap, EDM Drop, Orchestral Build, Trap Beat, Metallic Sound Design, Massive Impact",
+            "Phonk (Drift Energy)": "Drift Phonk, Cowbell Melody, Distorted 808, Memphis Rap Samples, High Energy Drift Vibe",
+            "Cyber-Goth Industrial": "Industrial Dance, Cyber-Goth, Dark Techno Rhythms, EBM Influence, Harsh Synths",
+            "Deep Dark Techno": "Deep Techno, Dark Room Vibe, Minimalist, Hypnotic Sub, Analog Warmth, Underground",
+            "Neurostep (Complex Bass)": "Neurostep, Neurofunk Influence, Complex Sound Design, Mutating Basslines, Dark Drum & Bass",
+            "Aggressive Slap House": "Slap House, Aggressive Bass, Deep House Beat, Vocal Chops, Radio Banger, Low End Focus",
+            "G-House (Gangsta House)": "G-House, Deep House, G-Funk Influence, Hip Hop Vocals, Dark Basslines, Club Energy",
+            "Hardwave (Cinematic Wave)": "Hardwave, Cinematic Atmosphere, Future Bass Drops, Emotional Melodies, Fast Trap Beat",
+            "Cyber-Orchestral Hybrid": "Cyber-Orchestral, Hybrid Epic, Trailer Music, Synthesized Orchestra, Dark Dystopian Energy",
+            "Aggressive Drill (Dark 808)": "UK Drill, Aggressive sliding 808, Dark Piano Loops, Violent Energy, Fast Hi-hats",
+            "Memphis Rap (Authentic 90s)": "Memphis Rap, 90s Lo-fi, Distorted 808, Triplets, Creepy Samples, Raw Soul",
+            "Post-Black Metal Ambient": "Post-Black Metal, Ambient Soundscapes, Raw Production, Distant Screams, Ethereal Guitars",
+            "Death Industrial Noise": "Death Industrial, Harsh Noise, Dark Ambient, Mechanical Sounds, Oppressive Atmosphere",
+            "Psychill (Spiritual)": "Psychill, Psybient, Down-tempo, Spiritual, Ethereal Synth, Deep Bass Drones",
+            "Dark Progressive Psy": "Dark Progressive Psytrance, Hypnotic, Deep Sub-bass, Forest Atmosphere, Alien Sound FX",
+            "Hi-Tech Psy (Extreme Speed)": "Hi-Tech Psytrance, 180+ BPM, Chaotic Glitches, Fast Melodic Runs, Maximum Kinetic Energy",
+            "Frenchcore (Euphoric)": "Frenchcore, Hardcore, Euphoric Melodies, Distorted Bass Kicks, Fast Paced, Happy but Hard",
+            "Speedcore Noise (600 BPM)": "Speedcore, Noise, Sonic Chaos, 600 BPM, Industrial Static, Aggressive Destruction",
+            "Liquid Drum & Bass (Serene)": "Liquid DNB, Serene, Soulful, Smooth Sub, Piano Melodies, Intelligent Rhythm",
+            "Intelligent Jungle (Atmospheric)": "Intelligent Jungle, 90s Atmospheric, Complex Amen Breaks, Ethereal Pads, Deep Sub",
+            "Ragga Jungle (Vocal Focus)": "Ragga Jungle, Dancehall Vocals, Fast Jungle Beat, Heavy Bassline, Soundclash Energy",
+            "Jump Up DNB (Wobbly)": "Jump Up DNB, Wobbly Bass, Simplified Beat, Party Vibe, High Energy, Catchy",
+            "Neurofunk DNB (Mechanical)": "Neurofunk, Technical DNB, Mechanical Sound Design, Dark Atmospheric, Complex Drums",
+            "Techstep (90s Dark DNB)": "Techstep, 90s Dark DNB, Mechanical Beat, Industrial Bass, Ominous Atmosphere",
+            "Darkcore Jungle": "Darkcore Jungle, 90s Darkside, Sinister Samples, Heavy Sub, Chaotic Breakbeats",
+            "Breakstep (Heavy Bass)": "Breakstep, Bassline Breakbeat, Dark UK Garage, Heavy Low End, Syncopated Rhythm",
+            "Acid Techno (TB-303 Focus)": "Acid Techno, TB-303 Resonance, Sququelch, Fast Techno Beat, Industrial Warehouse",
+            "Schranz (Fast Hard Techno)": "Schranz, Hard Techno, Fast Repetitive Drums, Industrial Noise, Maximum Percussion",
+            "Darkroom Minimal": "Minimal Techno, Darkroom Vibe, Subtle Bass, Clinical Sound Design, Deep Underground",
+            "Psy-Breaks (Glitchy)": "Psy-Breaks, Psychedelic Breakbeat, Glitch FX, Deep Sub, Acid Leads, Funky Rhythm",
+            "Aggressive Moombahton": "Moombahton, Aggressive Lead, Dembow Rhythm, Dutch House Influence, Heavy Drop",
+            "Moombahcore (Dubstep Hybrid)": "Moombahcore, 110 BPM, Dubstep Wobbles, Dembow Rhythm, High Energy",
+            "Aggressive Jersey Club": "Jersey Club, Fast Kick Pattern, Bed Squeaks, Vocal Chops, Aggressive Club Energy",
+            "Footwork (Extreme Speed)": "Footwork, 160 BPM, Chaotic Drum Programming, Soul Samples, Sub Bass Focus",
+            "Ghetto Tech (Fast Beats)": "Ghetto Tech, Detroit Style, Fast House, Raw Vocals, Heavy Bass, Raw Production",
+            "Hardgroove Techno": "Hardgroove, Funky Techno, Fast Rhythmic, Tribal Percussion, Tool Style",
+            "Peak Time Techno (Festival)": "Peak Time Techno, Festival Drop, Big Synths, Heavy Kick, Atmospheric Build",
+            "Cyber-Trap (Futuristic)": "Cyber-Trap, Futuristic Sound Design, Neon Atmosphere, Heavy 808, Digital Distortion",
+            "Glitchcore Pop": "Glitchcore, Hyperpop, Chaos Pop, High Pitched Vocals, Digital Glitches, Aggressive",
+            "Aggressive Hyperpop": "Hyperpop, Aggressive Bass, Distorted Vocals, Pop Hooks, Chaotic Production",
+            "Digicore (Online Sound)": "Digicore, Glitchy Pop, Trap Beats, Internet Aesthetic, Lo-fi Digital, Melancholic",
+            "Emo Trap (Guitar Focus)": "Emo Trap, Melancholic Guitar, 808 Bass, Emotional Vocals, Dark Hip Hop",
+            "Rage Beat (Playboi Style)": "Rage Beat, Aggressive Synth, High Energy Trap, Video Game Leads, Fast Flow",
+            "Pluggnb (Melodic Trap)": "Pluggnb, Melodic Synth, Smooth R&B influence, Soft 808, Chill Trap Vibe",
+            "Aggressive Hardcore Punk": "Hardcore Punk, Aggressive, Fast Tempo, Raw Vocals, Distorted Guitars, Chaos",
+            "Screamo (Emotional Chaos)": "Screamo, Chaotic Hardcore, Screamed Vocals, Emotional Breakdown, Post-Rock influence",
+            "Deathcore (Brutal Breaks)": "Deathcore, Brutal breakdowns, Guttural Growls, Blast Beats, Extreme Metal",
+            "Slamming Death Metal": "Slam Death Metal, Crushing Riffs, Gurgle Vocals, Heavy Grooves, Brutal",
+            "Technical Death Metal": "Tech Death, Complex Riffs, Virtuoso Drums, Fast Tempos, Dark and Brutal",
+            "Grindcore (Short Chaos)": "Grindcore, Short Songs, Maximum Speed, Sonic Chaos, Aggressive Vocals",
+            "Goregrind (Pitch Shifted)": "Goregrind, Pitch Shifted Vocals, Fast Grind Beats, Horror Samples, Raw",
+            "Power Electronics (Hate)": "Power Electronics, Harsh Noise, Aggressive Themes, Industrial Static, Violent",
+            "Bestial Black Metal": "Bestial Black Metal, Blasphemous, Raw Chaos, Fast Tempo, Primitive Metal",
+            "War Metal (Extreme)": "War Metal, Black Death Hybrid, Sonic Wall of Chaos, Brutal and Fast",
+            "Depressive Suicidal Black Metal": "DSBM, Extremely Slow and Sad, Painful Screams, Raw Guitars, Despair",
+            "Funeral Doom (Occult)": "Funeral Doom, Occult Themes, Extremely Slow, Massive Sub-bass, Somber",
+            "Cavernous Death Metal": "Cavernous Death, Deep Reverb, Muddy Production, Ominous, Dark Atmosphere",
+            "Occult Rock (70s Vibe)": "Occult Rock, 70s Psych, Dark Themes, Vintage Production, Melodic but Evil",
+            "Aggressive Synthpunk": "Synthpunk, Aggressive, DIY Aesthetic, Fast Tempos, Electronic Punk",
+            "Egg Punk (Lo-fi Punk)": "Egg Punk, Lo-fi, High Speed, Weird Synths, Quirky Punk Rock",
+            "Synth Bassline House": "Bassline House, Heavy Sub, 4x4 Beat, UK Garage Influence, Club Energy",
+            "Deep Tech (Minimal)": "Deep Tech, Minimal House, Groovy Bassline, Underground Vibe, Clinical",
+            "Raw Techno (Warehouse)": "Raw Techno, Warehouse Style, Distorted Drums, Minimalist, Dark Room",
+            "Acid House (Classic)": "Acid House, 808/303, Retro Rave, 88 Style, Sququelch",
+            "Nu-Disco (Funky)": "Nu-Disco, Modern Disco, Funky Bass, Synths, Danceable",
+            "Disco House (Classic Energy)": "Disco House, Uplifting, Sampled Disco Loops, Funky Bass, Piano",
+            "French House (Filtered)": "French House, Filtered Loops, 90s Style, Funky, Sample Heavy",
+            "Ghetto House (Booty)": "Ghetto House, Booty Bass, Raw Vocals, Fast Beats, 909 Drums",
+            "Jersey Club (Bed Squeak)": "Jersey Club, Bed Squeaks, Fast Kick pattern, Party Vibe",
+            "Speed House (High Energy)": "Speed House, 150 BPM, Bass House energy, Fast 4x4, Aggressive Bass",
+            "Complextro (Old School EDM)": "Complextro, Complex Synth Chops, High Energy, 2012 Style, Glitchy",
+            "Hard Trance (Aggressive)": "Hard Trance, Aggressive Leads, Fast Tempo, Hardstyle Kick, Euphoric",
+            "Classic Psytrance": "Psytrance, 140 BPM, Rolling Bassline, Trippy Leads, Forest Vibe",
+            "Full-On Psytrance": "Full-On Psytrance, High Energy, Melodic Leads, Power Bassline, Morning Vibe",
+            "Psy-Ambient (Dreamy)": "Psy-Ambient, Psybient, Slow Trippy, Atmospheric, Spacey",
+            "Hardgroove Techno (Percussive)": "Hardgroove, Fast Percussion, Funky Techno, Rhythmic, 90s Style",
+            "Aggressive Schranz": "Schranz, Fast Hard Techno, Industrial Noise, Maximum Percussion",
+            "Dark Progressive House": "Dark Progressive House, Hypnotic, Deep Bass, Long Evolution, Melodic",
+            "Euphoric Hardstyle": "Euphoric Hardstyle, Emotional Melody, Hard Kick, Festival Anthem",
+            "Mainstream Hardstyle": "Mainstream Hardstyle, Catchy, Hard Kick, High Energy, EDM Style",
+            "Hardcore (Old School Rave)": "Hardcore, 90s Rave, Breakbeats, Piano, Fast, Happy Energy",
+            "Donk (UK Bounce)": "Donk, UK Bounce, Bouncy Bass, Fast Tempo, Fun Party Energy",
+            "Aggressive Donk": "Aggressive Donk, Hardstyle influence, Fast Bouncy Bass, Distorted, High Energy",
+            "Hard Trance Rave": "Hard Trance, 90s Rave Style, Fast Melodies, Acid Leads, High Octane",
+            "Terrorcore (Speed)": "Terrorcore, Extremely Aggressive, Fast, Distorted Kicks, Industrial Noise",
+            "Extratone (1000 BPM)": "Extratone, 1000 BPM, Sonic Texture, Extreme Speed, Noise, Experimental",
+            "Aggressive Jungle Techno": "Jungle Techno, 90s Style, Breakbeats, Techno Synths, Heavy Bass",
+            "Drumstep (Half Time)": "Drumstep, Half Time DNB, Dubstep influence, Fast Drums, Aggressive Bass",
+            "Liquid Funk (DNB)": "Liquid Funk, Soulful DNB, Fast Drums, Funky Bass, Positive Energy",
+            "Darkstep (DNB)": "Darkstep, Dark DNB, Ominous Atmosphere, Heavy Bass, Aggressive Drums",
+            "Skullstep (DNB)": "Skullstep, Extreme DNB, Chaotic Amen Breaks, Distorted Bass, Violent",
+            "Techstep (Darkside)": "Techstep, Darkside 90s, Mechanical, Industrial, Cold Atmosphere",
+            "Breakbeat (Classic Rave)": "Breakbeat, 90s Rave, Funky Drums, Basslines, High Energy",
+            "Aggressive Breakbeat": "Breakbeat, Aggressive Bass, Modern Production, Big Beat energy",
+            "Big Beat (90s Style)": "Big Beat, 90s Style, Fat Drums, Funky Bass, Chemical Vibe",
+            "Aggressive Electro Pop": "Electro Pop, Aggressive Synth, Catchy Hooks, Heavy Bass, Modern production",
         };
 
         const categories = [
-            { 
-                name: "1. EXTRÉMNE BASY a DARKNESS (PREMIUM)", 
-                keys: [
-                    "Bass Boosted Hard", "Aggressive Bass Boosted Energy", "Brutal Bass (Extreme Sub-Bass)", 
-                    "Hardbass (Russian/Slavic)", "Tearout Dubstep (Chaos & Filth)", "Extreme Bassline House",
-                    "Rawstyle (Brutal Kicks)", "Uptempo Hardcore", "Phonk (Drift Energy)", "Dark Trap (808 Bass & Horror Samples)",
-                    "Death Metal Rap (Aggressive & Dark)", "Doomcore (Dark & Slow Hardcore)", "Drill (UK/Chicago Style)",
-                    "Aggressive Drill (Dark 808)", "Dark Techno (Industrial)", "Neurostep (Complex Bass)", "Cyber-Goth Industrial",
-                    "Riddim (Minimalistic & Repetitive Bass)", "Heavy Midtempo Bass (Industrial)", "Witch House (Slowed & Dark Synth)",
-                    "Death Industrial Noise", "Power Electronics (Hate)", "Cybergrind (Digital & Brutal)", "Breakcore (Complex Breakbeats)",
-                    "Digital Hardcore (Noise & Punk)", "Dark Psytrance (Forest/Hi-Tech)", "Hi-Tech Psy (Extreme Speed)", "Speedcore Noise (600 BPM)",
-                    "Hardcore Rave (90s Style)", "Horrorcore", "Dark Horror Darkness", "Depressive Suicidal Black Metal",
-                    "Funeral Doom (Occult)", "Cavernous Death Metal", "Dungeon Synth (Fantasy)", "Dark Ambient Ritual (Esoteric)",
-                    "Techno Hardcore (Gabba)", "Aggressive Schranz", "Darkroom Minimal", "Rhythmic Noise (Industrial Beat)",
-                    "Industrial Ambient (Cold Drones)", "Sludge Metal (Oppressive)", "Blackgaze (Shoegaze & Black Metal)", "Crust Punk (Metal & Anarchism)",
-                    "Noise Music (Harsh, Static)", "Doom Metal (Traditional)", "Vapor-Trap (Ambient Trap)", "Horror Ambient (Cursed Soundscape)"
-                ] 
-            },
-            { 
-                name: "2. HIGH ENERGY & CLUB (PREMIUM)", 
-                keys: [
-                    "Future Bass (Epic Drops)", "Melodic Dubstep (Emotional)", "Color Bass (Vibrant)", "Hybrid Trap (EDM Focus)",
-                    "Aggressive Slap House", "G-House (Gangsta House)", "Hardwave (Cinematic Wave)", "Future House (Bassline Focus)",
-                    "UK Bassline (Wobbly Energy)", "Speed Garage (UK Jackin' Bass)", "Aggressive Jersey Club", "Footwork (Extreme Speed)",
-                    "Ghetto Tech (Fast Beats)", "Hardgroove Techno (Percussive)", "Peak Time Techno (Festival)", "Progressive House (Long Build-ups)",
-                    "Aggressive Moombahton", "Moombahcore (Dubstep Hybrid)", "Complextro (Old School EDM)", "Hard Trance (Aggressive)",
-                    "Full-On Psytrance", "Donk (UK Bounce)", "Aggressive Donk", "Hard Trance Rave", "Drumstep (Half Time)",
-                    "Liquid Funk (DNB)", "Jump Up DNB (Wobbly)", "Neurofunk DNB (Mechanical)", "Techstep (90s Dark DNB)", "Darkcore Jungle",
-                    "Breakstep (Heavy Bass)", "Acid Techno (TB-303 Focus)", "Nu-Disco (Funky)", "Disco House (Classic Energy)", "Ghetto House (Booty)",
-                    "Speed House (High Energy)", "Hyperpop (Sexton & Glitch)", "Aggressive Hyperpop", "Glitchcore Pop", "Bitpop (8-bit Pop)"
-                ] 
-            },
-            { 
-                name: "3. ATMOSFÉRICKÉ & EXPERIMENTÁLNE (PREMIUM)", 
-                keys: [
-                    "Vaporwave", "Synthwave", "Cyberpunk Synthwave", "Outrun (High Speed)", "Darkwave Synthpop", "Coldwave (Mechanical)",
-                    "Lofi Hip Hop", "Ambient", "Post-Rock (Cinematic Epic)", "Shoegaze (Loud)", "Chillwave", "Trip Hop", "Minimalism",
-                    "Dark Jazz (Cinematic)", "Post-Punk (Goth Rock)", "Krautrock (Motorik Beat)", "New Age (Meditative Ambient)",
-                    "Dream Pop (Hazy, Ethereal)", "Lo-Fi Indie (Bedroom Pop)", "Jazz Fusion (Complex Harmony)", "Psychill (Spiritual)",
-                    "Psybient (Trippy)", "Dub Ambient (Spacey)", "Minimalist Piano (Dark)", "Ethereal Wave (Angelic)", "Drone Metal (Extremely Slow Drones)",
-                    "Post-Metal (Atmospheric Sludge)", "Noise Rock (Dissonant, Feedback)", "Baroque Pop", "Chiptune (8-bit Soundtrack)", "Stoner Rock (Fuzzed)"
-                ] 
-            },
-            { 
-                name: "4. POP, URBAN & WORLD (PREMIUM)", 
-                keys: [
-                    "Mainstream Pop (Custom)", "Melodic Pop Ballad (New Pop Model)", "Hip Hop (Golden Era)", "GTA San Andreas Style (West Coast G-Funk)",
-                    "Future R&B (Vocal Focused)", "Neo-Soul (Smooth & Groovy)", "Synth Pop (80s Aesthetic)", "Symphonic Metal (Opera Vocals)",
-                    "Aggressive Afro-Trap", "Baile Funk (Favela)", "Funk Ostentacao (Luxury)", "Batida (Aggressive Afro)", "Gqom (Dark Durban House)",
-                    "Amapiano (Deep & Jazzy)", "Chicano Rap (Old School)", "Latin Trap (Aggressive)", "Reggaeton Flow (Classic)", "K-Pop Hip Hop (Aggressive)",
-                    "K-R&B (Smooth)", "J-Pop Rock (High Energy)", "Kawaii Metal (Babymetal Style)", "Afro House (Tribal Percussion)", "Bollywood Pop (Indian Cinematic)",
-                    "Latin Pop (Reggaeton & Pop Fusion)", "Samba (Modern)", "Flamenco (Modern Fusion)", "Celtic Dark Folk", "Steampunk Opera (Victorian Tech)"
-                ] 
-            },
-            {
-                name: "5. KOLEKCIE & HOLIDAY (PREMIUM)",
-                keys: [
-                    "Christmas Pop (Holiday Ballad)", "Trap Christmas (Dark Christmas)", "Acoustic Christmas Jazz (Comfortable Tone)", "Eurodance 90s (High Energy)",
-                    "Opera (Dramatic)", "Trailer Music (Epic Impact)", "Cyber-Orchestral Hybrid", "Crunkcore (Screamo & Rap)", "Mathcore (Complex Rhythm)",
-                    "Digital Hardcore (Chaos)", "Viking Metal (Epic Sagas)", "Pirate Metal (Folk)", "Nordic Ritual Folk", "Slavic Dark Folk"
-                ]
-            }
+            { name: "1. EXTRÉMNE BASY a DARKNESS (PREMIUM)", keys: ["Bass Boosted Hard", "Aggressive Bass Boosted Energy", "Brutal Bass (Extreme Sub-Bass)", "Hardbass (Russian/Slavic)", "Tearout Dubstep (Chaos & Filth)", "Extreme Bassline House", "Rawstyle (Brutal Kicks)", "Uptempo Hardcore", "Phonk (Drift Energy)", "Dark Trap (808 Bass & Horror Samples)", "Death Metal Rap (Aggressive & Dark)", "Doomcore (Dark & Slow Hardcore)", "Drill (UK/Chicago Style)", "Aggressive Drill (Dark 808)", "Dark Techno (Industrial)", "Neurostep (Complex Bass)", "Cyber-Goth Industrial", "Riddim (Minimalistic & Repetitive Bass)", "Heavy Midtempo Bass (Industrial)", "Witch House (Slowed & Dark Synth)", "Death Industrial Noise", "Power Electronics (Hate)", "Cybergrind (Digital & Brutal)", "Breakcore (Complex Breakbeats)", "Digital Hardcore (Noise & Punk)", "Dark Psytrance (Forest/Hi-Tech)", "Hi-Tech Psy (Extreme Speed)", "Speedcore Noise (600 BPM)", "Hardcore Rave (90s Style)", "Horrorcore", "Dark Horror Darkness", "Depressive Suicidal Black Metal", "Funeral Doom (Occult)", "Cavernous Death Metal", "Dungeon Synth (Fantasy)", "Dark Ambient Ritual (Esoteric)", "Techno Hardcore (Gabba)", "Aggressive Schranz", "Darkroom Minimal", "Rhythmic Noise (Industrial Beat)", "Industrial Ambient (Cold Drones)", "Sludge Metal (Oppressive)", "Blackgaze (Shoegaze & Black Metal)", "Crust Punk (Metal & Anarchism)", "Noise Music (Harsh, Static)", "Doom Metal (Traditional)", "Vapor-Trap (Ambient Trap)", "Horror Ambient (Cursed Soundscape)"] },
+            { name: "2. HIGH ENERGY & CLUB (PREMIUM)", keys: ["Future Bass (Epic Drops)", "Melodic Dubstep (Emotional)", "Color Bass (Vibrant)", "Hybrid Trap (EDM Focus)", "Aggressive Slap House", "G-House (Gangsta House)", "Hardwave (Cinematic Wave)", "Future House (Bassline Focus)", "UK Bassline (Wobbly Energy)", "Speed Garage (UK Jackin' Bass)", "Aggressive Jersey Club", "Footwork (Extreme Speed)", "Ghetto Tech (Fast Beats)", "Hardgroove Techno (Percussive)", "Peak Time Techno (Festival)", "Progressive House (Long Build-ups)", "Aggressive Moombahton", "Moombahcore (Dubstep Hybrid)", "Complextro (Old School EDM)", "Hard Trance (Aggressive)", "Full-On Psytrance", "Donk (UK Bounce)", "Aggressive Donk", "Hard Trance Rave", "Drumstep (Half Time)", "Liquid Funk (DNB)", "Jump Up DNB (Wobbly)", "Neurofunk DNB (Mechanical)", "Techstep (90s Dark DNB)", "Darkcore Jungle", "Breakstep (Heavy Bass)", "Acid Techno (TB-303 Focus)", "Nu-Disco (Funky)", "Disco House (Classic Energy)", "Ghetto House (Booty)", "Speed House (High Energy)", "Hyperpop (Sexton & Glitch)", "Aggressive Hyperpop", "Glitchcore Pop", "Bitpop (8-bit Pop)"] },
+            { name: "3. ATMOSFÉRICKÉ & EXPERIMENTÁLNE (PREMIUM)", keys: ["Vaporwave", "Synthwave", "Cyberpunk Synthwave", "Outrun (High Speed)", "Darkwave Synthpop", "Coldwave (Mechanical)", "Lofi Hip Hop", "Ambient", "Post-Rock (Cinematic Epic)", "Shoegaze (Loud)", "Chillwave", "Trip Hop", "Minimalism", "Dark Jazz (Cinematic)", "Post-Punk (Goth Rock)", "Krautrock (Motorik Beat)", "New Age (Meditative Ambient)", "Dream Pop (Hazy, Ethereal)", "Lo-Fi Indie (Bedroom Pop)", "Jazz Fusion (Complex Harmony)", "Psychill (Spiritual)", "Psybient (Trippy)", "Dub Ambient (Spacey)", "Minimalist Piano (Dark)", "Ethereal Wave (Angelic)", "Drone Metal (Extremely Slow Drones)", "Post-Metal (Atmospheric Sludge)", "Noise Rock (Dissonant, Feedback)", "Baroque Pop", "Chiptune (8-bit Soundtrack)", "Stoner Rock (Fuzzed)"] },
+            { name: "4. POP, URBAN & WORLD (PREMIUM)", keys: ["Mainstream Pop (Custom)", "Melodic Pop Ballad (New Pop Model)", "Hip Hop (Golden Era)", "GTA San Andreas Style (West Coast G-Funk)", "Future R&B (Vocal Focused)", "Neo-Soul (Smooth & Groovy)", "Synth Pop (80s Aesthetic)", "Symphonic Metal (Opera Vocals)", "Aggressive Afro-Trap", "Baile Funk (Favela)", "Funk Ostentacao (Luxury)", "Batida (Aggressive Afro)", "Gqom (Dark Durban House)", "Amapiano (Deep & Jazzy)", "Chicano Rap (Old School)", "Latin Trap (Aggressive)", "Reggaeton Flow (Classic)", "K-Pop Hip Hop (Aggressive)", "K-R&B (Smooth)", "J-Pop Rock (High Energy)", "Kawaii Metal (Babymetal Style)", "Afro House (Tribal Percussion)", "Bollywood Pop (Indian Cinematic)", "Latin Pop (Reggaeton & Pop Fusion)", "Samba (Modern)", "Flamenco (Modern Fusion)", "Celtic Dark Folk", "Steampunk Opera (Victorian Tech)"] },
+            { name: "5. KOLEKCIE & HOLIDAY (PREMIUM)", keys: ["Christmas Pop (Holiday Ballad)", "Trap Christmas (Dark Christmas)", "Acoustic Christmas Jazz (Comfortable Tone)", "Eurodance 90s (High Energy)", "Opera (Dramatic)", "Trailer Music (Epic Impact)", "Cyber-Orchestral Hybrid", "Crunkcore (Screamo & Rap)", "Mathcore (Complex Rhythm)", "Digital Hardcore (Chaos)", "Viking Metal (Epic Sagas)", "Pirate Metal (Folk)", "Nordic Ritual Folk", "Slavic Dark Folk"] }
         ];
 
         function renderLibrary() {
@@ -517,16 +494,25 @@
                 section.innerHTML = `
                     <h3 class="text-2xl font-black mb-10 text-brand-primary uppercase tracking-[0.2em] border-l-8 border-brand-primary pl-6 italic">${cat.name}</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                        ${cat.keys.map(key => `
-                            <div onclick="handleStyleClick('${key}')" class="style-tag glass p-8 rounded-[2rem] border border-brand-border cursor-pointer group relative overflow-hidden">
-                                <div class="flex items-center justify-between mb-4">
-                                    <span class="bg-red-600 text-white px-3 py-1 rounded-xl text-[9px] font-black uppercase tracking-widest pro-glow">PRO</span>
-                                    <svg class="w-5 h-5 text-slate-700 group-hover:text-brand-primary transition duration-500" fill="currentColor" viewBox="0 0 20 20"><path d="M8 2a1 1 0 000 2h2a1 1 0 100-2H8z"></path><path d="M3 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
+                        ${cat.keys.map(key => {
+                            const prompt = fullPrompts[key] || "No data";
+                            return `
+                                <div onclick="handleStyleClick('${key}')" class="style-tag glass p-8 rounded-[2rem] border border-brand-border cursor-pointer group relative overflow-hidden flex flex-col justify-between">
+                                    <div class="mb-4">
+                                        <div class="flex items-center justify-between mb-4">
+                                            <span class="bg-red-600 text-white px-3 py-1 rounded-xl text-[9px] font-black uppercase tracking-widest pro-glow">PRO</span>
+                                            <svg class="w-5 h-5 text-slate-700 group-hover:text-brand-primary transition duration-500" fill="currentColor" viewBox="0 0 20 20"><path d="M8 2a1 1 0 000 2h2a1 1 0 100-2H8z"></path><path d="M3 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
+                                        </div>
+                                        <h4 class="font-black text-white uppercase text-base tracking-tighter transition-colors group-hover:text-brand-primary">${key}</h4>
+                                    </div>
+                                    <div class="border-t border-brand-border pt-4">
+                                        <p class="text-[10px] text-slate-500 font-mono leading-relaxed line-clamp-2 uppercase group-hover:text-slate-300">
+                                            ${prompt}
+                                        </p>
+                                    </div>
                                 </div>
-                                <h4 class="font-black text-slate-100 group-hover:text-white uppercase text-base tracking-tighter transition-colors">${key}</h4>
-                                <p class="text-[10px] text-slate-500 font-mono truncate mt-3 border-t border-brand-border pt-3 opacity-50 group-hover:opacity-100 transition-opacity">${fullPrompts[key] || ''}</p>
-                            </div>
-                        `).join('')}
+                            `;
+                        }).join('')}
                     </div>
                 `;
                 container.appendChild(section);
@@ -534,10 +520,8 @@
         }
 
         function handleStyleClick(key) {
-            // Kontrola aktívneho stavu pred vykonaním akcie
             if (!window.isProActive) {
                 document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
-                // Voliteľná vizuálna spätná väzba, že treba zaplatiť
                 const statusLabel = document.getElementById('account-status');
                 statusLabel.classList.add('animate-pulse', 'scale-110');
                 setTimeout(() => statusLabel.classList.remove('animate-pulse', 'scale-110'), 1000);
@@ -563,30 +547,19 @@
             document.getElementById('payment-modal').classList.replace('hidden', 'flex');
         }
 
-        function closePayment() {
-            document.getElementById('payment-modal').classList.replace('flex', 'hidden');
-        }
+        function closePayment() { document.getElementById('payment-modal').classList.replace('flex', 'hidden'); }
 
         function processPayment() {
             const msInDay = 24 * 60 * 60 * 1000;
             const expiresAt = Date.now() + (selectedPlan.days * msInDay);
-            
-            const subData = {
-                planName: selectedPlan.name,
-                expiresAt: expiresAt,
-                purchasedAt: Date.now()
-            };
-
+            const subData = { planName: selectedPlan.name, expiresAt: expiresAt, purchasedAt: Date.now() };
             saveSubscriptionToDB(subData);
-            
             closePayment();
             document.getElementById('success-modal').classList.replace('hidden', 'flex');
         }
 
         function updateUIAfterPayment(plan, expiresAt) {
-            const dateObj = new Date(expiresAt);
-            const dateStr = dateObj.toLocaleDateString('sk-SK');
-            
+            const dateStr = new Date(expiresAt).toLocaleDateString('sk-SK');
             document.getElementById('account-status').textContent = `AKTÍVNA (${plan})`;
             document.getElementById('account-status').classList.replace('text-red-500', 'text-green-500');
             document.getElementById('expiry-banner').classList.remove('hidden');
@@ -604,9 +577,7 @@
             document.getElementById('account-status').classList.replace('text-green-500', 'text-red-500');
             document.getElementById('expiry-banner').classList.add('hidden');
             document.getElementById('nav-action').innerHTML = `
-                <a href="#pricing" class="bg-brand-primary hover:bg-red-600 text-white px-5 py-2 rounded-full text-sm font-bold transition transform active:scale-95 shadow-lg">
-                    UPGRADE PRO
-                </a>
+                <a href="#pricing" class="bg-brand-primary hover:bg-red-600 text-white px-5 py-2 rounded-full text-sm font-bold transition transform active:scale-95 shadow-lg">UPGRADE PRO</a>
             `;
         }
 
@@ -615,10 +586,7 @@
             document.getElementById('library').scrollIntoView({ behavior: 'smooth' });
         }
 
-        window.onload = () => {
-            renderLibrary();
-        };
+        window.onload = () => { renderLibrary(); };
     </script>
 </body>
 </html>
-
