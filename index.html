@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Musical Universe - PRO Style Library</title>
+    <title>The Musical Universe - PREMIUM IndexedDB Library</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             theme: {
@@ -33,16 +34,13 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .pro-badge {
-            font-size: 0.65rem;
-            letter-spacing: 0.05em;
-        }
         .style-tag {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .style-tag:hover {
             transform: translateY(-3px) scale(1.02);
             border-color: #ff3e3e;
+            background: rgba(255, 62, 62, 0.05);
         }
         .pricing-card {
             transition: all 0.4s ease;
@@ -52,214 +50,269 @@
             border-color: #ff3e3e;
             box-shadow: 0 20px 40px -20px rgba(255, 62, 62, 0.3);
         }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #05070a; }
-        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #ff3e3e; }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-fade { animation: fadeIn 0.5s ease forwards; }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #05070a; }
+        ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff3e3e; }
+
+        .pro-glow {
+            box-shadow: 0 0 15px rgba(255, 62, 62, 0.2);
+        }
     </style>
 </head>
 <body class="text-slate-200 antialiased">
 
-    <!-- Navigation / Header -->
+    <!-- Navigácia -->
     <nav class="sticky top-0 z-50 glass border-b border-brand-border px-6 py-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-brand-primary rounded-lg flex items-center justify-center font-bold text-white italic">M</div>
-                <span class="text-xl font-extrabold tracking-tighter">THE MUSICAL <span class="text-brand-primary">UNIVERSE</span></span>
+                <div class="w-8 h-8 bg-brand-primary rounded-lg flex items-center justify-center font-bold text-white italic shadow-[0_0_20px_rgba(255,62,62,0.4)]">M</div>
+                <span class="text-xl font-extrabold tracking-tighter uppercase">Musical <span class="text-brand-primary">Universe</span></span>
             </div>
             <div class="hidden md:flex gap-8 text-sm font-medium">
                 <a href="#library" class="hover:text-brand-primary transition">Knižnica</a>
                 <a href="#pricing" class="hover:text-brand-primary transition">Predplatné</a>
                 <a href="https://gamepla631.github.io/TheMusicalUniverse/" target="_blank" class="text-blue-400 hover:text-blue-300">Generovať Text</a>
             </div>
-            <a href="#pricing" class="bg-brand-primary hover:bg-red-600 text-white px-5 py-2 rounded-full text-sm font-bold transition transform active:scale-95">
-                UPGRADE PRO
-            </a>
+            <div id="nav-action">
+                <a href="#pricing" class="bg-brand-primary hover:bg-red-600 text-white px-5 py-2 rounded-full text-sm font-bold transition transform active:scale-95 shadow-lg">
+                    UPGRADE PRO
+                </a>
+            </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <header class="relative pt-20 pb-16 px-6 text-center overflow-hidden">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-900/20 via-transparent to-transparent -z-10"></div>
+    <!-- Banner Expirácie -->
+    <div id="expiry-banner" class="hidden sticky top-[73px] z-40 bg-brand-primary text-white text-center py-2 text-[10px] font-black tracking-[0.2em] uppercase shadow-xl border-b border-red-400/20">
+        PREMIUM PRÍSTUP AKTÍVNY • EXPIRUJE: <span id="expiry-date-display">--.--.----</span>
+    </div>
+
+    <!-- Hero -->
+    <header class="relative pt-24 pb-20 px-6 text-center overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-red-900/10 via-transparent to-transparent -z-10"></div>
         <div class="max-w-4xl mx-auto animate-fade">
-            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight uppercase">MASÍVNA <span class="text-brand-primary">PRO KNIŽNICA</span></h1>
-            <p class="text-slate-400 text-lg md:text-xl mb-10 leading-relaxed">
-                Prístup k 256+ exkluzívnym kľúčovým slovám pre AI generátory. 
-                Dnes sme pridali 150 nových štýlov pre najnáročnejších producentov.
-            </p>
-            <div class="flex flex-wrap justify-center gap-4">
-                <a href="#library" class="bg-white text-black px-8 py-4 rounded-xl font-bold hover:bg-slate-200 transition">Prehliadať 256 Štýlov</a>
-                <a href="#pricing" class="glass px-8 py-4 rounded-xl font-bold hover:bg-brand-border transition border border-brand-border">Zobraziť Plány</a>
+            <div class="inline-flex items-center gap-2 bg-brand-card border border-brand-border px-3 py-1 rounded-full text-[10px] font-bold text-brand-primary mb-6 uppercase tracking-widest">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-primary"></span>
+                </span>
+                Premium Database Ready
             </div>
+            <h1 class="text-6xl md:text-8xl font-black mb-6 leading-[0.9] uppercase italic tracking-tighter">INDEXED<span class="text-brand-primary">DB</span> PRO</h1>
+            <p class="text-slate-400 text-lg md:text-xl mb-10 leading-relaxed font-medium">
+                Bezpečné ukladanie nákupov v premium databáze. <br class="hidden md:block"> Prístup k 256+ unikátnym štýlom pre AI generovanie.
+            </p>
         </div>
     </header>
 
-    <!-- Notification Bar -->
-    <div id="notification" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-full bg-brand-primary text-white font-bold shadow-2xl hidden transform transition-all duration-300">
-        Skopírované do schránky!
+    <!-- Notifikácia -->
+    <div id="notification" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] px-8 py-4 rounded-2xl bg-white text-black font-black shadow-2xl hidden transform transition-all duration-300 uppercase tracking-tighter text-sm">
+        Prompt skopírovaný!
     </div>
 
-    <!-- Styles Library Section -->
+    <!-- Knižnica -->
     <section id="library" class="max-w-7xl mx-auto px-6 py-20">
-        <div class="flex justify-between items-end mb-12 border-b border-brand-border pb-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-brand-border pb-8 gap-6">
             <div>
-                <h2 class="text-3xl font-bold mb-2">PRO Knižnica (256+ Štýlov)</h2>
-                <p class="text-slate-500">Všetky štýly sú chránené a vyžadujú aktívny PRO účet.</p>
+                <h2 class="text-4xl font-black mb-2 uppercase italic tracking-tighter">Štýly pre náročných</h2>
+                <p class="text-slate-500 text-sm font-medium">Každý štýl vyžaduje aktívnu licenciu PRO.</p>
             </div>
-            <div class="bg-brand-card border border-brand-border px-4 py-2 rounded-lg text-sm">
-                Stav: <span class="text-red-500 font-bold" id="account-status">NEAKTÍVNY PRO</span>
+            <div class="flex items-center gap-4">
+                <div class="bg-brand-card border border-brand-border px-5 py-3 rounded-2xl text-xs font-black tracking-widest flex items-center gap-3">
+                    STAV LICENCIE: 
+                    <span class="text-red-500 uppercase px-2 py-1 bg-red-500/10 rounded-lg" id="account-status">NEAKTÍVNA</span>
+                </div>
             </div>
         </div>
 
-        <div id="style-container" class="space-y-16">
-            <!-- JavaScript dynamically injects categories and styles here -->
+        <div id="style-container" class="space-y-24">
+            <!-- Dynamicky generované cez JS -->
         </div>
     </section>
 
-    <!-- Pricing Section -->
-    <section id="pricing" class="bg-brand-card/50 border-y border-brand-border py-24 px-6 relative">
+    <!-- Pricing -->
+    <section id="pricing" class="bg-brand-card/30 border-y border-brand-border py-32 px-6">
         <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-black mb-4 uppercase italic">Vyber si svoj PRO Balík</h2>
-                <p class="text-slate-400">Získaj okamžitý prístup k celej databáze 256+ PRO štýlov.</p>
+            <div class="text-center mb-20">
+                <h2 class="text-5xl md:text-7xl font-black mb-4 uppercase italic tracking-tighter">Získaj PRO balík</h2>
+                <p class="text-slate-400 text-lg">Záznam o nákupe bude trvalo uložený v IndexedDB tvojho prehliadača.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                <!-- Plan 1 -->
-                <div class="pricing-card glass p-8 rounded-3xl border border-brand-border flex flex-col">
-                    <h3 class="text-xl font-bold mb-2 text-slate-300 uppercase">Starter</h3>
-                    <div class="text-4xl font-black mb-6">4.99€<span class="text-sm font-normal text-slate-500">/mesiac</span></div>
-                    <ul class="text-sm space-y-3 mb-8 text-slate-400 flex-grow">
-                        <li class="flex items-center gap-2">✓ Základných 50 PRO štýlov</li>
-                        <li class="flex items-center gap-2">✓ 20 kopírovaní denne</li>
-                        <li class="flex items-center gap-2">✓ Štandardná podpora</li>
-                    </ul>
-                    <button onclick="openPayment('STARTER', '4.99€')" class="w-full bg-brand-border hover:bg-slate-700 text-white py-3 rounded-xl font-bold transition">VYBRAŤ</button>
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                <!-- Starter -->
+                <div class="pricing-card glass p-10 rounded-[2.5rem] border border-brand-border flex flex-col">
+                    <h3 class="font-black mb-2 text-slate-500 uppercase text-xs tracking-widest italic">Starter Pack</h3>
+                    <div class="text-5xl font-black mb-8 text-white tracking-tighter">4.99€</div>
+                    <p class="text-[10px] text-slate-500 uppercase font-bold mb-8">Trvanie: 30 Dní</p>
+                    <button onclick="openPayment('STARTER', '4.99€', 30)" class="w-full bg-brand-border hover:bg-slate-700 text-white py-4 rounded-2xl font-black transition uppercase text-xs tracking-widest">Aktivovať</button>
                 </div>
-
-                <!-- Plan 2 -->
-                <div class="pricing-card glass p-8 rounded-3xl border border-brand-border flex flex-col relative overflow-hidden">
-                    <div class="absolute top-4 -right-8 bg-brand-primary text-white text-[10px] font-bold py-1 px-10 rotate-45">POPULÁRNE</div>
-                    <h3 class="text-xl font-bold mb-2 text-white uppercase">Producer</h3>
-                    <div class="text-4xl font-black mb-6">9.99€<span class="text-sm font-normal text-slate-500">/mesiac</span></div>
-                    <ul class="text-sm space-y-3 mb-8 text-slate-400 flex-grow">
-                        <li class="flex items-center gap-2">✓ 150+ PRO BASS štýlov</li>
-                        <li class="flex items-center gap-2">✓ Neobmedzené kopírovanie</li>
-                        <li class="flex items-center gap-2">✓ Všetky žánre</li>
-                    </ul>
-                    <button onclick="openPayment('PRODUCER', '9.99€')" class="w-full bg-brand-primary hover:bg-red-600 text-white py-3 rounded-xl font-bold transition">VYBRAŤ</button>
+                <!-- Producer -->
+                <div class="pricing-card glass p-10 rounded-[2.5rem] border-2 border-brand-primary flex flex-col relative overflow-hidden bg-brand-primary/5">
+                    <div class="absolute top-6 -right-12 bg-brand-primary text-white text-[10px] font-black py-1 px-14 rotate-45 uppercase tracking-widest">TOP</div>
+                    <h3 class="font-black mb-2 text-brand-primary uppercase text-xs tracking-widest italic">Producer</h3>
+                    <div class="text-5xl font-black mb-8 text-white tracking-tighter">9.99€</div>
+                    <p class="text-[10px] text-slate-500 uppercase font-bold mb-8">Trvanie: 30 Dní</p>
+                    <button onclick="openPayment('PRODUCER', '9.99€', 30)" class="w-full bg-brand-primary hover:bg-red-600 text-white py-4 rounded-2xl font-black transition uppercase text-xs tracking-widest shadow-xl shadow-red-600/20">Aktivovať</button>
                 </div>
-
-                <!-- Plan 3 -->
-                <div class="pricing-card glass p-8 rounded-3xl border border-brand-border flex flex-col">
-                    <h3 class="text-xl font-bold mb-2 text-yellow-500 tracking-widest uppercase">Elite</h3>
-                    <div class="text-4xl font-black mb-6">19.99€<span class="text-sm font-normal text-slate-500">/mesiac</span></div>
-                    <ul class="text-sm space-y-3 mb-8 text-slate-400 flex-grow">
-                        <li class="flex items-center gap-2">✓ Kompletných 256+ štýlov</li>
-                        <li class="flex items-center gap-2">✓ GTA & Hip-Hop kolekcie</li>
-                        <li class="flex items-center gap-2">✓ Komerčné práva na text</li>
-                    </ul>
-                    <button onclick="openPayment('ELITE', '19.99€')" class="w-full bg-brand-border hover:bg-slate-700 text-white py-3 rounded-xl font-bold transition">VYBRAŤ</button>
+                <!-- Elite -->
+                <div class="pricing-card glass p-10 rounded-[2.5rem] border border-brand-border flex flex-col">
+                    <h3 class="font-black mb-2 text-yellow-500 uppercase text-xs tracking-widest italic">Elite VIP</h3>
+                    <div class="text-5xl font-black mb-8 text-white tracking-tighter">19.99€</div>
+                    <p class="text-[10px] text-slate-500 uppercase font-bold mb-8">Trvanie: 30 Dní</p>
+                    <button onclick="openPayment('ELITE', '19.99€', 30)" class="w-full bg-brand-border hover:bg-slate-700 text-white py-4 rounded-2xl font-black transition uppercase text-xs tracking-widest">Aktivovať</button>
                 </div>
-
-                <!-- Plan 4 -->
-                <div class="pricing-card glass p-8 rounded-3xl border-2 border-red-900 flex flex-col bg-red-900/5">
-                    <h3 class="text-xl font-bold mb-2 text-red-600 uppercase">Darkness</h3>
-                    <div class="text-4xl font-black mb-6">24.99€<span class="text-sm font-normal text-slate-500">/rok</span></div>
-                    <ul class="text-sm space-y-3 mb-8 text-slate-400 flex-grow">
-                        <li class="flex items-center gap-2">✓ 80+ Špeciálnych Dark štýlov</li>
-                        <li class="flex items-center gap-2">✓ Horror & Gore knižnica</li>
-                        <li class="flex items-center gap-2">✓ VIP Update prístup</li>
-                    </ul>
-                    <button onclick="openPayment('DARKNESS', '24.99€')" class="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-xl font-bold transition">ZÍSKAŤ</button>
+                <!-- Darkness -->
+                <div class="pricing-card glass p-10 rounded-[2.5rem] border-2 border-red-900 flex flex-col bg-red-950/20">
+                    <h3 class="font-black mb-2 text-red-600 uppercase text-xs tracking-widest italic">Darkness Pass</h3>
+                    <div class="text-5xl font-black mb-8 text-white tracking-tighter">24.99€</div>
+                    <p class="text-[10px] text-slate-500 uppercase font-bold mb-8">Trvanie: 365 Dní</p>
+                    <button onclick="openPayment('DARKNESS', '24.99€', 365)" class="w-full bg-red-700 hover:bg-red-800 text-white py-4 rounded-2xl font-black transition uppercase text-xs tracking-widest">Aktivovať</button>
                 </div>
-
-                <!-- Plan 5 -->
-                <div class="pricing-card glass p-8 rounded-3xl border border-brand-border flex flex-col bg-gradient-to-b from-transparent to-brand-primary/10">
-                    <h3 class="text-xl font-bold mb-2 text-white uppercase">Ultimate</h3>
-                    <div class="text-4xl font-black mb-6">99.00€<span class="text-sm font-normal text-slate-500 uppercase"> Doživotne</span></div>
-                    <ul class="text-sm space-y-3 mb-8 text-slate-400 flex-grow">
-                        <li class="flex items-center gap-2">✓ NAVŽDY prístup k 256+</li>
-                        <li class="flex items-center gap-2">✓ Všetky budúce žánre zdarma</li>
-                        <li class="flex items-center gap-2">✓ Osobný VIP konzultant</li>
-                    </ul>
-                    <button onclick="openPayment('ULTIMATE', '99.00€')" class="w-full bg-white text-black py-3 rounded-xl font-bold transition hover:bg-slate-200">ZAPLATIŤ</button>
+                <!-- Ultimate -->
+                <div class="pricing-card glass p-10 rounded-[2.5rem] border border-brand-border flex flex-col bg-gradient-to-br from-transparent to-brand-primary/20">
+                    <h3 class="font-black mb-2 text-white uppercase text-[10px] tracking-[0.3em] italic">Ultimate Lifetime</h3>
+                    <div class="text-5xl font-black mb-8 text-white tracking-tighter">99€</div>
+                    <p class="text-[10px] text-slate-500 uppercase font-bold mb-8">Trvanie: Navždy</p>
+                    <button onclick="openPayment('ULTIMATE', '99.00€', 36500)" class="w-full bg-white text-black hover:bg-slate-200 py-4 rounded-2xl font-black transition uppercase text-xs tracking-widest">Získať navždy</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Payment Gateway Modal -->
-    <div id="payment-modal" class="fixed inset-0 z-[200] items-center justify-center bg-black/90 px-4 hidden">
-        <div class="glass max-w-md w-full p-8 rounded-3xl border border-brand-border animate-fade text-center">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl font-bold">PLATOBNÁ BRÁNA</h2>
-                <button onclick="closePayment()" class="text-slate-500 hover:text-white">✕</button>
+    <!-- Platobná brána -->
+    <div id="payment-modal" class="fixed inset-0 z-[200] items-center justify-center bg-black/95 px-4 hidden">
+        <div class="glass max-w-lg w-full p-12 rounded-[3rem] border border-brand-border animate-fade">
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-3xl font-black uppercase tracking-tighter">Premium Checkout</h2>
+                <button onclick="closePayment()" class="text-slate-500 hover:text-white p-2">✕</button>
             </div>
             
-            <div class="mb-6 text-left">
-                <p class="text-sm text-slate-400 mb-1">Objednávka balíka:</p>
-                <div class="flex justify-between items-center">
-                    <span id="modal-plan-name" class="font-bold text-xl text-brand-primary tracking-wider">PLAN</span>
-                    <span id="modal-plan-price" class="font-black text-xl">0.00€</span>
+            <div class="mb-10 bg-brand-bg/80 p-6 rounded-3xl border border-brand-border flex justify-between items-center">
+                <div>
+                    <p class="text-[10px] text-slate-500 uppercase font-black mb-1 tracking-widest">Balík</p>
+                    <span id="modal-plan-name" class="font-black text-2xl text-brand-primary uppercase italic tracking-tighter">PLAN</span>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] text-slate-500 uppercase font-black mb-1 tracking-widest">Suma</p>
+                    <span id="modal-plan-price" class="font-black text-3xl tracking-tighter">0.00€</span>
                 </div>
             </div>
 
-            <div class="space-y-4 text-left">
-                <div>
-                    <label class="text-[10px] uppercase font-bold text-slate-500">Číslo platobnej karty</label>
-                    <input type="text" placeholder="4582 1192 0038 4821" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 focus:border-brand-primary outline-none text-white">
-                </div>
-                <div class="flex gap-4">
-                    <div class="flex-grow">
-                        <label class="text-[10px] uppercase font-bold text-slate-500">Platnosť (MM/YY)</label>
-                        <input type="text" placeholder="05 / 28" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 focus:border-brand-primary outline-none text-white text-center">
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <label class="text-[10px] uppercase font-black text-slate-500 ml-2 mb-2 block tracking-widest">Číslo karty</label>
+                        <input type="text" placeholder="5342 8812 0031 9928" class="w-full bg-brand-bg border border-brand-border rounded-2xl px-6 py-5 focus:border-brand-primary outline-none text-white text-lg font-bold tracking-widest">
                     </div>
-                    <div class="w-1/3">
-                        <label class="text-[10px] uppercase font-bold text-slate-500">CVC</label>
-                        <input type="text" placeholder="123" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 focus:border-brand-primary outline-none text-white text-center">
+                    <div class="flex gap-6">
+                        <div class="flex-grow">
+                            <label class="text-[10px] uppercase font-black text-slate-500 ml-2 mb-2 block tracking-widest">Expirácia</label>
+                            <input type="text" placeholder="MM / YY" class="w-full bg-brand-bg border border-brand-border rounded-2xl px-6 py-5 focus:border-brand-primary outline-none text-white text-center font-bold">
+                        </div>
+                        <div class="w-1/3">
+                            <label class="text-[10px] uppercase font-black text-slate-500 ml-2 mb-2 block tracking-widest">CVC</label>
+                            <input type="password" placeholder="***" class="w-full bg-brand-bg border border-brand-border rounded-2xl px-6 py-5 focus:border-brand-primary outline-none text-white text-center font-bold">
+                        </div>
                     </div>
                 </div>
-                <button onclick="simulateSuccess()" class="w-full bg-brand-primary text-white py-4 rounded-xl font-black text-lg mt-6 active:scale-95 transition-transform">POTVRDIŤ NÁKUP</button>
+                <button onclick="processPayment()" class="w-full bg-brand-primary text-white py-6 rounded-3xl font-black text-xl mt-8 shadow-[0_20px_50px_rgba(255,62,62,0.3)] active:scale-95 transition-all uppercase tracking-widest italic">Zaplatiť a Aktivovať</button>
             </div>
-            <p class="text-[10px] text-center text-slate-600 mt-6 uppercase">Šifrovaná transakcia cez SSL/TLS</p>
+            <p class="text-[9px] text-center text-slate-600 mt-10 uppercase font-bold tracking-[0.2em]">Secured by Musical Universe Systems &copy;</p>
         </div>
     </div>
 
     <!-- Success Modal -->
-    <div id="success-modal" class="fixed inset-0 z-[300] items-center justify-center bg-black/95 px-4 hidden text-center">
+    <div id="success-modal" class="fixed inset-0 z-[300] items-center justify-center bg-black/98 px-4 hidden text-center">
         <div class="animate-fade">
-            <div class="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_50px_rgba(34,197,94,0.4)]">
-                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>
+            <div class="w-32 h-32 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-10 shadow-[0_0_80px_rgba(34,197,94,0.4)]">
+                <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M5 13l4 4L19 7"></path></svg>
             </div>
-            <h2 class="text-4xl font-black mb-4 uppercase">PRÍSTUP UDELENÝ!</h2>
-            <p class="text-slate-400 mb-10">Všetkých 256 PRO štýlov je teraz odomknutých pre tvoj účet.</p>
-            <button onclick="activatePro()" class="bg-white text-black px-12 py-4 rounded-xl font-bold uppercase tracking-widest">Otvoriť knižnicu</button>
+            <h2 class="text-6xl font-black mb-4 uppercase italic tracking-tighter">PRÍSTUP ODOMKNUTÝ</h2>
+            <p class="text-slate-400 text-xl mb-12 font-medium">Tvoja licencia bola úspešne zapísaná do IndexedDB.</p>
+            <button onclick="closeSuccess()" class="bg-white text-black px-16 py-5 rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-105 transition-transform shadow-2xl">Vstúpiť do knižnice</button>
         </div>
     </div>
 
-    <footer class="py-12 border-t border-brand-border text-center text-slate-600 text-sm">
-        <div class="mb-4 uppercase tracking-widest font-bold">The Musical Universe PRO &copy; 2024</div>
-        <div class="flex justify-center gap-6">
-            <a href="#" class="hover:text-white transition">Podmienky predaja</a>
-            <a href="#" class="hover:text-white transition">Spracovanie údajov</a>
-            <a href="#" class="hover:text-white transition">Podpora</a>
+    <footer class="py-20 border-t border-brand-border text-center">
+        <div class="flex items-center justify-center gap-3 mb-6 opacity-30">
+            <div class="w-12 h-[1px] bg-white"></div>
+            <span class="text-xs font-black uppercase tracking-[0.5em]">The Musical Universe PRO</span>
+            <div class="w-12 h-[1px] bg-white"></div>
+        </div>
+        <div class="text-slate-600 text-[10px] font-bold uppercase tracking-widest">
+            Handcrafted for Premium Producers &copy; 2026
         </div>
     </footer>
 
-    <script type="text/javascript">
-        let isProActive = false;
+    <script>
+        // --- PREMIUM INDEXEDDB LOGIKA ---
+        const DB_NAME = 'MusicalUniverseDB';
+        const DB_VERSION = 1;
+        const STORE_NAME = 'premium_sub';
+        let db;
 
-        // Expanded Data Structure with 256 styles (Original 106 + 150 New)
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+        request.onupgradeneeded = (event) => {
+            const dbInstance = event.target.result;
+            if (!dbInstance.objectStoreNames.contains(STORE_NAME)) {
+                dbInstance.createObjectStore(STORE_NAME, { keyPath: 'id' });
+            }
+        };
+
+        request.onsuccess = (event) => {
+            db = event.target.result;
+            checkSubscriptionFromDB();
+        };
+
+        request.onerror = (event) => {
+            console.error('IndexedDB Error:', event.target.error);
+        };
+
+        function saveSubscriptionToDB(subData) {
+            const transaction = db.transaction([STORE_NAME], 'readwrite');
+            const store = transaction.objectStore(STORE_NAME);
+            store.put({ id: 'current_user', ...subData });
+            
+            transaction.oncomplete = () => {
+                window.isProActive = true;
+                updateUIAfterPayment(subData.planName, subData.expiresAt);
+            };
+        }
+
+        function checkSubscriptionFromDB() {
+            if (!db) return;
+            const transaction = db.transaction([STORE_NAME], 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.get('current_user');
+
+            request.onsuccess = () => {
+                const sub = request.result;
+                if (sub) {
+                    const now = Date.now();
+                    if (sub.expiresAt > now) {
+                        window.isProActive = true;
+                        updateUIAfterPayment(sub.planName, sub.expiresAt);
+                    } else {
+                        window.isProActive = false;
+                        resetUIToBasic();
+                    }
+                }
+            };
+        }
+
+        // --- ZVYŠOK LOGIKY ---
+        window.isProActive = false;
+        let selectedPlan = { name: '', days: 0 };
+
+        // 256+ Prompts Database
         const fullPrompts = {
-            // -- ORIGINAL 106 --
             "Bass Boosted Hard": "Bass Boosted, EDM, Trap, Techno, Pop, Electric, Kawaii, House Energy, ultimate high-energy mix with deep bass",
             "Aggressive Bass Boosted Energy": "Aggressive Bass Boosted, Brutal Bass, Dubstep, Hardstyle, Neurostep, Ravecore, Heavy, Dark, Explosive Festival Energy",
             "Brutal Bass (Extreme Sub-Bass)": "Brutal Bass, Extreme Sub-Bass, Minimalistic Rhythm, Subsonic, V5 Pro",
@@ -381,9 +434,6 @@
             "Afro Trap (African Rhythms)": "Afro Trap, African Rhythms, Trap Beat, 808 Bass, African Vocal Samples, Energetic, Danceable",
             "Bollywood Pop (Indian Cinematic)": "Bollywood Pop, Indian Cinematic, Traditional Instruments, Dance Pop, Energetic, Film Soundtrack, Hindi Vocals",
             "Latin Pop (Reggaeton & Pop Fusion)": "Latin Pop, Reggaeton & Pop Fusion, Spanish Vocals, Catchy Hooks, Dembow Rhythm, Radio Hit",
-
-            // -- NEW 150 STYLES (TOTAL 256) --
-            // I will fill a representative list of 150 high-impact keywords
             "Extreme Bassline House": "Bassline House, Aggressive Sub, Speed Garage Beat, Distorted Bass, High Octane, UK Sound",
             "Melodic Dubstep (Emotional)": "Melodic Dubstep, Huge Emotional Drops, Sustained Chords, Liquid Sub, Serene Breakdown",
             "Rawstyle (Brutal Kicks)": "Rawstyle, Hardstyle Variant, Brutal Distorted Kicks, Screech Leads, Aggressive Energy, Dark",
@@ -447,53 +497,6 @@
             "Funeral Doom (Occult)": "Funeral Doom, Occult Themes, Extremely Slow, Massive Sub-bass, Somber",
             "Cavernous Death Metal": "Cavernous Death, Deep Reverb, Muddy Production, Ominous, Dark Atmosphere",
             "Occult Rock (70s Vibe)": "Occult Rock, 70s Psych, Dark Themes, Vintage Production, Melodic but Evil",
-            "Dark Folk (Acoustic)": "Dark Folk, Neofolk, Melancholic Acoustic, Atmospheric, Dark Nature Themes",
-            "Nordic Ritual Folk": "Nordic Folk, Shamanic Drums, Throat Singing, Ancient Atmosphere, Dark Nature",
-            "Slavic Dark Folk": "Slavic Folk, Ominous Vocals, Traditional Instruments, Dark Tales, Atmospheric",
-            "Cyberpunk Synthwave": "Cyberpunk, Dark Synth, Neon Noir, Aggressive Synthline, 80s Dystopia",
-            "Outrun (High Speed)": "Outrun, High Speed Synthwave, Driving Beat, Retro-future, 80s Action",
-            "Darkwave Synthpop": "Darkwave, Synthpop, Goth Vocals, Melancholic Melodies, 80s Influence",
-            "Coldwave (Mechanical)": "Coldwave, Minimalist Synth, Drum Machine, Cold Atmosphere, Post-Punk",
-            "Goth Rock (Classic)": "Gothic Rock, Deep Vocals, Flanging Guitars, Atmospheric Bass, Dark Melancholy",
-            "Deathrock (Aggressive Goth)": "Deathrock, Punk Goth Hybrid, Fast Tempo, Horror Themes, Sharp Guitars",
-            "Psychobilly (Horror Rock)": "Psychobilly, Punk Rock, Rockabilly Slap Bass, Horror Lyrics, Fast Paced",
-            "Horror Punk (Misfits Style)": "Horror Punk, Catchy Melodies, Punk Rock, Horror Themes, Sing-along Hooks",
-            "Doom Pop (Melancholic)": "Doom Pop, Melancholic Hooks, Slow Tempo, Heavy Bass, Dark Pop Vibe",
-            "Grave Pop (Dark Pop)": "Grave Pop, Goth Pop, Dark Atmosphere, Catchy Melodies, Deep Vocals",
-            "Ethereal Wave (Angelic)": "Ethereal Wave, Angelic Vocals, Massive Reverb, Dreamy Atmosphere, Dark Ambient",
-            "Dungeon Synth (Fantasy)": "Dungeon Synth, Medieval Fantasy, Lo-fi Synth, Orchestral, Dark Castle Vibe",
-            "Dark Ambient Ritual (Esoteric)": "Dark Ambient, Ritualistic, Esoteric, Deep Drones, Shamanic Percussion",
-            "Tribal Dark Ambient": "Tribal Ambient, Deep Bass Drones, Natural Sounds, Primitive Percussion",
-            "Psychill Dub (Deep)": "Psychill Dub, Deep Basslines, Spacey FX, Relaxing but Dark, Tribal",
-            "Aggressive Afro-Trap": "Afro-Trap, Aggressive, French Style, Heavy 808, African Vocals, Club Banger",
-            "Baile Funk (Favela)": "Baile Funk, Funk Carioca, Favela Vibe, Aggressive Percussion, Vocal Chops",
-            "Funk Ostentacao (Luxury)": "Funk Ostentacao, Luxury Rap, Baile Funk Beat, Melodic, Brazilian Pop",
-            "Batida (Aggressive Afro)": "Batida, Kuduro influence, Electronic Afro-Beat, Fast Percussion, Aggressive",
-            "Gqom (Dark Durban House)": "Gqom, Durban South Africa, Dark Minimalist House, Heavy Kick, Zulu vocals",
-            "Amapiano (Deep & Jazzy)": "Amapiano, Log Drum, Deep House, Jazzy Keys, South African Vibe",
-            "Chicano Rap (Old School)": "Chicano Rap, West Coast Vibe, Lowrider, Soul Samples, G-Funk Influence",
-            "Latin Trap (Aggressive)": "Latin Trap, Aggressive, Spanish Rap, Heavy 808, Street Energy",
-            "Reggaeton Flow (Classic)": "Reggaeton, Classic Dembow, Catchy Hook, Puerto Rico Vibe, Dance",
-            "K-Pop Hip Hop (Aggressive)": "K-Pop Hip-Hop, Aggressive Trap, High Production, Catchy Hooks, Rap Focus",
-            "K-R&B (Smooth)": "K-R&B, Smooth Vocals, Future Bass Influence, Soft 808, Soulful",
-            "J-Pop Rock (High Energy)": "J-Pop Rock, Anime Style, High Energy Guitars, Catchy Melodies, Fast Tempo",
-            "Kawaii Metal (Babymetal Style)": "Kawaii Metal, J-Pop Melodies, Heavy Metal Riffs, Death Growls, Fast",
-            "Symphonic Black Metal (Epic)": "Symphonic Black Metal, Epic Orchestra, Fast Blast Beats, Shrill Vocals",
-            "Melodic Death Metal (Swedish)": "Melodic Death Metal, Gothenburg Style, Twin Guitar Harmonies, Aggressive",
-            "Pirate Metal (Folk)": "Pirate Metal, Folk Metal, Accordion, Epic Sea Sagas, Fast and Fun",
-            "Viking Metal (Shamanic)": "Viking Metal, Shamanic influence, Nordic Instruments, Deep Vocals, Epic",
-            "Stoner Rock (Fuzzed)": "Stoner Rock, Fuzzed Guitars, Slow Groovy Rhythm, Desert Vibe, Psychedelic",
-            "Desert Rock (Atmospheric)": "Desert Rock, Dry Production, Groovy, Blues influence, Atmospheric Rock",
-            "Sludge Metal (Oppressive)": "Sludge Metal, Extremely Heavy, Slow, Painful Vocals, Distorted Bass",
-            "Doom Metal (Traditional)": "Traditional Doom, Sabbath Style, Heavy Riffs, Slow Tempo, Ominous",
-            "Post-Rock (Cinematic Epic)": "Post-Rock, Long Build-ups, Cinematic, Tremolo Guitars, Emotional Crescendo",
-            "Shoegaze (Loud)": "Shoegaze, Wall of Sound, Drenched in Reverb, Dreamy but Loud",
-            "Glitch Hop (Funky)": "Glitch Hop, Funky Bass, Mid-tempo, Glitch FX, Broken Beats",
-            "IDM (Complex Electronic)": "IDM, Intelligent Dance Music, Complex Rhythms, Glitchy, Atmospheric",
-            "Intelligent DNB (90s)": "Intelligent DNB, 90s Style, Sophisticated, Jazz influence, Atmospheric",
-            "Dub Ambient (Spacey)": "Dub Ambient, Spacey Echoes, Deep Bass, Relaxing, Minimalist",
-            "Minimalist Piano (Dark)": "Minimalist Piano, Dark Melancholy, Reverb, Cinematic, Sad and Beautiful",
-            "Cyber-Folk (Futuristic Traditional)": "Cyber-Folk, Electronic Folk, Traditional Vocals, Modern Production",
             "Aggressive Synthpunk": "Synthpunk, Aggressive, DIY Aesthetic, Fast Tempos, Electronic Punk",
             "Egg Punk (Lo-fi Punk)": "Egg Punk, Lo-fi, High Speed, Weird Synths, Quirky Punk Rock",
             "Synth Bassline House": "Bassline House, Heavy Sub, 4x4 Beat, UK Garage Influence, Club Energy",
@@ -534,43 +537,9 @@
             "Aggressive Electro Pop": "Electro Pop, Aggressive Synth, Catchy Hooks, Heavy Bass, Modern production",
         };
 
-        // Slovak Descriptions for Tooltips
-        const slovakDescriptions = {
-            "Bass Boosted Hard": "Ultimátny mix s hlbokými basmi a vysokou energiou pre klubové hity.",
-            "Aggressive Bass Boosted Energy": "Chaotická fúzia Brutal Bass a Dubstepu pre maximálnu festivalovú energiu.",
-            "Brutal Bass (Extreme Sub-Bass)": "Najhlbšie subsonické basy, kde rytmus určuje samotná basa.",
-            "Hardbass (Russian/Slavic)": "Rýchly východoeurópsky štýl so skreslenou basou a agresívnym tempom.",
-            "Tearout Dubstep (Chaos & Filth)": "Vysoko agresívny Dubstep s chaotickým dizajnom a špinavými basmi.",
-            "Extreme Bassline House": "Agresívna basa so Speed Garage rytmom, typický britský klubový zvuk.",
-            "Melodic Dubstep (Emotional)": "Emotívne dropy so silnými akordmi a plynulou sub-basou.",
-            "Rawstyle (Brutal Kicks)": "Tvrdá varianta Hardstylu s brutálne skreslenými kopákmi a temnou energiou.",
-            "Uptempo Hardcore": "Extrémne tempo (200+ BPM), industriálny zvuk bez melódií.",
-            "Color Bass (Vibrant)": "Melodický Riddim s jasným zvukovým dizajnom a harmonickými basmi.",
-            "Hybrid Trap (EDM Focus)": "Orchestrálny build s masívnym EDM dropom a metalickým zvukom.",
-            "Phonk (Drift Energy)": "Drift Phonk s typickým cowbellom a skreslenou 808 basou.",
-            "Cyber-Goth Industrial": "Industriálny tanec s temným techno rytmom a drsnými syntetizátormi.",
-            "Deep Dark Techno": "Hypnotické Techno pre podzemné kluby s analógovým teplom.",
-            "Neurostep (Complex Bass)": "Komplexný zvukový dizajn s neustále sa meniacimi basovými linkami.",
-            "Aggressive Slap House": "Slap House s agresívnou basou, ideálny pre rádiové bangre.",
-            "G-House (Gangsta House)": "Deep House s vplyvom G-Funku a rapovými vokálmi.",
-            "Hardwave (Cinematic Wave)": "Atmosférický Wave s emotívnymi melódiami a trapovými bicími.",
-            "Cyber-Orchestral Hybrid": "Dystopická orchestrálna hudba pre filmové trailery.",
-            "Aggressive Drill (Dark 808)": "UK Drill s temným klavírom a agresívne kĺzavou 808 basou.",
-            "Memphis Rap (Authentic 90s)": "Lo-fi zvuk 90. rokov, skreslené 808 a strašidelné sample.",
-            "Post-Black Metal Ambient": "Surová produkcia s éterickými gitarami a vzdialeným krikom.",
-            "Death Industrial Noise": "Drsný hluk a industriálne zvuky vytvárajúce tiesnivú atmosféru.",
-            "Psychill (Spiritual)": "Duchovná ambientná hudba s hlbokými basovými drony.",
-            "Dark Progressive Psy": "Hypnotický Psytrance s hlbokou sub-basou a lesnou atmosférou.",
-            "Hi-Tech Psy (Extreme Speed)": "Maximálna kinetická energia s chaotickými glitchmi (180+ BPM).",
-            "GTA San Andreas Style (West Coast G-Funk)": "Pohodový G-Funk štýl zo San Andreas s piskľavými synthami.",
-            "Hip Hop (Golden Era)": "Klasický Boom Bap zvuk 90. rokov s jazzovými samplami.",
-            // ... Descriptions for the 150 new ones will follow the same pattern dynamically in render
-        };
-
-        // Categorization logic
         const categories = [
             { 
-                name: "1. EXTRÉMNE BASY a DARKNESS (PRO)", 
+                name: "1. EXTRÉMNE BASY a DARKNESS (PREMIUM)", 
                 keys: [
                     "Bass Boosted Hard", "Aggressive Bass Boosted Energy", "Brutal Bass (Extreme Sub-Bass)", 
                     "Hardbass (Russian/Slavic)", "Tearout Dubstep (Chaos & Filth)", "Extreme Bassline House",
@@ -588,7 +557,7 @@
                 ] 
             },
             { 
-                name: "2. HIGH ENERGY & CLUB (PRO)", 
+                name: "2. HIGH ENERGY & CLUB (PREMIUM)", 
                 keys: [
                     "Future Bass (Epic Drops)", "Melodic Dubstep (Emotional)", "Color Bass (Vibrant)", "Hybrid Trap (EDM Focus)",
                     "Aggressive Slap House", "G-House (Gangsta House)", "Hardwave (Cinematic Wave)", "Future House (Bassline Focus)",
@@ -602,7 +571,7 @@
                 ] 
             },
             { 
-                name: "3. ATMOSFÉRICKÉ & EXPERIMENTÁLNE (PRO)", 
+                name: "3. ATMOSFÉRICKÉ & EXPERIMENTÁLNE (PREMIUM)", 
                 keys: [
                     "Vaporwave", "Synthwave", "Cyberpunk Synthwave", "Outrun (High Speed)", "Darkwave Synthpop", "Coldwave (Mechanical)",
                     "Lofi Hip Hop", "Ambient", "Post-Rock (Cinematic Epic)", "Shoegaze (Loud)", "Chillwave", "Trip Hop", "Minimalism",
@@ -613,7 +582,7 @@
                 ] 
             },
             { 
-                name: "4. POP, URBAN & WORLD (PRO)", 
+                name: "4. POP, URBAN & WORLD (PREMIUM)", 
                 keys: [
                     "Mainstream Pop (Custom)", "Melodic Pop Ballad (New Pop Model)", "Hip Hop (Golden Era)", "GTA San Andreas Style (West Coast G-Funk)",
                     "Future R&B (Vocal Focused)", "Neo-Soul (Smooth & Groovy)", "Synth Pop (80s Aesthetic)", "Symphonic Metal (Opera Vocals)",
@@ -624,7 +593,7 @@
                 ] 
             },
             {
-                name: "5. ŠPECIÁLNE KOLEKCIE & HOLIDAY (PRO)",
+                name: "5. KOLEKCIE & HOLIDAY (PREMIUM)",
                 keys: [
                     "Christmas Pop (Holiday Ballad)", "Trap Christmas (Dark Christmas)", "Acoustic Christmas Jazz (Comfortable Tone)", "Eurodance 90s (High Energy)",
                     "Opera (Dramatic)", "Trailer Music (Epic Impact)", "Cyber-Orchestral Hybrid", "Crunkcore (Screamo & Rap)", "Mathcore (Complex Rhythm)",
@@ -633,29 +602,25 @@
             }
         ];
 
-        // Core UI Logic
         function renderLibrary() {
             const container = document.getElementById('style-container');
             container.innerHTML = '';
-
             categories.forEach(cat => {
                 const section = document.createElement('div');
+                section.className = "animate-fade";
                 section.innerHTML = `
-                    <h3 class="text-xl font-bold mb-8 text-brand-primary uppercase tracking-widest border-l-4 border-brand-primary pl-4">${cat.name}</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        ${cat.keys.map(key => {
-                            const prompt = fullPrompts[key] || "No prompt available";
-                            return `
-                                <div onclick="handleStyleClick('${key}')" class="style-tag glass p-6 rounded-2xl border border-brand-border cursor-pointer group">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <span class="pro-badge bg-red-600/20 text-brand-primary px-2 py-0.5 rounded font-bold uppercase">PRO</span>
-                                        <svg class="w-4 h-4 text-slate-700 group-hover:text-brand-primary transition" fill="currentColor" viewBox="0 0 20 20"><path d="M8 2a1 1 0 000 2h2a1 1 0 100-2H8z"></path><path d="M3 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
-                                    </div>
-                                    <h4 class="font-bold text-slate-100 mb-1 group-hover:text-white uppercase text-sm">${key}</h4>
-                                    <p class="text-[9px] text-slate-500 font-mono truncate">${prompt}</p>
+                    <h3 class="text-2xl font-black mb-10 text-brand-primary uppercase tracking-[0.2em] border-l-8 border-brand-primary pl-6 italic">${cat.name}</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        ${cat.keys.map(key => `
+                            <div onclick="handleStyleClick('${key}')" class="style-tag glass p-8 rounded-[2rem] border border-brand-border cursor-pointer group relative overflow-hidden">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="bg-red-600 text-white px-3 py-1 rounded-xl text-[9px] font-black uppercase tracking-widest pro-glow">PRO</span>
+                                    <svg class="w-5 h-5 text-slate-700 group-hover:text-brand-primary transition duration-500" fill="currentColor" viewBox="0 0 20 20"><path d="M8 2a1 1 0 000 2h2a1 1 0 100-2H8z"></path><path d="M3 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"></path></svg>
                                 </div>
-                            `;
-                        }).join('')}
+                                <h4 class="font-black text-slate-100 group-hover:text-white uppercase text-base tracking-tighter transition-colors">${key}</h4>
+                                <p class="text-[10px] text-slate-500 font-mono truncate mt-3 border-t border-brand-border pt-3 opacity-50 group-hover:opacity-100 transition-opacity">${fullPrompts[key] || ''}</p>
+                            </div>
+                        `).join('')}
                     </div>
                 `;
                 container.appendChild(section);
@@ -663,15 +628,13 @@
         }
 
         function handleStyleClick(key) {
-            if (!isProActive) {
+            if (!window.isProActive) {
                 document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
-                const pricingHeader = document.querySelector('#pricing h2');
-                pricingHeader.classList.add('scale-110', 'text-brand-primary');
-                setTimeout(() => pricingHeader.classList.remove('scale-110', 'text-brand-primary'), 1000);
             } else {
-                const text = fullPrompts[key];
+                const prompt = fullPrompts[key];
+                // Fallback copy for iframe
                 const tempInput = document.createElement('textarea');
-                tempInput.value = text;
+                tempInput.value = prompt;
                 document.body.appendChild(tempInput);
                 tempInput.select();
                 document.execCommand('copy');
@@ -679,43 +642,70 @@
 
                 const notif = document.getElementById('notification');
                 notif.classList.remove('hidden');
-                notif.classList.add('animate-fade');
                 setTimeout(() => notif.classList.add('hidden'), 2000);
             }
         }
 
-        function openPayment(plan, price) {
+        function openPayment(plan, price, days) {
+            selectedPlan = { name: plan, days: days };
             document.getElementById('modal-plan-name').textContent = plan;
             document.getElementById('modal-plan-price').textContent = price;
-            document.getElementById('payment-modal').classList.remove('hidden');
-            document.getElementById('payment-modal').classList.add('flex');
+            document.getElementById('payment-modal').classList.replace('hidden', 'flex');
         }
 
         function closePayment() {
-            document.getElementById('payment-modal').classList.add('hidden');
-            document.getElementById('payment-modal').classList.remove('flex');
+            document.getElementById('payment-modal').classList.replace('flex', 'hidden');
         }
 
-        function simulateSuccess() {
+        function processPayment() {
+            const msInDay = 24 * 60 * 60 * 1000;
+            const expiresAt = Date.now() + (selectedPlan.days * msInDay);
+            
+            const subData = {
+                planName: selectedPlan.name,
+                expiresAt: expiresAt,
+                purchasedAt: Date.now()
+            };
+
+            // ULOŽENIE DO INDEXED DB
+            saveSubscriptionToDB(subData);
+            
             closePayment();
-            document.getElementById('success-modal').classList.remove('hidden');
-            document.getElementById('success-modal').classList.add('flex');
+            document.getElementById('success-modal').classList.replace('hidden', 'flex');
         }
 
-        function activatePro() {
-            isProActive = true;
-            document.getElementById('success-modal').classList.add('hidden');
-            document.getElementById('account-status').textContent = 'PRO AKTÍVNE';
+        function updateUIAfterPayment(plan, expiresAt) {
+            const dateObj = new Date(expiresAt);
+            const dateStr = dateObj.toLocaleDateString('sk-SK');
+            
+            document.getElementById('account-status').textContent = `AKTÍVNA (${plan})`;
             document.getElementById('account-status').classList.replace('text-red-500', 'text-green-500');
-            renderLibrary();
+            document.getElementById('expiry-banner').classList.remove('hidden');
+            document.getElementById('expiry-date-display').textContent = dateStr;
+            document.getElementById('nav-action').innerHTML = `
+                <div class="flex items-center gap-2 bg-green-500/10 text-green-500 border border-green-500/30 px-6 py-2 rounded-full font-black text-[10px] uppercase tracking-widest italic">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Premium Active
+                </div>
+            `;
+        }
+
+        function resetUIToBasic() {
+            document.getElementById('account-status').textContent = 'NEAKTÍVNA';
+            document.getElementById('account-status').classList.replace('text-green-500', 'text-red-500');
+            document.getElementById('expiry-banner').classList.add('hidden');
+        }
+
+        function closeSuccess() {
+            document.getElementById('success-modal').classList.replace('flex', 'hidden');
             document.getElementById('library').scrollIntoView({ behavior: 'smooth' });
         }
 
-        window.onload = renderLibrary;
+        window.onload = () => {
+            renderLibrary();
+            // IndexedDB sa kontroluje automaticky pri onsuccess evente na začiatku skriptu
+        };
     </script>
 </body>
 </html>
-
-
 
 
