@@ -296,16 +296,23 @@
                 const sub = request.result;
                 if (sub) {
                     const now = Date.now();
+                    // PRÍSNA KONTROLA EXPIRÁCIE
                     if (sub.expiresAt > now) {
                         window.isProActive = true;
                         updateUIAfterPayment(sub.planName, sub.expiresAt);
                     } else {
+                        // LICENCIA EXPIROVALA - ZABLOKOVAŤ PRÍSTUP
                         window.isProActive = false;
                         resetUIToBasic();
                     }
                 }
             };
         }
+
+        // Kontrolovať každých 30 sekúnd, či licencia neexpitovala počas prehliadania
+        setInterval(() => {
+            checkSubscriptionFromDB();
+        }, 30000);
 
         // --- ZVYŠOK LOGIKY ---
         window.isProActive = false;
@@ -434,107 +441,6 @@
             "Afro Trap (African Rhythms)": "Afro Trap, African Rhythms, Trap Beat, 808 Bass, African Vocal Samples, Energetic, Danceable",
             "Bollywood Pop (Indian Cinematic)": "Bollywood Pop, Indian Cinematic, Traditional Instruments, Dance Pop, Energetic, Film Soundtrack, Hindi Vocals",
             "Latin Pop (Reggaeton & Pop Fusion)": "Latin Pop, Reggaeton & Pop Fusion, Spanish Vocals, Catchy Hooks, Dembow Rhythm, Radio Hit",
-            "Extreme Bassline House": "Bassline House, Aggressive Sub, Speed Garage Beat, Distorted Bass, High Octane, UK Sound",
-            "Melodic Dubstep (Emotional)": "Melodic Dubstep, Huge Emotional Drops, Sustained Chords, Liquid Sub, Serene Breakdown",
-            "Rawstyle (Brutal Kicks)": "Rawstyle, Hardstyle Variant, Brutal Distorted Kicks, Screech Leads, Aggressive Energy, Dark",
-            "Uptempo Hardcore": "Uptempo Hardcore, 200+ BPM, Heavy Distortion, Fast Aggressive Beats, No Melodies, Industrial",
-            "Color Bass (Vibrant)": "Color Bass, Melodic Riddim, Saturated Vocoders, Bright Sound Design, Harmonic Bass Wobbles",
-            "Hybrid Trap (EDM Focus)": "Hybrid Trap, EDM Drop, Orchestral Build, Trap Beat, Metallic Sound Design, Massive Impact",
-            "Phonk (Drift Energy)": "Drift Phonk, Cowbell Melody, Distorted 808, Memphis Rap Samples, High Energy Drift Vibe",
-            "Cyber-Goth Industrial": "Industrial Dance, Cyber-Goth, Dark Techno Rhythms, EBM Influence, Harsh Synths",
-            "Deep Dark Techno": "Deep Techno, Dark Room Vibe, Minimalist, Hypnotic Sub, Analog Warmth, Underground",
-            "Neurostep (Complex Bass)": "Neurostep, Neurofunk Influence, Complex Sound Design, Mutating Basslines, Dark Drum & Bass",
-            "Aggressive Slap House": "Slap House, Aggressive Bass, Deep House Beat, Vocal Chops, Radio Banger, Low End Focus",
-            "G-House (Gangsta House)": "G-House, Deep House, G-Funk Influence, Hip Hop Vocals, Dark Basslines, Club Energy",
-            "Hardwave (Cinematic Wave)": "Hardwave, Cinematic Atmosphere, Future Bass Drops, Emotional Melodies, Fast Trap Beat",
-            "Cyber-Orchestral Hybrid": "Cyber-Orchestral, Hybrid Epic, Trailer Music, Synthesized Orchestra, Dark Dystopian Energy",
-            "Aggressive Drill (Dark 808)": "UK Drill, Aggressive sliding 808, Dark Piano Loops, Violent Energy, Fast Hi-hats",
-            "Memphis Rap (Authentic 90s)": "Memphis Rap, 90s Lo-fi, Distorted 808, Triplets, Creepy Samples, Raw Soul",
-            "Post-Black Metal Ambient": "Post-Black Metal, Ambient Soundscapes, Raw Production, Distant Screams, Ethereal Guitars",
-            "Death Industrial Noise": "Death Industrial, Harsh Noise, Dark Ambient, Mechanical Sounds, Oppressive Atmosphere",
-            "Psychill (Spiritual)": "Psychill, Psybient, Down-tempo, Spiritual, Ethereal Synth, Deep Bass Drones",
-            "Dark Progressive Psy": "Dark Progressive Psytrance, Hypnotic, Deep Sub-bass, Forest Atmosphere, Alien Sound FX",
-            "Hi-Tech Psy (Extreme Speed)": "Hi-Tech Psytrance, 180+ BPM, Chaotic Glitches, Fast Melodic Runs, Maximum Kinetic Energy",
-            "Frenchcore (Euphoric)": "Frenchcore, Hardcore, Euphoric Melodies, Distorted Bass Kicks, Fast Paced, Happy but Hard",
-            "Speedcore Noise (600 BPM)": "Speedcore, Noise, Sonic Chaos, 600 BPM, Industrial Static, Aggressive Destruction",
-            "Liquid Drum & Bass (Serene)": "Liquid DNB, Serene, Soulful, Smooth Sub, Piano Melodies, Intelligent Rhythm",
-            "Intelligent Jungle (Atmospheric)": "Intelligent Jungle, 90s Atmospheric, Complex Amen Breaks, Ethereal Pads, Deep Sub",
-            "Ragga Jungle (Vocal Focus)": "Ragga Jungle, Dancehall Vocals, Fast Jungle Beat, Heavy Bassline, Soundclash Energy",
-            "Jump Up DNB (Wobbly)": "Jump Up DNB, Wobbly Bass, Simplified Beat, Party Vibe, High Energy, Catchy",
-            "Neurofunk DNB (Mechanical)": "Neurofunk, Technical DNB, Mechanical Sound Design, Dark Atmospheric, Complex Drums",
-            "Techstep (90s Dark DNB)": "Techstep, 90s Dark DNB, Mechanical Beat, Industrial Bass, Ominous Atmosphere",
-            "Darkcore Jungle": "Darkcore Jungle, 90s Darkside, Sinister Samples, Heavy Sub, Chaotic Breakbeats",
-            "Breakstep (Heavy Bass)": "Breakstep, Bassline Breakbeat, Dark UK Garage, Heavy Low End, Syncopated Rhythm",
-            "Acid Techno (TB-303 Focus)": "Acid Techno, TB-303 Resonance, Sququelch, Fast Techno Beat, Industrial Warehouse",
-            "Schranz (Fast Hard Techno)": "Schranz, Hard Techno, Fast Repetitive Drums, Industrial Noise, Maximum Percussion",
-            "Darkroom Minimal": "Minimal Techno, Darkroom Vibe, Subtle Bass, Clinical Sound Design, Deep Underground",
-            "Psy-Breaks (Glitchy)": "Psy-Breaks, Psychedelic Breakbeat, Glitch FX, Deep Sub, Acid Leads, Funky Rhythm",
-            "Aggressive Moombahton": "Moombahton, Aggressive Lead, Dembow Rhythm, Dutch House Influence, Heavy Drop",
-            "Moombahcore (Dubstep Hybrid)": "Moombahcore, 110 BPM, Dubstep Wobbles, Dembow Rhythm, High Energy",
-            "Aggressive Jersey Club": "Jersey Club, Fast Kick Pattern, Bed Squeaks, Vocal Chops, Aggressive Club Energy",
-            "Footwork (Extreme Speed)": "Footwork, 160 BPM, Chaotic Drum Programming, Soul Samples, Sub Bass Focus",
-            "Ghetto Tech (Fast Beats)": "Ghetto Tech, Detroit Style, Fast House, Raw Vocals, Heavy Bass, Raw Production",
-            "Hardgroove Techno": "Hardgroove, Funky Techno, Fast Rhythmic, Tribal Percussion, Tool Style",
-            "Peak Time Techno (Festival)": "Peak Time Techno, Festival Drop, Big Synths, Heavy Kick, Atmospheric Build",
-            "Cyber-Trap (Futuristic)": "Cyber-Trap, Futuristic Sound Design, Neon Atmosphere, Heavy 808, Digital Distortion",
-            "Glitchcore Pop": "Glitchcore, Hyperpop, Chaos Pop, High Pitched Vocals, Digital Glitches, Aggressive",
-            "Aggressive Hyperpop": "Hyperpop, Aggressive Bass, Distorted Vocals, Pop Hooks, Chaotic Production",
-            "Digicore (Online Sound)": "Digicore, Glitchy Pop, Trap Beats, Internet Aesthetic, Lo-fi Digital, Melancholic",
-            "Emo Trap (Guitar Focus)": "Emo Trap, Melancholic Guitar, 808 Bass, Emotional Vocals, Dark Hip Hop",
-            "Rage Beat (Playboi Style)": "Rage Beat, Aggressive Synth, High Energy Trap, Video Game Leads, Fast Flow",
-            "Pluggnb (Melodic Trap)": "Pluggnb, Melodic Synth, Smooth R&B influence, Soft 808, Chill Trap Vibe",
-            "Aggressive Hardcore Punk": "Hardcore Punk, Aggressive, Fast Tempo, Raw Vocals, Distorted Guitars, Chaos",
-            "Screamo (Emotional Chaos)": "Screamo, Chaotic Hardcore, Screamed Vocals, Emotional Breakdown, Post-Rock influence",
-            "Deathcore (Brutal Breaks)": "Deathcore, Brutal breakdowns, Guttural Growls, Blast Beats, Extreme Metal",
-            "Slamming Death Metal": "Slam Death Metal, Crushing Riffs, Gurgle Vocals, Heavy Grooves, Brutal",
-            "Technical Death Metal": "Tech Death, Complex Riffs, Virtuoso Drums, Fast Tempos, Dark and Brutal",
-            "Grindcore (Short Chaos)": "Grindcore, Short Songs, Maximum Speed, Sonic Chaos, Aggressive Vocals",
-            "Goregrind (Pitch Shifted)": "Goregrind, Pitch Shifted Vocals, Fast Grind Beats, Horror Samples, Raw",
-            "Power Electronics (Hate)": "Power Electronics, Harsh Noise, Aggressive Themes, Industrial Static, Violent",
-            "Bestial Black Metal": "Bestial Black Metal, Blasphemous, Raw Chaos, Fast Tempo, Primitive Metal",
-            "War Metal (Extreme)": "War Metal, Black Death Hybrid, Sonic Wall of Chaos, Brutal and Fast",
-            "Depressive Suicidal Black Metal": "DSBM, Extremely Slow and Sad, Painful Screams, Raw Guitars, Despair",
-            "Funeral Doom (Occult)": "Funeral Doom, Occult Themes, Extremely Slow, Massive Sub-bass, Somber",
-            "Cavernous Death Metal": "Cavernous Death, Deep Reverb, Muddy Production, Ominous, Dark Atmosphere",
-            "Occult Rock (70s Vibe)": "Occult Rock, 70s Psych, Dark Themes, Vintage Production, Melodic but Evil",
-            "Aggressive Synthpunk": "Synthpunk, Aggressive, DIY Aesthetic, Fast Tempos, Electronic Punk",
-            "Egg Punk (Lo-fi Punk)": "Egg Punk, Lo-fi, High Speed, Weird Synths, Quirky Punk Rock",
-            "Synth Bassline House": "Bassline House, Heavy Sub, 4x4 Beat, UK Garage Influence, Club Energy",
-            "Deep Tech (Minimal)": "Deep Tech, Minimal House, Groovy Bassline, Underground Vibe, Clinical",
-            "Raw Techno (Warehouse)": "Raw Techno, Warehouse Style, Distorted Drums, Minimalist, Dark Room",
-            "Acid House (Classic)": "Acid House, 808/303, Retro Rave, 88 Style, Sququelch",
-            "Nu-Disco (Funky)": "Nu-Disco, Modern Disco, Funky Bass, Synths, Danceable",
-            "Disco House (Classic Energy)": "Disco House, Uplifting, Sampled Disco Loops, Funky Bass, Piano",
-            "French House (Filtered)": "French House, Filtered Loops, 90s Style, Funky, Sample Heavy",
-            "Ghetto House (Booty)": "Ghetto House, Booty Bass, Raw Vocals, Fast Beats, 909 Drums",
-            "Jersey Club (Bed Squeak)": "Jersey Club, Bed Squeaks, Fast Kick pattern, Party Vibe",
-            "Speed House (High Energy)": "Speed House, 150 BPM, Bass House energy, Fast 4x4, Aggressive Bass",
-            "Complextro (Old School EDM)": "Complextro, Complex Synth Chops, High Energy, 2012 Style, Glitchy",
-            "Hard Trance (Aggressive)": "Hard Trance, Aggressive Leads, Fast Tempo, Hardstyle Kick, Euphoric",
-            "Classic Psytrance": "Psytrance, 140 BPM, Rolling Bassline, Trippy Leads, Forest Vibe",
-            "Full-On Psytrance": "Full-On Psytrance, High Energy, Melodic Leads, Power Bassline, Morning Vibe",
-            "Psy-Ambient (Dreamy)": "Psy-Ambient, Psybient, Slow Trippy, Atmospheric, Spacey",
-            "Hardgroove Techno (Percussive)": "Hardgroove, Fast Percussion, Funky Techno, Rhythmic, 90s Style",
-            "Aggressive Schranz": "Schranz, Fast Hard Techno, Industrial Noise, Maximum Percussion",
-            "Dark Progressive House": "Dark Progressive House, Hypnotic, Deep Bass, Long Evolution, Melodic",
-            "Euphoric Hardstyle": "Euphoric Hardstyle, Emotional Melody, Hard Kick, Festival Anthem",
-            "Mainstream Hardstyle": "Mainstream Hardstyle, Catchy, Hard Kick, High Energy, EDM Style",
-            "Hardcore (Old School Rave)": "Hardcore, 90s Rave, Breakbeats, Piano, Fast, Happy Energy",
-            "Donk (UK Bounce)": "Donk, UK Bounce, Bouncy Bass, Fast Tempo, Fun Party Energy",
-            "Aggressive Donk": "Aggressive Donk, Hardstyle influence, Fast Bouncy Bass, Distorted, High Energy",
-            "Hard Trance Rave": "Hard Trance, 90s Rave Style, Fast Melodies, Acid Leads, High Octane",
-            "Terrorcore (Speed)": "Terrorcore, Extremely Aggressive, Fast, Distorted Kicks, Industrial Noise",
-            "Extratone (1000 BPM)": "Extratone, 1000 BPM, Sonic Texture, Extreme Speed, Noise, Experimental",
-            "Aggressive Jungle Techno": "Jungle Techno, 90s Style, Breakbeats, Techno Synths, Heavy Bass",
-            "Drumstep (Half Time)": "Drumstep, Half Time DNB, Dubstep influence, Fast Drums, Aggressive Bass",
-            "Liquid Funk (DNB)": "Liquid Funk, Soulful DNB, Fast Drums, Funky Bass, Positive Energy",
-            "Darkstep (DNB)": "Darkstep, Dark DNB, Ominous Atmosphere, Heavy Bass, Aggressive Drums",
-            "Skullstep (DNB)": "Skullstep, Extreme DNB, Chaotic Amen Breaks, Distorted Bass, Violent",
-            "Techstep (Darkside)": "Techstep, Darkside 90s, Mechanical, Industrial, Cold Atmosphere",
-            "Breakbeat (Classic Rave)": "Breakbeat, 90s Rave, Funky Drums, Basslines, High Energy",
-            "Aggressive Breakbeat": "Breakbeat, Aggressive Bass, Modern Production, Big Beat energy",
-            "Big Beat (90s Style)": "Big Beat, 90s Style, Fat Drums, Funky Bass, Chemical Vibe",
-            "Aggressive Electro Pop": "Electro Pop, Aggressive Synth, Catchy Hooks, Heavy Bass, Modern production",
         };
 
         const categories = [
@@ -628,11 +534,15 @@
         }
 
         function handleStyleClick(key) {
+            // Kontrola aktívneho stavu pred vykonaním akcie
             if (!window.isProActive) {
                 document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+                // Voliteľná vizuálna spätná väzba, že treba zaplatiť
+                const statusLabel = document.getElementById('account-status');
+                statusLabel.classList.add('animate-pulse', 'scale-110');
+                setTimeout(() => statusLabel.classList.remove('animate-pulse', 'scale-110'), 1000);
             } else {
                 const prompt = fullPrompts[key];
-                // Fallback copy for iframe
                 const tempInput = document.createElement('textarea');
                 tempInput.value = prompt;
                 document.body.appendChild(tempInput);
@@ -667,7 +577,6 @@
                 purchasedAt: Date.now()
             };
 
-            // ULOŽENIE DO INDEXED DB
             saveSubscriptionToDB(subData);
             
             closePayment();
@@ -690,9 +599,15 @@
         }
 
         function resetUIToBasic() {
-            document.getElementById('account-status').textContent = 'NEAKTÍVNA';
+            window.isProActive = false;
+            document.getElementById('account-status').textContent = 'NEAKTÍVNA / EXPIROVANÁ';
             document.getElementById('account-status').classList.replace('text-green-500', 'text-red-500');
             document.getElementById('expiry-banner').classList.add('hidden');
+            document.getElementById('nav-action').innerHTML = `
+                <a href="#pricing" class="bg-brand-primary hover:bg-red-600 text-white px-5 py-2 rounded-full text-sm font-bold transition transform active:scale-95 shadow-lg">
+                    UPGRADE PRO
+                </a>
+            `;
         }
 
         function closeSuccess() {
@@ -702,10 +617,8 @@
 
         window.onload = () => {
             renderLibrary();
-            // IndexedDB sa kontroluje automaticky pri onsuccess evente na začiatku skriptu
         };
     </script>
 </body>
 </html>
-
 
