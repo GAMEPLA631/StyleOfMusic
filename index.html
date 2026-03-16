@@ -342,7 +342,7 @@
                         const now = Date.now();
                         // KĽÚČOVÁ KONTROLA: Ak prešlo X dní (aktuálny čas je väčší ako expiresAt)
                         if (now >= sub.expiresAt) {
-                            // Zmaž databázu a zruš UI
+                            // Zmaž databázu a zruš UI (týmto sa odstráni premium v momente expiračného dátumu)
                             await this.revokePremium("TVOJE PREMIUM PREDPLATNÉ ("+ sub.planName +") VYPRŠALO. PRÍSTUP BOL UKONČENÝ.");
                         } else {
                             window.isProActive = true;
@@ -371,7 +371,7 @@
                 return new Promise((resolve, reject) => {
                     const transaction = db.transaction([STORE_NAME], 'readwrite');
                     const store = transaction.objectStore(STORE_NAME);
-                    const req = store.delete('current_user');
+                    const req = store.delete('current_user'); // Fyzické vymazanie z databázy
                     
                     req.onsuccess = () => {
                         window.isProActive = false;
@@ -681,25 +681,31 @@
             });
         }
 
-        function handleStyleClick(key) {
+        async function handleStyleClick(key) {
+            // Najprísnejšia kontrola - okamžite vymaže a zruší premium, ak už vypršal dátum
+            await PremiumSystem.verify();
+
+            // Ak po kontrole nemá platné Premium, systém mu zablokuje kópiu a presmeruje ho na balíčky
             if (!window.isProActive) {
                 document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
                 const statusLabel = document.getElementById('account-status');
                 statusLabel.classList.add('animate-pulse', 'scale-110');
                 setTimeout(() => statusLabel.classList.remove('animate-pulse', 'scale-110'), 1000);
-            } else {
-                const prompt = fullPrompts[key];
-                const tempInput = document.createElement('textarea');
-                tempInput.value = prompt;
-                document.body.appendChild(tempInput);
-                tempInput.select();
-                document.execCommand('copy');
-                document.body.removeChild(tempInput);
-
-                const notif = document.getElementById('notification');
-                notif.classList.remove('hidden');
-                setTimeout(() => notif.classList.add('hidden'), 2000);
+                return; // Ďalej systém nepokračuje, nič neskopíruje!
             }
+
+            // Ak má Premium aktívne, kód sa skopíruje
+            const prompt = fullPrompts[key];
+            const tempInput = document.createElement('textarea');
+            tempInput.value = prompt;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            const notif = document.getElementById('notification');
+            notif.classList.remove('hidden');
+            setTimeout(() => notif.classList.add('hidden'), 2000);
         }
 
         function openPayment(plan, price, days) {
