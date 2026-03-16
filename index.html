@@ -340,9 +340,12 @@
                     const sub = await this.getSubscription();
                     if (sub) {
                         const now = Date.now();
-                        // KĽÚČOVÁ KONTROLA: Ak prešlo X dní (aktuálny čas je väčší ako expiresAt)
-                        if (now >= sub.expiresAt) {
-                            // Zmaž databázu a zruš UI (týmto sa odstráni premium v momente expiračného dátumu)
+                        const todayStr = new Date(now).toLocaleDateString('sk-SK');
+                        const expireStr = new Date(sub.expiresAt).toLocaleDateString('sk-SK');
+
+                        // KĽÚČOVÁ KONTROLA: Ak aktuálny čas uplynul ALEBO ak nastal presne ten deň, ktorý svieti na obrazovke
+                        if (now >= sub.expiresAt || todayStr === expireStr) {
+                            // Zmaž databázu a zruš UI (týmto sa odstráni premium hneď v daný deň)
                             await this.revokePremium("TVOJE PREMIUM PREDPLATNÉ ("+ sub.planName +") VYPRŠALO. PRÍSTUP BOL UKONČENÝ.");
                         } else {
                             window.isProActive = true;
