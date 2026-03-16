@@ -145,7 +145,6 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
-                <!-- Plány zostávajú rovnaké, ukladajú sa do IndexedDB -->
                 <div class="pricing-card glass p-10 rounded-[2.5rem] border border-brand-border flex flex-col">
                     <h3 class="font-black mb-2 text-slate-500 uppercase text-xs tracking-widest italic">Starter Pack</h3>
                     <div class="text-5xl font-black mb-8 text-white tracking-tighter">4.99€</div>
@@ -181,7 +180,7 @@
         </div>
     </section>
 
-    <!-- Platobná brána a Modaly zostávajú rovnaké -->
+    <!-- Platobná brána -->
     <div id="payment-modal" class="fixed inset-0 z-[200] items-center justify-center bg-black/95 px-4 hidden">
         <div class="glass max-w-lg w-full p-12 rounded-[3rem] border border-brand-border animate-fade">
             <div class="flex justify-between items-center mb-10">
@@ -213,7 +212,7 @@
     </div>
 
     <script>
-        // --- INDEXEDDB LOGIKA ---
+        // --- INDEXEDDB LOGIKA S AUTOMATICKÝM ODSTRÁNENÍM ---
         const DB_NAME = 'MusicalUniverseDB';
         const DB_VERSION = 1;
         const STORE_NAME = 'premium_sub';
@@ -232,21 +231,37 @@
             transaction.oncomplete = () => { window.isProActive = true; updateUIAfterPayment(subData.planName, subData.expiresAt); };
         }
 
+        // Funkcia na vymazanie predplatného pri expirácii
+        function deleteSubscription() {
+            if (!db) return;
+            const transaction = db.transaction([STORE_NAME], 'readwrite');
+            transaction.objectStore(STORE_NAME).delete('current_user');
+            transaction.oncomplete = () => {
+                resetUIToBasic();
+            };
+        }
+
         function checkSubscriptionFromDB() {
             if (!db) return;
             const transaction = db.transaction([STORE_NAME], 'readonly');
             transaction.objectStore(STORE_NAME).get('current_user').onsuccess = (e) => {
                 const sub = e.target.result;
-                if (sub && sub.expiresAt > Date.now()) {
-                    window.isProActive = true;
-                    updateUIAfterPayment(sub.planName, sub.expiresAt);
+                if (sub) {
+                    // Ak už vypršal čas, okamžite ho vymaž z DB
+                    if (sub.expiresAt <= Date.now()) {
+                        deleteSubscription();
+                    } else {
+                        window.isProActive = true;
+                        updateUIAfterPayment(sub.planName, sub.expiresAt);
+                    }
                 } else {
                     resetUIToBasic();
                 }
             };
         }
 
-        setInterval(checkSubscriptionFromDB, 30000);
+        // Prísna kontrola každých 5 sekúnd (ak vyprší počas používania, okamžite zmizne)
+        setInterval(checkSubscriptionFromDB, 5000);
 
         window.isProActive = false;
         let selectedPlan = { name: '', days: 0 };
@@ -574,7 +589,8 @@
         function resetUIToBasic() {
             window.isProActive = false;
             document.getElementById('account-status').textContent = 'NEAKTÍVNA / EXPIROVANÁ';
-            document.getElementById('account-status').classList.replace('text-green-500', 'text-red-500');
+            document.getElementById('account-status').classList.remove('text-green-500');
+            document.getElementById('account-status').classList.add('text-red-500');
             document.getElementById('expiry-banner').classList.add('hidden');
             document.getElementById('nav-action').innerHTML = `
                 <a href="#pricing" class="bg-brand-primary hover:bg-red-600 text-white px-5 py-2 rounded-full text-sm font-bold transition transform active:scale-95 shadow-lg">UPGRADE PRO</a>
