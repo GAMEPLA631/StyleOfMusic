@@ -212,7 +212,7 @@
     </div>
 
     <script>
-        // --- INDEXEDDB LOGIKA S AUTOMATICKÝM ODSTRÁNENÍM ---
+        // --- INDEXEDDB LOGIKA S PRÍSNYM ODSTRÁNENÍM ---
         const DB_NAME = 'MusicalUniverseDB';
         const DB_VERSION = 1;
         const STORE_NAME = 'premium_sub';
@@ -223,33 +223,46 @@
             const dbInstance = e.target.result;
             if (!dbInstance.objectStoreNames.contains(STORE_NAME)) dbInstance.createObjectStore(STORE_NAME, { keyPath: 'id' });
         };
-        request.onsuccess = (e) => { db = e.target.result; checkSubscriptionFromDB(); };
+        request.onsuccess = (e) => { 
+            db = e.target.result; 
+            // Okamžitá kontrola pri načítaní
+            checkSubscriptionFromDB(); 
+        };
 
         function saveSubscriptionToDB(subData) {
             const transaction = db.transaction([STORE_NAME], 'readwrite');
             transaction.objectStore(STORE_NAME).put({ id: 'current_user', ...subData });
-            transaction.oncomplete = () => { window.isProActive = true; updateUIAfterPayment(subData.planName, subData.expiresAt); };
+            transaction.oncomplete = () => { 
+                window.isProActive = true; 
+                updateUIAfterPayment(subData.planName, subData.expiresAt); 
+            };
         }
 
-        // Funkcia na vymazanie predplatného pri expirácii
-        function deleteSubscription() {
+        // Funkcia na fyzické odstránenie z databázy
+        function deleteSubscriptionFromDB() {
             if (!db) return;
             const transaction = db.transaction([STORE_NAME], 'readwrite');
-            transaction.objectStore(STORE_NAME).delete('current_user');
+            const store = transaction.objectStore(STORE_NAME);
+            store.delete('current_user');
             transaction.oncomplete = () => {
                 resetUIToBasic();
+                console.log("Database Cleaned: Premium record removed due to expiration.");
             };
         }
 
         function checkSubscriptionFromDB() {
             if (!db) return;
             const transaction = db.transaction([STORE_NAME], 'readonly');
-            transaction.objectStore(STORE_NAME).get('current_user').onsuccess = (e) => {
+            const store = transaction.objectStore(STORE_NAME);
+            const getRequest = store.get('current_user');
+
+            getRequest.onsuccess = (e) => {
                 const sub = e.target.result;
                 if (sub) {
-                    // Ak už vypršal čas, okamžite ho vymaž z DB
-                    if (sub.expiresAt <= Date.now()) {
-                        deleteSubscription();
+                    const now = Date.now();
+                    // Ak PREMIUM skončilo (aj keby to bolo presne teraz), systém ho odstráni z databázy
+                    if (sub.expiresAt <= now) {
+                        deleteSubscriptionFromDB();
                     } else {
                         window.isProActive = true;
                         updateUIAfterPayment(sub.planName, sub.expiresAt);
@@ -260,13 +273,13 @@
             };
         }
 
-        // Prísna kontrola každých 5 sekúnd (ak vyprší počas používania, okamžite zmizne)
+        // Automatická kontrola každých 5 sekúnd - ak niekomu skončí premium počas práce, systém ho hneď vykopne
         setInterval(checkSubscriptionFromDB, 5000);
 
         window.isProActive = false;
         let selectedPlan = { name: '', days: 0 };
 
-        // 256+ Prompts Database
+        // --- DATABÁZA PROMPTOV ---
         const fullPrompts = {
             "Bass Boosted Hard": "Bass Boosted, EDM, Trap, Techno, Pop, Electric, Kawaii, House Energy, ultimate high-energy mix with deep bass",
             "Aggressive Bass Boosted Energy": "Aggressive Bass Boosted, Brutal Bass, Dubstep, Hardstyle, Neurostep, Ravecore, Heavy, Dark, Explosive Festival Energy",
