@@ -212,7 +212,6 @@
     </div>
 
     <script>
-        // --- POKROČILÝ SYSTÉM KONTROLY A ODSTRÁNENIA PREMIUM (ADVANCED SYSTEM) ---
         const DB_NAME = 'MusicalUniverseDB';
         const DB_VERSION = 1;
         const STORE_NAME = 'premium_sub';
@@ -229,14 +228,13 @@
         
         request.onsuccess = (e) => { 
             db = e.target.result; 
-            PremiumSystem.init(); // Inicializuje pokročilý systém okamžite po načítaní
-            PricingSystem.init(); // Inicializuje dynamický cenový systém
+            PremiumSystem.init();
+            PricingSystem.init();
         };
 
-        // --- DYNAMICKÝ CENOVÝ SYSTÉM (ADVANCED PRICING) ---
         const PricingSystem = {
             SIX_MONTHS_MS: 182.5 * 24 * 60 * 60 * 1000,
-            INCREASE_FACTOR: 1.15, // Ceny sa zvýšia o 15% každých 6 mesiacov
+            INCREASE_FACTOR: 1.15,
             
             defaultPrices: {
                 STARTER: 4.99,
@@ -253,7 +251,6 @@
                     const now = Date.now();
 
                     if (!pricingData) {
-                        // Prvé spustenie: Zvýšime ceny okamžite ("aj teraz zmeň ceny")
                         pricingData = {
                             id: 'pricing_data',
                             lastIncreaseDate: now,
@@ -261,7 +258,6 @@
                         };
                         await this.savePricingData(pricingData);
                     } else {
-                        // Kontrola, či uplynulo 6 mesiacov
                         if (now - pricingData.lastIncreaseDate >= this.SIX_MONTHS_MS) {
                             const periods = Math.floor((now - pricingData.lastIncreaseDate) / this.SIX_MONTHS_MS);
                             if (periods > 0) {
@@ -308,14 +304,12 @@
             },
 
             updateUI(prices) {
-                // Aktualizácia cien v HTML štruktúre
                 document.getElementById('price-starter').textContent = prices.STARTER.toFixed(2) + '€';
                 document.getElementById('price-producer').textContent = prices.PRODUCER.toFixed(2) + '€';
                 document.getElementById('price-elite').textContent = prices.ELITE.toFixed(2) + '€';
                 document.getElementById('price-darkness').textContent = prices.DARKNESS.toFixed(2) + '€';
                 document.getElementById('price-ultimate').textContent = prices.ULTIMATE.toFixed(2) + '€';
 
-                // Aktualizácia tlačidiel tak, aby do platobnej brány posielali nové ceny
                 document.getElementById('btn-starter').setAttribute('onclick', `openPayment('STARTER', '${prices.STARTER.toFixed(2)}€', 30)`);
                 document.getElementById('btn-producer').setAttribute('onclick', `openPayment('PRODUCER', '${prices.PRODUCER.toFixed(2)}€', 30)`);
                 document.getElementById('btn-elite').setAttribute('onclick', `openPayment('ELITE', '${prices.ELITE.toFixed(2)}€', 30)`);
@@ -324,13 +318,11 @@
             }
         };
 
-        // Manažér pre Premium s prísnymi kontrolami
         const PremiumSystem = {
             checkInterval: null,
             
             init() {
                 this.verify();
-                // Spúšťa kontrolu každých 5 sekúnd. Ak mu čas uplynie práve počas toho, ako pozerá stránku, vymaže ho to.
                 this.checkInterval = setInterval(() => this.verify(), 5000); 
             },
 
@@ -343,9 +335,7 @@
                         const todayStr = new Date(now).toLocaleDateString('sk-SK');
                         const expireStr = new Date(sub.expiresAt).toLocaleDateString('sk-SK');
 
-                        // KĽÚČOVÁ KONTROLA: Ak aktuálny čas uplynul ALEBO ak nastal presne ten deň, ktorý svieti na obrazovke
                         if (now >= sub.expiresAt || todayStr === expireStr) {
-                            // Zmaž databázu a zruš UI (týmto sa odstráni premium hneď v daný deň)
                             await this.revokePremium("TVOJE PREMIUM PREDPLATNÉ ("+ sub.planName +") VYPRŠALO. PRÍSTUP BOL UKONČENÝ.");
                         } else {
                             window.isProActive = true;
@@ -374,13 +364,12 @@
                 return new Promise((resolve, reject) => {
                     const transaction = db.transaction([STORE_NAME], 'readwrite');
                     const store = transaction.objectStore(STORE_NAME);
-                    const req = store.delete('current_user'); // Fyzické vymazanie z databázy
+                    const req = store.delete('current_user');
                     
                     req.onsuccess = () => {
                         window.isProActive = false;
                         resetUIToBasic();
                         this.showExpiredNotification(reason);
-                        console.warn("SYSTEM ACTION: Database cleaned. " + reason);
                         resolve();
                     };
                     req.onerror = () => reject(req.error);
@@ -409,7 +398,7 @@
             transaction.oncomplete = () => { 
                 window.isProActive = true; 
                 updateUIAfterPayment(subData.planName, subData.expiresAt); 
-                PremiumSystem.verify(); // Okamžitá synchronizácia systému po nákupe
+                PremiumSystem.verify();
             };
         }
 
@@ -418,6 +407,10 @@
 
         // --- DATABÁZA PROMPTOV ---
         const fullPrompts = {
+            "Electro Brutal Bass": "Electro, Brutal Bass, High Energy, Distorted Synths, Heavy Drop, Club Banger, Aggressive, V5 Pro",
+            "Dark Electro Bass": "Dark Electro, Heavy Sub-Bass, Industrial Edge, Aggressive Rhythm, Gritty Synths, V5 Pro",
+            "Electro Trash (Distorted)": "Electro Trash, Distorted Bass, Aggressive, Fast Tempo, Raw Energy, Club",
+            "Hard Electro (Festival)": "Hard Electro, Big Room Bass, Festival Energy, Aggressive Drops, Punchy Kicks",
             "Bass Boosted Hard": "Bass Boosted, EDM, Trap, Techno, Pop, Electric, Kawaii, House Energy, ultimate high-energy mix with deep bass",
             "Aggressive Bass Boosted Energy": "Aggressive Bass Boosted, Brutal Bass, Dubstep, Hardstyle, Neurostep, Ravecore, Heavy, Dark, Explosive Festival Energy",
             "Brutal Bass (Extreme Sub-Bass)": "Brutal Bass, Extreme Sub-Bass, Minimalistic Rhythm, Subsonic, V5 Pro",
@@ -640,8 +633,6 @@
             "Aggressive Breakbeat": "Breakbeat, Aggressive Bass, Modern Production, Big Beat energy",
             "Big Beat (90s Style)": "Big Beat, 90s Style, Fat Drums, Funky Bass, Chemical Vibe",
             "Aggressive Electro Pop": "Electro Pop, Aggressive Synth, Catchy Hooks, Heavy Bass, Modern production",
-            
-            // --- NOVÉ DOPLNENÉ PROMPTY PRE PREDTÝM "No data" ---
             "Dungeon Synth (Fantasy)": "Dungeon Synth, Fantasy RPG, Lo-fi Orchestral, Medieval Fantasy, Atmospheric, Mythical",
             "Dark Ambient Ritual (Esoteric)": "Dark Ambient, Esoteric Ritual, Chants, Deep Drones, Occult Atmosphere, Mystical",
             "Sludge Metal (Oppressive)": "Sludge Metal, Oppressive Atmosphere, Slow Riffs, Heavy Distortion, Raw Aggression",
@@ -683,7 +674,7 @@
         };
 
         const categories = [
-            { name: "1. EXTRÉMNE BASY a DARKNESS (PREMIUM)", keys: ["Bass Boosted Hard", "Aggressive Bass Boosted Energy", "Brutal Bass (Extreme Sub-Bass)", "Hardbass (Russian/Slavic)", "Tearout Dubstep (Chaos & Filth)", "Extreme Bassline House", "Rawstyle (Brutal Kicks)", "Uptempo Hardcore", "Phonk (Drift Energy)", "Dark Trap (808 Bass & Horror Samples)", "Death Metal Rap (Aggressive & Dark)", "Doomcore (Dark & Slow Hardcore)", "Drill (UK/Chicago Style)", "Aggressive Drill (Dark 808)", "Dark Techno (Industrial)", "Neurostep (Complex Bass)", "Cyber-Goth Industrial", "Riddim (Minimalistic & Repetitive Bass)", "Heavy Midtempo Bass (Industrial)", "Witch House (Slowed & Dark Synth)", "Death Industrial Noise", "Power Electronics (Hate)", "Cybergrind (Digital & Brutal)", "Breakcore (Complex Breakbeats)", "Digital Hardcore (Noise & Punk)", "Dark Psytrance (Forest/Hi-Tech)", "Hi-Tech Psy (Extreme Speed)", "Speedcore Noise (600 BPM)", "Hardcore Rave (90s Style)", "Horrorcore", "Dark Horror Darkness", "Depressive Suicidal Black Metal", "Funeral Doom (Occult)", "Cavernous Death Metal", "Dungeon Synth (Fantasy)", "Dark Ambient Ritual (Esoteric)", "Techno Hardcore (Gabba)", "Aggressive Schranz", "Darkroom Minimal", "Rhythmic Noise (Industrial Beat)", "Industrial Ambient (Cold Drones)", "Sludge Metal (Oppressive)", "Blackgaze (Shoegaze & Black Metal)", "Crust Punk (Metal & Anarchism)", "Noise Music (Harsh, Static)", "Doom Metal (Traditional)", "Vapor-Trap (Ambient Trap)", "Horror Ambient (Cursed Soundscape)"] },
+            { name: "1. EXTRÉMNE BASY a DARKNESS (PREMIUM)", keys: ["Electro Brutal Bass", "Dark Electro Bass", "Electro Trash (Distorted)", "Hard Electro (Festival)", "Bass Boosted Hard", "Aggressive Bass Boosted Energy", "Brutal Bass (Extreme Sub-Bass)", "Hardbass (Russian/Slavic)", "Tearout Dubstep (Chaos & Filth)", "Extreme Bassline House", "Rawstyle (Brutal Kicks)", "Uptempo Hardcore", "Phonk (Drift Energy)", "Dark Trap (808 Bass & Horror Samples)", "Death Metal Rap (Aggressive & Dark)", "Doomcore (Dark & Slow Hardcore)", "Drill (UK/Chicago Style)", "Aggressive Drill (Dark 808)", "Dark Techno (Industrial)", "Neurostep (Complex Bass)", "Cyber-Goth Industrial", "Riddim (Minimalistic & Repetitive Bass)", "Heavy Midtempo Bass (Industrial)", "Witch House (Slowed & Dark Synth)", "Death Industrial Noise", "Power Electronics (Hate)", "Cybergrind (Digital & Brutal)", "Breakcore (Complex Breakbeats)", "Digital Hardcore (Noise & Punk)", "Dark Psytrance (Forest/Hi-Tech)", "Hi-Tech Psy (Extreme Speed)", "Speedcore Noise (600 BPM)", "Hardcore Rave (90s Style)", "Horrorcore", "Dark Horror Darkness", "Depressive Suicidal Black Metal", "Funeral Doom (Occult)", "Cavernous Death Metal", "Dungeon Synth (Fantasy)", "Dark Ambient Ritual (Esoteric)", "Techno Hardcore (Gabba)", "Aggressive Schranz", "Darkroom Minimal", "Rhythmic Noise (Industrial Beat)", "Industrial Ambient (Cold Drones)", "Sludge Metal (Oppressive)", "Blackgaze (Shoegaze & Black Metal)", "Crust Punk (Metal & Anarchism)", "Noise Music (Harsh, Static)", "Doom Metal (Traditional)", "Vapor-Trap (Ambient Trap)", "Horror Ambient (Cursed Soundscape)"] },
             { name: "2. HIGH ENERGY & CLUB (PREMIUM)", keys: ["Future Bass (Epic Drops)", "Melodic Dubstep (Emotional)", "Color Bass (Vibrant)", "Hybrid Trap (EDM Focus)", "Aggressive Slap House", "G-House (Gangsta House)", "Hardwave (Cinematic Wave)", "Future House (Bassline Focus)", "UK Bassline (Wobbly Energy)", "Speed Garage (UK Jackin' Bass)", "Aggressive Jersey Club", "Footwork (Extreme Speed)", "Ghetto Tech (Fast Beats)", "Hardgroove Techno (Percussive)", "Peak Time Techno (Festival)", "Progressive House (Long Build-ups)", "Aggressive Moombahton", "Moombahcore (Dubstep Hybrid)", "Complextro (Old School EDM)", "Hard Trance (Aggressive)", "Full-On Psytrance", "Donk (UK Bounce)", "Aggressive Donk", "Hard Trance Rave", "Drumstep (Half Time)", "Liquid Funk (DNB)", "Jump Up DNB (Wobbly)", "Neurofunk DNB (Mechanical)", "Techstep (90s Dark DNB)", "Darkcore Jungle", "Breakstep (Heavy Bass)", "Acid Techno (TB-303 Focus)", "Nu-Disco (Funky)", "Disco House (Classic Energy)", "Ghetto House (Booty)", "Speed House (High Energy)", "Hyperpop (Sexton & Glitch)", "Aggressive Hyperpop", "Glitchcore Pop", "Bitpop (8-bit Pop)"] },
             { name: "3. ATMOSFÉRICKÉ & EXPERIMENTÁLNE (PREMIUM)", keys: ["Vaporwave", "Synthwave", "Cyberpunk Synthwave", "Outrun (High Speed)", "Darkwave Synthpop", "Coldwave (Mechanical)", "Lofi Hip Hop", "Ambient", "Post-Rock (Cinematic Epic)", "Shoegaze (Loud)", "Chillwave", "Trip Hop", "Minimalism", "Dark Jazz (Cinematic)", "Post-Punk (Goth Rock)", "Krautrock (Motorik Beat)", "New Age (Meditative Ambient)", "Dream Pop (Hazy, Ethereal)", "Lo-Fi Indie (Bedroom Pop)", "Jazz Fusion (Complex Harmony)", "Psychill (Spiritual)", "Psybient (Trippy)", "Dub Ambient (Spacey)", "Minimalist Piano (Dark)", "Ethereal Wave (Angelic)", "Drone Metal (Extremely Slow Drones)", "Post-Metal (Atmospheric Sludge)", "Noise Rock (Dissonant, Feedback)", "Baroque Pop", "Chiptune (8-bit Soundtrack)", "Stoner Rock (Fuzzed)"] },
             { name: "4. POP, URBAN & WORLD (PREMIUM)", keys: ["Mainstream Pop (Custom)", "Melodic Pop Ballad (New Pop Model)", "Hip Hop (Golden Era)", "GTA San Andreas Style (West Coast G-Funk)", "Future R&B (Vocal Focused)", "Neo-Soul (Smooth & Groovy)", "Synth Pop (80s Aesthetic)", "Symphonic Metal (Opera Vocals)", "Aggressive Afro-Trap", "Baile Funk (Favela)", "Funk Ostentacao (Luxury)", "Batida (Aggressive Afro)", "Gqom (Dark Durban House)", "Amapiano (Deep & Jazzy)", "Chicano Rap (Old School)", "Latin Trap (Aggressive)", "Reggaeton Flow (Classic)", "K-Pop Hip Hop (Aggressive)", "K-R&B (Smooth)", "J-Pop Rock (High Energy)", "Kawaii Metal (Babymetal Style)", "Afro House (Tribal Percussion)", "Bollywood Pop (Indian Cinematic)", "Latin Pop (Reggaeton & Pop Fusion)", "Samba (Modern)", "Flamenco (Modern Fusion)", "Celtic Dark Folk", "Steampunk Opera (Victorian Tech)"] },
@@ -725,19 +716,16 @@
         }
 
         async function handleStyleClick(key) {
-            // Najprísnejšia kontrola - okamžite vymaže a zruší premium, ak už vypršal dátum
             await PremiumSystem.verify();
 
-            // Ak po kontrole nemá platné Premium, systém mu zablokuje kópiu a presmeruje ho na balíčky
             if (!window.isProActive) {
                 document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
                 const statusLabel = document.getElementById('account-status');
                 statusLabel.classList.add('animate-pulse', 'scale-110');
                 setTimeout(() => statusLabel.classList.remove('animate-pulse', 'scale-110'), 1000);
-                return; // Ďalej systém nepokračuje, nič neskopíruje!
+                return;
             }
 
-            // Ak má Premium aktívne, kód sa skopíruje
             const prompt = fullPrompts[key];
             const tempInput = document.createElement('textarea');
             tempInput.value = prompt;
