@@ -35,7 +35,7 @@
             background-attachment: fixed;
             scroll-behavior: smooth;
         }
-        /* CRT Scanlines efekt */
+        /* CRT Scanlines efekt - Vylepšený Cyberpunk */
         body::before {
             content: " ";
             display: block;
@@ -45,26 +45,56 @@
             z-index: 9999;
             background-size: 100% 4px, 6px 100%;
             pointer-events: none;
-            opacity: 0.4;
+            opacity: 0.5;
         }
+        /* Cyberpunk dynamický scanline bar */
+        .scanline-bar {
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(0deg, transparent, rgba(0, 255, 102, 0.15), transparent);
+            position: fixed;
+            top: -120px;
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+            z-index: 9998;
+        }
+        @keyframes scanline {
+            0% { top: -120px; }
+            100% { top: 120vh; }
+        }
+        /* Cyberpunk Glitch animácia na hover */
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 0 red, -2px 0 0 cyan; }
+            20% { text-shadow: -2px 0 0 red, 2px 0 0 cyan; }
+            40% { text-shadow: 2px 0 0 red, -2px 0 0 cyan; }
+            60% { text-shadow: -2px 0 0 red, 2px 0 0 cyan; }
+            80% { text-shadow: 2px 0 0 red, -2px 0 0 cyan; }
+            100% { text-shadow: -2px 0 0 red, 2px 0 0 cyan; }
+        }
+        .cyber-glitch:hover {
+            animation: glitch 0.3s infinite linear;
+            color: #fff;
+        }
+
         .grid-bg {
-            background-image: radial-gradient(rgba(0, 255, 102, 0.1) 1px, transparent 1px);
+            background-image: radial-gradient(rgba(0, 255, 102, 0.15) 1px, transparent 1px);
             background-size: 20px 20px;
         }
         .glass {
             background: rgba(2, 4, 6, 0.85);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 255, 102, 0.15);
+            border: 1px solid rgba(0, 255, 102, 0.25);
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.05);
         }
         .style-tag {
             background: rgba(5, 9, 14, 0.9);
-            border: 1px solid rgba(0, 255, 102, 0.1);
+            border: 1px solid rgba(0, 255, 102, 0.15);
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
         .style-tag:hover {
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.02);
             border-color: #00ff66;
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.25), inset 0 0 10px rgba(0, 255, 102, 0.1);
         }
         .pricing-card {
             background: rgba(5, 9, 14, 0.95);
@@ -73,7 +103,7 @@
         }
         .pricing-card:hover {
             border-color: #00ff66;
-            box-shadow: 0 0 25px rgba(0, 255, 102, 0.15);
+            box-shadow: 0 0 25px rgba(0, 255, 102, 0.2), inset 0 0 15px rgba(0, 255, 102, 0.05);
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -83,33 +113,35 @@
         
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #020406; }
-        ::-webkit-scrollbar-thumb { background: #003b14; border-radius: 0px; }
-        ::-webkit-scrollbar-thumb:hover { background: #00ff66; }
+        ::-webkit-scrollbar-thumb { background: #00ff66; border-radius: 0px; box-shadow: 0 0 10px #00ff66; }
+        ::-webkit-scrollbar-thumb:hover { background: #fff; }
 
         .terminal-glow {
-            text-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
+            text-shadow: 0 0 10px rgba(0, 255, 102, 0.6);
         }
         .terminal-glow-heavy {
-            text-shadow: 0 0 20px rgba(0, 255, 102, 0.8);
+            text-shadow: 0 0 25px rgba(0, 255, 102, 0.9), 0 0 50px rgba(0, 255, 102, 0.4);
         }
     </style>
 </head>
 <body class="text-slate-300 font-mono antialiased">
+    <!-- Cyberpunk Scanline -->
+    <div class="scanline-bar"></div>
 
     <!-- Navigácia -->
-    <nav class="sticky top-0 z-50 glass border-b border-brand-primary/20 px-6 py-4">
+    <nav class="sticky top-0 z-50 glass px-6 py-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 border border-brand-primary flex items-center justify-center font-bold text-brand-primary italic animate-pulse">[M]</div>
-                <span class="text-lg font-bold tracking-widest uppercase text-white font-sans">MUSICAL <span class="text-brand-primary terminal-glow">UNIVERSE_</span></span>
+                <div class="w-9 h-9 border border-brand-primary flex items-center justify-center font-bold text-brand-primary italic animate-pulse shadow-[0_0_10px_#00ff66]">[M]</div>
+                <span class="text-lg font-bold tracking-widest uppercase text-white font-sans cyber-glitch">MUSICAL <span class="text-brand-primary terminal-glow">UNIVERSE_</span></span>
             </div>
             <div class="hidden md:flex gap-8 text-xs font-bold tracking-widest">
-                <a href="#library" class="text-slate-400 hover:text-brand-primary transition">&gt; KNIŽNICA</a>
-                <a href="#pricing" class="text-slate-400 hover:text-brand-primary transition">&gt; PRÍSTUPY</a>
-                <a href="https://gamepla631.github.io/TheMusicalUniverse/" target="_blank" class="text-cyan-400 hover:text-cyan-300 transition">&gt; TEXT_GEN.EXE ↗</a>
+                <a href="#library" class="text-slate-400 hover:text-brand-primary cyber-glitch transition">&gt; KNIŽNICA</a>
+                <a href="#pricing" class="text-slate-400 hover:text-brand-primary cyber-glitch transition">&gt; PRÍSTUPY</a>
+                <a href="https://gamepla631.github.io/TheMusicalUniverse/" target="_blank" class="text-cyan-400 hover:text-cyan-300 cyber-glitch transition">&gt; TEXT_GEN.EXE ↗</a>
             </div>
             <div id="nav-action">
-                <a href="#pricing" class="border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-black px-5 py-2 text-xs font-bold transition transform active:scale-95 tracking-widest">
+                <a href="#pricing" class="border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-black px-5 py-2 text-xs font-bold transition transform active:scale-95 tracking-widest shadow-[0_0_10px_rgba(0,255,102,0.3)]">
                     BYPASS_SYS
                 </a>
             </div>
@@ -117,51 +149,51 @@
     </nav>
 
     <!-- Banner Expirácie -->
-    <div id="expiry-banner" class="hidden sticky top-[73px] z-40 bg-brand-primary text-black text-center py-2 text-[10px] font-bold tracking-[0.25em] uppercase shadow-xl">
+    <div id="expiry-banner" class="hidden sticky top-[73px] z-40 bg-brand-primary text-black text-center py-2 text-[10px] font-bold tracking-[0.25em] uppercase shadow-[0_0_20px_#00ff66]">
         ::: PREMIUM ACCESS ACTIVE ::: EXPIRATION_DATE: <span id="expiry-date-display" class="font-bold underline">--.--.----</span> :::
     </div>
 
     <!-- Hero -->
     <header class="relative pt-24 pb-16 px-6 text-center overflow-hidden">
-        <div class="absolute inset-0 grid-bg opacity-30 -z-10"></div>
+        <div class="absolute inset-0 grid-bg opacity-40 -z-10"></div>
         <div class="max-w-4xl mx-auto animate-fade">
-            <div class="inline-flex items-center gap-2 border border-brand-primary/30 bg-brand-card px-3 py-1 rounded-none text-[9px] font-bold text-brand-primary mb-6 uppercase tracking-[0.2em]">
+            <div class="inline-flex items-center gap-2 border border-brand-primary/50 bg-brand-card/80 px-3 py-1 rounded-none text-[9px] font-bold text-brand-primary mb-6 uppercase tracking-[0.2em] shadow-[0_0_15px_rgba(0,255,102,0.2)]">
                 <span class="inline-block w-2 h-2 bg-brand-primary animate-ping"></span>
                 SYSTEM STATUS: ONLINE // DATA decrypted
             </div>
-            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-[0.9] uppercase tracking-tighter text-white font-sans">PRO_<span class="text-brand-primary terminal-glow-heavy">KEYWORDS</span></h1>
-            <p class="text-slate-400 text-sm md:text-base mb-10 leading-relaxed font-mono max-w-2xl mx-auto">
-                [DATABASE_VER: 5.0] [NODES: 256+] [PAYLOAD: SUNO_PROMPTS] <br>
+            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-[0.9] uppercase tracking-tighter text-white font-sans cyber-glitch">PRO_<span class="text-brand-primary terminal-glow-heavy">KEYWORDS</span></h1>
+            <p class="text-slate-400 text-sm md:text-base mb-10 leading-relaxed font-mono max-w-2xl mx-auto cyber-glitch">
+                [DATABASE_VER: 5.0] [NODES: 257+] [PAYLOAD: SUNO_PROMPTS] <br>
                 Zoznam optimalizovaných hudobných parametrov pripravených pre okamžité zavedenie do neurónových sietí.
             </p>
         </div>
     </header>
 
     <!-- Notifikácia (Kopírovanie) -->
-    <div id="notification" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] px-6 py-4 border border-brand-primary bg-black text-brand-primary font-bold shadow-2xl hidden transform transition-all duration-300 uppercase tracking-widest text-xs">
+    <div id="notification" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] px-6 py-4 border border-brand-primary bg-black text-brand-primary font-bold shadow-[0_0_30px_#00ff66] hidden transform transition-all duration-300 uppercase tracking-widest text-xs">
         &gt;&gt;&gt; PROMPT_COPIED_TO_CLIPBOARD
     </div>
 
     <!-- Knižnica -->
     <section id="library" class="max-w-7xl mx-auto px-6 py-12">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-brand-primary/20 pb-8 gap-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b border-brand-primary/30 pb-8 gap-6">
             <div>
-                <h2 class="text-3xl font-bold mb-2 uppercase tracking-wide text-white font-sans">&gt; KNIŽNICA SYSTEM</h2>
+                <h2 class="text-3xl font-bold mb-2 uppercase tracking-wide text-white font-sans cyber-glitch">&gt; KNIŽNICA SYSTEM</h2>
                 <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Zvoľte uzol pre extrakciu kľúčových slov.</p>
             </div>
             
             <!-- Vyhľadávací Panel (Terminál štýl) -->
-            <div class="w-full md:w-80 relative">
+            <div class="w-full md:w-80 relative shadow-[0_0_15px_rgba(0,255,102,0.1)]">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-brand-primary">
                     &gt;
                 </span>
-                <input type="text" id="genre-search" oninput="renderLibrary(this.value)" placeholder="SEARCH_GENRE..." class="w-full bg-brand-card/70 border border-brand-primary/30 rounded-none pl-10 pr-4 py-2 text-xs font-mono outline-none focus:border-brand-primary transition-all text-white placeholder-slate-600 uppercase tracking-widest">
+                <input type="text" id="genre-search" oninput="renderLibrary(this.value)" placeholder="SEARCH_GENRE..." class="w-full bg-brand-card/90 border border-brand-primary/50 rounded-none pl-10 pr-4 py-2 text-xs font-mono outline-none focus:border-brand-primary focus:shadow-[0_0_20px_rgba(0,255,102,0.4)] transition-all text-white placeholder-slate-600 uppercase tracking-widest">
             </div>
 
             <div class="flex items-center gap-4">
-                <div class="border border-brand-primary/30 bg-brand-card px-4 py-3 rounded-none text-[10px] font-bold tracking-widest flex items-center gap-3">
+                <div class="border border-brand-primary/50 bg-brand-card/90 px-4 py-3 rounded-none text-[10px] font-bold tracking-widest flex items-center gap-3 shadow-[0_0_15px_rgba(0,255,102,0.1)]">
                     LIC_STATUS: 
-                    <span class="text-red-500 uppercase px-2 py-0.5 bg-red-950/20 border border-red-500/30" id="account-status">[ RESTRICTED / NO_LIC ]</span>
+                    <span class="text-red-500 uppercase px-2 py-0.5 bg-red-950/40 border border-red-500/50 shadow-[0_0_10px_rgba(239,68,68,0.3)]" id="account-status">[ RESTRICTED / NO_LIC ]</span>
                 </div>
             </div>
         </div>
@@ -172,10 +204,11 @@
     </section>
 
     <!-- Pricing -->
-    <section id="pricing" class="bg-brand-card/40 border-y border-brand-primary/10 py-24 px-6">
+    <section id="pricing" class="bg-brand-card/60 border-y border-brand-primary/30 py-24 px-6 relative">
+        <div class="absolute inset-0 bg-brand-primary/5 opacity-10 -z-10"></div>
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-black mb-4 uppercase tracking-tight text-white font-sans">&gt;_ODOMKNÚŤ SYSTEM</h2>
+                <h2 class="text-4xl md:text-5xl font-black mb-4 uppercase tracking-tight text-white font-sans cyber-glitch">&gt;_ODOMKNÚŤ SYSTEM</h2>
                 <p class="text-slate-400 text-sm max-w-md mx-auto">Zvoľte úroveň obídenia (bypass) databázy.</p>
             </div>
 
@@ -188,68 +221,80 @@
                         <div id="price-starter" class="text-3xl font-bold mb-4 text-white tracking-wider font-mono">4.99€</div>
                         <p class="text-[9px] text-slate-400 font-mono bg-slate-900 border border-slate-800 px-2.5 py-1 inline-block mb-6">SPAN: 30 DAYS</p>
                     </div>
-                    <button id="btn-starter" onclick="openPayment('STARTER', '4.99€', 30)" class="w-full border border-slate-700 hover:border-brand-primary hover:text-brand-primary text-slate-400 py-3 font-bold transition uppercase text-[10px] tracking-widest">EXECUTE_BYPASS</button>
+                    <button id="btn-starter" onclick="openPayment('STARTER', '4.99€', 30)" class="w-full border border-slate-700 hover:border-brand-primary hover:text-brand-primary text-slate-400 py-3 font-bold transition uppercase text-[10px] tracking-widest hover:shadow-[0_0_10px_rgba(0,255,102,0.3)]">EXECUTE_BYPASS</button>
                 </div>
 
                 <!-- Producer -->
-                <div class="pricing-card p-6 border-brand-primary/40 flex flex-col justify-between relative overflow-hidden bg-brand-primary/[0.01]">
-                    <div class="absolute top-4 -right-12 bg-brand-primary text-black text-[8px] font-bold py-1 px-12 rotate-45 uppercase tracking-widest">RECOMMENDED</div>
+                <div class="pricing-card p-6 border-brand-primary/40 flex flex-col justify-between relative overflow-hidden bg-brand-primary/[0.03]">
+                    <div class="absolute top-4 -right-12 bg-brand-primary text-black text-[8px] font-bold py-1 px-12 rotate-45 uppercase tracking-widest shadow-[0_0_15px_#00ff66]">RECOMMENDED</div>
                     <div>
-                        <h3 class="font-bold mb-1 text-brand-primary uppercase text-[10px] tracking-widest">BYPASS_LVL_02</h3>
+                        <h3 class="font-bold mb-1 text-brand-primary uppercase text-[10px] tracking-widest terminal-glow">BYPASS_LVL_02</h3>
                         <p class="text-[9px] text-brand-primary/60 mb-4 font-mono">[ Producer Pro ]</p>
-                        <div id="price-producer" class="text-3xl font-bold mb-4 text-white tracking-wider font-mono">9.99€</div>
-                        <p class="text-[9px] text-brand-primary uppercase font-bold bg-brand-primary/10 border border-brand-primary/30 px-2.5 py-1 inline-block mb-6">SPAN: 30 DAYS</p>
+                        <div id="price-producer" class="text-3xl font-bold mb-4 text-white tracking-wider font-mono terminal-glow">9.99€</div>
+                        <p class="text-[9px] text-brand-primary uppercase font-bold bg-brand-primary/10 border border-brand-primary/30 px-2.5 py-1 inline-block mb-6 shadow-[0_0_10px_rgba(0,255,102,0.2)]">SPAN: 30 DAYS</p>
                     </div>
-                    <button id="btn-producer" onclick="openPayment('PRODUCER', '9.99€', 30)" class="w-full bg-brand-primary text-black hover:bg-black hover:text-brand-primary border border-brand-primary py-3 font-bold transition uppercase text-[10px] tracking-widest">EXECUTE_BYPASS</button>
+                    <button id="btn-producer" onclick="openPayment('PRODUCER', '9.99€', 30)" class="w-full bg-brand-primary text-black hover:bg-black hover:text-brand-primary border border-brand-primary py-3 font-bold transition uppercase text-[10px] tracking-widest hover:shadow-[0_0_20px_#00ff66]">EXECUTE_BYPASS</button>
                 </div>
 
                 <!-- Elite VIP -->
-                <div class="pricing-card p-6 border-yellow-500/30 flex flex-col justify-between bg-yellow-950/[0.05]">
+                <div class="pricing-card p-6 border-yellow-500/40 flex flex-col justify-between bg-yellow-950/[0.08]">
                     <div>
-                        <h3 class="font-bold mb-1 text-yellow-500 uppercase text-[10px] tracking-widest">BYPASS_LVL_03</h3>
+                        <h3 class="font-bold mb-1 text-yellow-500 uppercase text-[10px] tracking-widest shadow-yellow-500">BYPASS_LVL_03</h3>
                         <p class="text-[9px] text-yellow-500/60 mb-4 font-mono">[ Elite VIP Node ]</p>
                         <div id="price-elite" class="text-3xl font-bold mb-4 text-white tracking-wider font-mono">19.99€</div>
-                        <p class="text-[9px] text-yellow-500 uppercase font-bold bg-yellow-500/10 border border-yellow-500/30 px-2.5 py-1 inline-block mb-6">SPAN: 30 DAYS</p>
+                        <p class="text-[9px] text-yellow-500 uppercase font-bold bg-yellow-500/10 border border-yellow-500/40 px-2.5 py-1 inline-block mb-6 shadow-[0_0_10px_rgba(234,179,8,0.2)]">SPAN: 30 DAYS</p>
                     </div>
-                    <button id="btn-elite" onclick="openPayment('ELITE', '19.99€', 30)" class="w-full border border-yellow-500/50 hover:bg-yellow-500 hover:text-black text-yellow-500 py-3 font-bold transition uppercase text-[10px] tracking-widest">EXECUTE_BYPASS</button>
+                    <button id="btn-elite" onclick="openPayment('ELITE', '19.99€', 30)" class="w-full border border-yellow-500/50 hover:bg-yellow-500 hover:text-black text-yellow-500 py-3 font-bold transition uppercase text-[10px] tracking-widest hover:shadow-[0_0_15px_rgba(234,179,8,0.5)]">EXECUTE_BYPASS</button>
                 </div>
 
                 <!-- Darkness Pass -->
-                <div class="pricing-card p-6 border-red-900/40 flex flex-col justify-between bg-red-950/[0.05]">
+                <div class="pricing-card p-6 border-red-900/50 flex flex-col justify-between bg-red-950/[0.1]">
                     <div>
                         <h3 class="font-bold mb-1 text-red-600 uppercase text-[10px] tracking-widest">DARK_SHELL_EXPLOIT</h3>
                         <p class="text-[9px] text-red-400/60 mb-4 font-mono">[ Darkness Pass ]</p>
                         <div id="price-darkness" class="text-3xl font-bold mb-4 text-white tracking-wider font-mono">24.99€</div>
-                        <p class="text-[9px] text-red-400 uppercase font-bold bg-red-950/20 border border-red-900/50 px-2.5 py-1 inline-block mb-6">SPAN: 365 DAYS</p>
+                        <p class="text-[9px] text-red-400 uppercase font-bold bg-red-950/30 border border-red-900/60 px-2.5 py-1 inline-block mb-6 shadow-[0_0_10px_rgba(220,38,38,0.3)]">SPAN: 365 DAYS</p>
                     </div>
-                    <button id="btn-darkness" onclick="openPayment('DARKNESS', '24.99€', 365)" class="w-full border border-red-600 hover:bg-red-600 hover:text-black text-red-500 py-3 font-bold transition uppercase text-[10px] tracking-widest">INJECT_SHELL</button>
+                    <button id="btn-darkness" onclick="openPayment('DARKNESS', '24.99€', 365)" class="w-full border border-red-600 hover:bg-red-600 hover:text-black text-red-500 py-3 font-bold transition uppercase text-[10px] tracking-widest hover:shadow-[0_0_20px_rgba(220,38,38,0.5)]">INJECT_SHELL</button>
                 </div>
 
                 <!-- Ultimate Lifetime -->
-                <div class="pricing-card p-6 border-slate-500/40 flex flex-col justify-between bg-slate-900/[0.2]">
+                <div class="pricing-card p-6 border-slate-400/50 flex flex-col justify-between bg-slate-900/[0.3]">
                     <div>
-                        <h3 class="font-bold mb-1 text-white uppercase text-[9px] tracking-[0.2em]">ROOT_LIFETIME</h3>
+                        <h3 class="font-bold mb-1 text-white uppercase text-[9px] tracking-[0.2em] shadow-white">ROOT_LIFETIME</h3>
                         <p class="text-[9px] text-slate-400 mb-4 font-mono">[ Full Administrator ]</p>
                         <div id="price-ultimate" class="text-3xl font-bold mb-4 text-white tracking-wider font-mono">99€</div>
-                        <p class="text-[9px] text-white uppercase font-bold bg-white/10 border border-white/20 px-2.5 py-1 inline-block mb-6">SPAN: PERMANENT</p>
+                        <p class="text-[9px] text-white uppercase font-bold bg-white/10 border border-white/30 px-2.5 py-1 inline-block mb-6 shadow-[0_0_10px_rgba(255,255,255,0.2)]">SPAN: PERMANENT</p>
                     </div>
-                    <button id="btn-ultimate" onclick="openPayment('ULTIMATE', '99.00€', 36500)" class="w-full bg-white text-black hover:bg-transparent hover:text-white border border-white py-3 font-bold transition uppercase text-[10px] tracking-widest">RUN_ROOT_EXPLOIT</button>
+                    <button id="btn-ultimate" onclick="openPayment('ULTIMATE', '99.00€', 36500)" class="w-full bg-white text-black hover:bg-transparent hover:text-white border border-white py-3 font-bold transition uppercase text-[10px] tracking-widest hover:shadow-[0_0_20px_rgba(255,255,255,0.8)]">RUN_ROOT_EXPLOIT</button>
                 </div>
+            </div>
+
+            <!-- EXCLUSIVE OMEGA TIER -->
+            <div class="mt-8 pricing-card p-8 border-fuchsia-600/60 flex flex-col justify-between bg-fuchsia-950/[0.15] max-w-xl mx-auto text-center relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-r from-fuchsia-600/10 via-transparent to-fuchsia-600/10 pointer-events-none animate-pulse"></div>
+                <div>
+                    <h3 class="font-bold mb-2 text-fuchsia-500 uppercase text-[14px] tracking-[0.3em] cyber-glitch" style="text-shadow: 0 0 15px rgba(217,70,239,0.8);">OMEGA_BASS_PROTOCOL</h3>
+                    <p class="text-[10px] text-fuchsia-400/80 mb-6 font-mono">[ 1 Exclusive God-Tier Prompt Database ]</p>
+                    <div id="price-omega" class="text-5xl font-black mb-6 text-white tracking-widest font-mono" style="text-shadow: 0 0 20px rgba(217,70,239,0.5);">573.85€</div>
+                    <p class="text-[10px] text-fuchsia-300 uppercase font-bold bg-fuchsia-900/40 border border-fuchsia-500/50 px-4 py-1.5 inline-block mb-8 shadow-[0_0_15px_rgba(217,70,239,0.4)]">ACCESS: GOD TIER EXTRACT ONLY</p>
+                </div>
+                <button id="btn-omega" onclick="openPayment('OMEGA', '573.85€', 36500)" class="w-full border-2 border-fuchsia-500 hover:bg-fuchsia-600 hover:border-fuchsia-400 hover:text-white text-fuchsia-400 py-4 font-bold transition-all duration-300 uppercase text-[13px] tracking-[0.2em]" style="box-shadow: 0 0 25px rgba(217,70,239,0.3), inset 0 0 10px rgba(217,70,239,0.2);">DECRYPT_OMEGA_BASS</button>
             </div>
         </div>
     </section>
 
     <!-- Platobná brána -->
     <div id="payment-modal" class="fixed inset-0 z-[200] items-center justify-center bg-black/98 px-4 hidden">
-        <div class="glass max-w-md w-full p-8 border border-brand-primary animate-fade">
+        <div class="glass max-w-md w-full p-8 border border-brand-primary animate-fade shadow-[0_0_40px_rgba(0,255,102,0.2)]">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold uppercase tracking-wider text-brand-primary">PAYMENT_GATEWAY_SUB_SECURE</h2>
-                <button onclick="closePayment()" class="text-slate-500 hover:text-white p-1 text-sm">CLOSE_</button>
+                <h2 class="text-xl font-bold uppercase tracking-wider text-brand-primary cyber-glitch">PAYMENT_GATEWAY_SUB_SECURE</h2>
+                <button onclick="closePayment()" class="text-slate-500 hover:text-white p-1 text-sm transition-colors">CLOSE_</button>
             </div>
-            <div class="mb-6 bg-brand-bg p-4 border border-brand-primary/20 flex justify-between items-center">
+            <div class="mb-6 bg-brand-bg p-4 border border-brand-primary/40 flex justify-between items-center shadow-[inset_0_0_15px_rgba(0,255,102,0.1)]">
                 <div>
                     <p class="text-[8px] text-slate-500 uppercase font-mono">PAY_NODE</p>
-                    <span id="modal-plan-name" class="font-bold text-lg text-brand-primary uppercase font-mono">PLAN</span>
+                    <span id="modal-plan-name" class="font-bold text-lg text-brand-primary uppercase font-mono terminal-glow">PLAN</span>
                 </div>
                 <div class="text-right">
                     <p class="text-[8px] text-slate-500 uppercase font-mono">AMOUNT</p>
@@ -257,12 +302,12 @@
                 </div>
             </div>
             <div class="space-y-4">
-                <input type="text" placeholder="CARD_NUMBER" class="w-full bg-brand-bg border border-brand-primary/30 rounded-none px-4 py-3.5 focus:border-brand-primary outline-none text-white text-sm font-bold tracking-widest transition-all">
+                <input type="text" placeholder="CARD_NUMBER" class="w-full bg-brand-bg border border-brand-primary/50 rounded-none px-4 py-3.5 focus:border-brand-primary focus:shadow-[0_0_15px_rgba(0,255,102,0.3)] outline-none text-white text-sm font-bold tracking-widest transition-all">
                 <div class="flex gap-4">
-                    <input type="text" placeholder="MM / YY" class="flex-grow bg-brand-bg border border-brand-primary/30 rounded-none px-4 py-3.5 focus:border-brand-primary outline-none text-white text-center text-sm font-bold">
-                    <input type="password" placeholder="CVC" class="w-1/3 bg-brand-bg border border-brand-primary/30 rounded-none px-4 py-3.5 focus:border-brand-primary outline-none text-white text-center text-sm font-bold">
+                    <input type="text" placeholder="MM / YY" class="flex-grow bg-brand-bg border border-brand-primary/50 rounded-none px-4 py-3.5 focus:border-brand-primary focus:shadow-[0_0_15px_rgba(0,255,102,0.3)] outline-none text-white text-center text-sm font-bold transition-all">
+                    <input type="password" placeholder="CVC" class="w-1/3 bg-brand-bg border border-brand-primary/50 rounded-none px-4 py-3.5 focus:border-brand-primary focus:shadow-[0_0_15px_rgba(0,255,102,0.3)] outline-none text-white text-center text-sm font-bold transition-all">
                 </div>
-                <button onclick="processPayment()" class="w-full bg-brand-primary text-black py-4 font-bold text-sm mt-4 hover:bg-black hover:text-brand-primary border border-brand-primary transition-all duration-300 uppercase tracking-widest">CONFIRM_TRANSACTION</button>
+                <button onclick="processPayment()" class="w-full bg-brand-primary text-black py-4 font-bold text-sm mt-4 hover:bg-black hover:text-brand-primary border border-brand-primary hover:shadow-[0_0_30px_#00ff66] transition-all duration-300 uppercase tracking-widest">CONFIRM_TRANSACTION</button>
             </div>
         </div>
     </div>
@@ -270,12 +315,12 @@
     <!-- Úspech platby -->
     <div id="success-modal" class="fixed inset-0 z-[300] items-center justify-center bg-black/99 px-4 hidden text-center">
         <div class="animate-fade max-w-md">
-            <div class="w-20 h-20 border-2 border-brand-primary flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(0,255,102,0.3)]">
+            <div class="w-20 h-20 border-2 border-brand-primary flex items-center justify-center mx-auto mb-6 shadow-[0_0_50px_rgba(0,255,102,0.5)]">
                 <svg class="w-10 h-10 text-brand-primary animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
             </div>
-            <h2 class="text-2xl font-bold mb-4 uppercase tracking-widest text-white">ACCESS_GRANTED_INIT</h2>
+            <h2 class="text-2xl font-bold mb-4 uppercase tracking-widest text-white cyber-glitch">ACCESS_GRANTED_INIT</h2>
             <p class="text-slate-400 text-sm mb-8">Premium oprávnenia úspešne zapísané do databázy localDB.</p>
-            <button onclick="closeSuccess()" class="border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-black px-10 py-3.5 font-bold uppercase tracking-widest text-xs transition">ENTER_SYSTEM</button>
+            <button onclick="closeSuccess()" class="border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-black px-10 py-3.5 font-bold uppercase tracking-widest text-xs transition shadow-[0_0_20px_rgba(0,255,102,0.3)] hover:shadow-[0_0_40px_rgba(0,255,102,0.6)]">ENTER_SYSTEM</button>
         </div>
     </div>
 
@@ -309,7 +354,8 @@
                 PRODUCER: 9.99,
                 ELITE: 19.99,
                 DARKNESS: 24.99,
-                ULTIMATE: 99.00
+                ULTIMATE: 99.00,
+                OMEGA: 573.85 // Upravená Omega cena
             },
 
             async init() {
@@ -377,12 +423,14 @@
                 document.getElementById('price-elite').textContent = prices.ELITE.toFixed(2) + '€';
                 document.getElementById('price-darkness').textContent = prices.DARKNESS.toFixed(2) + '€';
                 document.getElementById('price-ultimate').textContent = prices.ULTIMATE.toFixed(2) + '€';
+                document.getElementById('price-omega').textContent = prices.OMEGA.toFixed(2) + '€';
 
                 document.getElementById('btn-starter').setAttribute('onclick', `openPayment('STARTER', '${prices.STARTER.toFixed(2)}€', 30)`);
                 document.getElementById('btn-producer').setAttribute('onclick', `openPayment('PRODUCER', '${prices.PRODUCER.toFixed(2)}€', 30)`);
                 document.getElementById('btn-elite').setAttribute('onclick', `openPayment('ELITE', '${prices.ELITE.toFixed(2)}€', 30)`);
                 document.getElementById('btn-darkness').setAttribute('onclick', `openPayment('DARKNESS', '${prices.DARKNESS.toFixed(2)}€', 365)`);
                 document.getElementById('btn-ultimate').setAttribute('onclick', `openPayment('ULTIMATE', '${prices.ULTIMATE.toFixed(2)}€', 36500)`);
+                document.getElementById('btn-omega').setAttribute('onclick', `openPayment('OMEGA', '${prices.OMEGA.toFixed(2)}€', 36500)`);
             }
         };
 
@@ -449,7 +497,7 @@
                 if (!notif) {
                     notif = document.createElement('div');
                     notif.id = 'expired-notification';
-                    notif.className = 'fixed top-24 left-1/2 -translate-x-1/2 z-[200] px-8 py-5 border border-brand-primary bg-black text-brand-primary font-bold shadow-2xl uppercase tracking-widest text-xs transition-all duration-500 text-center animate-fade';
+                    notif.className = 'fixed top-24 left-1/2 -translate-x-1/2 z-[200] px-8 py-5 border border-brand-primary bg-black text-brand-primary font-bold shadow-[0_0_30px_#00ff66] uppercase tracking-widest text-xs transition-all duration-500 text-center animate-fade';
                     document.body.appendChild(notif);
                 }
                 notif.innerHTML = `<span class="block text-white mb-2 text-[9px] tracking-[0.25em]">&gt;&gt; SYSTEM_ALERT_LOG</span>${msg}`;
@@ -742,7 +790,9 @@
             "Digital Hardcore (Chaos)": "Digital Hardcore, Extreme Chaos, Gabber Kicks, Punk Vocals, Distorted Synths",
             "Pirate Metal (Folk)": "Pirate Metal, Folk Metal, Sea Shanties, Accordion, Drinking Songs, Heavy",
             "Nordic Ritual Folk": "Nordic Ritual Folk, Shamanic Drums, Throat Singing, Ancient Runes, Pagan Atmosphere",
-            "Slavic Dark Folk": "Slavic Dark Folk, Eastern European Traditions, Melancholic, Acoustic, Mystical"
+            "Slavic Dark Folk": "Slavic Dark Folk, Eastern European Traditions, Melancholic, Acoustic, Mystical",
+            // EXCLUSIVE OMEGA PROMPT
+            "Omega Extreme Bass Duet (EXCLUSIVE)": "Extreme Bass Boosted, Heavy Sub Bass, Earth-Shattering Festival Bass, Aggressive Bassline, Duet, Male Vocal, Female Vocal, Mainstage Peak Time Techno, Hard Hitting Kick, Industrial Drops, Extended Mix, Ultra Low Frequency, Wall of Sound, Massive Sub-Woofer Pressure"
         };
 
         const categories = [
@@ -750,7 +800,9 @@
             { name: "2. HIGH ENERGY & CLUB (PREMIUM)", keys: ["Future Bass (Epic Drops)", "Melodic Dubstep (Emotional)", "Color Bass (Vibrant)", "Hybrid Trap (EDM Focus)", "Aggressive Slap House", "G-House (Gangsta House)", "Hardwave (Cinematic Wave)", "Future House (Bassline Focus)", "UK Bassline (Wobbly Energy)", "Speed Garage (UK Jackin' Bass)", "Aggressive Jersey Club", "Footwork (Extreme Speed)", "Ghetto Tech (Fast Beats)", "Hardgroove Techno (Percussive)", "Peak Time Techno (Festival)", "Progressive House (Long Build-ups)", "Aggressive Moombahton", "Moombahcore (Dubstep Hybrid)", "Complextro (Old School EDM)", "Hard Trance (Aggressive)", "Full-On Psytrance", "Donk (UK Bounce)", "Aggressive Donk", "Hard Trance Rave", "Drumstep (Half Time)", "Liquid Funk (DNB)", "Jump Up DNB (Wobbly)", "Neurofunk DNB (Mechanical)", "Techstep (90s Dark DNB)", "Darkcore Jungle", "Breakstep (Heavy Bass)", "Acid Techno (TB-303 Focus)", "Nu-Disco (Funky)", "Disco House (Classic Energy)", "Ghetto House (Booty)", "Speed House (High Energy)", "Hyperpop (Sexton & Glitch)", "Aggressive Hyperpop", "Glitchcore Pop", "Bitpop (8-bit Pop)"] },
             { name: "3. ATMOSFÉRICKÉ & EXPERIMENTÁLNE (PREMIUM)", keys: ["Vaporwave", "Synthwave", "Cyberpunk Synthwave", "Outrun (High Speed)", "Darkwave Synthpop", "Coldwave (Mechanical)", "Lofi Hip Hop", "Ambient", "Post-Rock (Cinematic Epic)", "Shoegaze (Loud)", "Chillwave", "Trip Hop", "Minimalism", "Dark Jazz (Cinematic)", "Post-Punk (Goth Rock)", "Krautrock (Motorik Beat)", "New Age (Meditative Ambient)", "Dream Pop (Hazy, Ethereal)", "Lo-Fi Indie (Bedroom Pop)", "Jazz Fusion (Complex Harmony)", "Psychill (Spiritual)", "Psybient (Trippy)", "Dub Ambient (Spacey)", "Minimalist Piano (Dark)", "Ethereal Wave (Angelic)", "Drone Metal (Extremely Slow Drones)", "Post-Metal (Atmospheric Sludge)", "Noise Rock (Dissonant, Feedback)", "Baroque Pop", "Chiptune (8-bit Soundtrack)", "Stoner Rock (Fuzzed)"] },
             { name: "4. POP, URBAN & WORLD (PREMIUM)", keys: ["Mainstream Pop (Custom)", "Melodic Pop Ballad (New Pop Model)", "Hip Hop (Golden Era)", "GTA San Andreas Style (West Coast G-Funk)", "Future R&B (Vocal Focused)", "Neo-Soul (Smooth & Groovy)", "Synth Pop (80s Aesthetic)", "Symphonic Metal (Opera Vocals)", "Aggressive Afro-Trap", "Baile Funk (Favela)", "Funk Ostentacao (Luxury)", "Batida (Aggressive Afro)", "Gqom (Dark Durban House)", "Amapiano (Deep & Jazzy)", "Chicano Rap (Old School)", "Latin Trap (Aggressive)", "Reggaeton Flow (Classic)", "K-Pop Hip Hop (Aggressive)", "K-R&B (Smooth)", "J-Pop Rock (High Energy)", "Kawaii Metal (Babymetal Style)", "Afro House (Tribal Percussion)", "Bollywood Pop (Indian Cinematic)", "Latin Pop (Reggaeton & Pop Fusion)", "Samba (Modern)", "Flamenco (Modern Fusion)", "Celtic Dark Folk", "Steampunk Opera (Victorian Tech)"] },
-            { name: "5. KOLEKCIE & HOLIDAY (PREMIUM)", keys: ["Christmas Pop (Holiday Ballad)", "Trap Christmas (Dark Christmas)", "Acoustic Christmas Jazz (Comfortable Tone)", "Eurodance 90s (High Energy)", "Opera (Dramatic)", "Trailer Music (Epic Impact)", "Cyber-Orchestral Hybrid", "Crunkcore (Screamo & Rap)", "Mathcore (Complex Rhythm)", "Digital Hardcore (Chaos)", "Viking Metal (Epic Sagas)", "Pirate Metal (Folk)", "Nordic Ritual Folk", "Slavic Dark Folk"] }
+            { name: "5. KOLEKCIE & HOLIDAY (PREMIUM)", keys: ["Christmas Pop (Holiday Ballad)", "Trap Christmas (Dark Christmas)", "Acoustic Christmas Jazz (Comfortable Tone)", "Eurodance 90s (High Energy)", "Opera (Dramatic)", "Trailer Music (Epic Impact)", "Cyber-Orchestral Hybrid", "Crunkcore (Screamo & Rap)", "Mathcore (Complex Rhythm)", "Digital Hardcore (Chaos)", "Viking Metal (Epic Sagas)", "Pirate Metal (Folk)", "Nordic Ritual Folk", "Slavic Dark Folk"] },
+            // NOVÁ OMEGA KATEGÓRIA
+            { name: "6. OMEGA EXCLUSIVE TIER (GOD BASS)", keys: ["Omega Extreme Bass Duet (EXCLUSIVE)"] }
         ];
 
         function renderLibrary(filterText = '') {
@@ -768,21 +820,32 @@
 
                 const section = document.createElement('div');
                 section.className = "animate-fade space-y-6";
+                
+                // Špeciálny štýl nadpisu pre Omegu
+                const isOmega = cat.name.includes('OMEGA');
+                const titleStyle = isOmega ? 'text-fuchsia-500 border-fuchsia-500 text-shadow-[0_0_10px_#d946ef]' : 'text-brand-primary border-brand-primary';
+
                 section.innerHTML = `
-                    <h3 class="text-sm md:text-base font-bold text-brand-primary uppercase tracking-[0.25em] border-l-2 border-brand-primary pl-4 italic">&gt; ${cat.name}</h3>
+                    <h3 class="text-sm md:text-base font-bold uppercase tracking-[0.25em] border-l-2 pl-4 italic ${titleStyle} cyber-glitch">&gt; ${cat.name}</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         ${filteredKeys.map(key => {
                             const prompt = fullPrompts[key] || "No data";
+                            const borderGlow = isOmega ? 'border-fuchsia-500/30 hover:border-fuchsia-400 hover:shadow-[0_0_20px_rgba(217,70,239,0.3)]' : '';
+                            const tagStyle = isOmega ? 'text-fuchsia-400 border-fuchsia-500' : 'text-brand-primary border-brand-primary';
+                            const titleColor = isOmega ? 'group-hover:text-fuchsia-400' : 'group-hover:text-brand-primary';
+                            const badgeText = isOmega ? '[GOD_NODE]' : '[PRO_NODE]';
+
                             return `
-                                <div onclick="handleStyleClick('${key}')" class="style-tag p-5 rounded-none cursor-pointer group relative overflow-hidden flex flex-col justify-between">
-                                    <div class="mb-3">
+                                <div onclick="handleStyleClick('${key}')" class="style-tag p-5 rounded-none cursor-pointer group relative overflow-hidden flex flex-col justify-between ${borderGlow}">
+                                    ${isOmega ? '<div class="absolute inset-0 bg-fuchsia-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>' : ''}
+                                    <div class="mb-3 relative z-10">
                                         <div class="flex items-center justify-between mb-2">
-                                            <span class="border border-brand-primary text-brand-primary px-2 py-0.5 text-[8px] font-bold tracking-widest">[PRO_NODE]</span>
-                                            <span class="text-slate-700 group-hover:text-brand-primary transition-colors duration-300 text-[10px] font-mono">[COPY]</span>
+                                            <span class="border px-2 py-0.5 text-[8px] font-bold tracking-widest ${tagStyle}">${badgeText}</span>
+                                            <span class="text-slate-700 ${titleColor} transition-colors duration-300 text-[10px] font-mono">[COPY]</span>
                                         </div>
-                                        <h4 class="font-bold text-white uppercase text-xs tracking-wider transition-colors group-hover:text-brand-primary font-mono">${key}</h4>
+                                        <h4 class="font-bold text-white uppercase text-xs tracking-wider transition-colors font-mono ${titleColor}">${key}</h4>
                                     </div>
-                                    <div class="border-t border-brand-primary/10 pt-3">
+                                    <div class="border-t ${isOmega ? 'border-fuchsia-500/20' : 'border-brand-primary/10'} pt-3 relative z-10">
                                         <p class="text-[9px] text-slate-500 font-mono leading-relaxed line-clamp-2 uppercase group-hover:text-slate-300 transition-colors">
                                             ${prompt}
                                         </p>
@@ -798,7 +861,7 @@
             if (container.children.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-20 animate-fade">
-                        <p class="text-brand-primary font-bold uppercase tracking-widest text-xs">&gt;&gt; NO_NODES_FOUND_IN_DATABASES</p>
+                        <p class="text-brand-primary font-bold uppercase tracking-widest text-xs cyber-glitch">&gt;&gt; NO_NODES_FOUND_IN_DATABASES</p>
                     </div>
                 `;
             }
@@ -815,6 +878,16 @@
                 return;
             }
 
+            // OMEGA EXCLUSIVE CHECK - Pustí ďalej, iba ak má používateľ zakúpený OMEGA plán
+            if (key === 'Omega Extreme Bass Duet (EXCLUSIVE)') {
+                const sub = await PremiumSystem.getSubscription();
+                if (!sub || sub.planName !== 'OMEGA') {
+                    document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+                    PremiumSystem.showExpiredNotification("ACCESS DENIED: TENTO UZOL VYŽADUJE OMEGA_BASS_PROTOCOL.");
+                    return;
+                }
+            }
+
             const prompt = fullPrompts[key];
             const tempInput = document.createElement('textarea');
             tempInput.value = prompt;
@@ -824,6 +897,16 @@
             document.body.removeChild(tempInput);
 
             const notif = document.getElementById('notification');
+            
+            // Špeciálna farba notifikácie ak kopírujeme Omega prompt
+            if(key.includes("Omega Extreme Bass Duet")) {
+                notif.className = "fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] px-6 py-4 border border-fuchsia-500 bg-black text-fuchsia-500 font-bold shadow-[0_0_30px_#d946ef] hidden transform transition-all duration-300 uppercase tracking-widest text-xs cyber-glitch";
+                notif.innerHTML = "&gt;&gt;&gt; OMEGA_GOD_TIER_PROMPT_COPIED";
+            } else {
+                notif.className = "fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] px-6 py-4 border border-brand-primary bg-black text-brand-primary font-bold shadow-[0_0_30px_#00ff66] hidden transform transition-all duration-300 uppercase tracking-widest text-xs";
+                notif.innerHTML = "&gt;&gt;&gt; PROMPT_COPIED_TO_CLIPBOARD";
+            }
+
             notif.classList.remove('hidden');
             setTimeout(() => notif.classList.add('hidden'), 2000);
         }
@@ -831,6 +914,14 @@
         function openPayment(plan, price, days) {
             selectedPlan = { name: plan, days: days };
             document.getElementById('modal-plan-name').textContent = plan;
+            
+            // Vizuál modalu podľa plánu (Omega plan má fuchsia farby)
+            if(plan === 'OMEGA') {
+                document.getElementById('modal-plan-name').classList.replace('text-brand-primary', 'text-fuchsia-500');
+            } else {
+                document.getElementById('modal-plan-name').classList.replace('text-fuchsia-500', 'text-brand-primary');
+            }
+
             document.getElementById('modal-plan-price').textContent = price;
             document.getElementById('payment-modal').classList.replace('hidden', 'flex');
         }
@@ -848,13 +939,23 @@
 
         function updateUIAfterPayment(plan, expiresAt) {
             const dateStr = new Date(expiresAt).toLocaleDateString('sk-SK');
+            
+            let colorClass = 'text-green-500';
+            if(plan === 'OMEGA') colorClass = 'text-fuchsia-500';
+
             document.getElementById('account-status').textContent = `[ DECRYPTED: ${plan} ]`;
-            document.getElementById('account-status').classList.replace('text-red-500', 'text-green-500');
+            document.getElementById('account-status').className = `uppercase px-2 py-0.5 bg-black/40 border ${plan === 'OMEGA' ? 'border-fuchsia-500/50 text-fuchsia-500 shadow-[0_0_10px_rgba(217,70,239,0.3)]' : 'border-green-500/50 text-green-500 shadow-[0_0_10px_rgba(34,197,94,0.3)]'}`;
             document.getElementById('expiry-banner').classList.remove('hidden');
+            
+            if(plan === 'OMEGA') {
+                document.getElementById('expiry-banner').classList.replace('bg-brand-primary', 'bg-fuchsia-500');
+                document.getElementById('expiry-banner').classList.replace('shadow-[0_0_20px_#00ff66]', 'shadow-[0_0_20px_#d946ef]');
+            }
+
             document.getElementById('expiry-date-display').textContent = dateStr;
             document.getElementById('nav-action').innerHTML = `
-                <div class="flex items-center gap-2 border border-brand-primary bg-brand-primary/10 text-brand-primary px-4 py-2 text-[9px] uppercase tracking-widest font-bold">
-                    <span class="w-2 h-2 bg-brand-primary animate-ping"></span> [ SYSTEM_OK: DECRYPTED ]
+                <div class="flex items-center gap-2 border ${plan === 'OMEGA' ? 'border-fuchsia-500 bg-fuchsia-500/10 text-fuchsia-500' : 'border-brand-primary bg-brand-primary/10 text-brand-primary'} px-4 py-2 text-[9px] uppercase tracking-widest font-bold">
+                    <span class="w-2 h-2 ${plan === 'OMEGA' ? 'bg-fuchsia-500' : 'bg-brand-primary'} animate-ping"></span> [ SYSTEM_OK: DECRYPTED ]
                 </div>
             `;
         }
@@ -862,11 +963,10 @@
         function resetUIToBasic() {
             window.isProActive = false;
             document.getElementById('account-status').textContent = '[ RESTRICTED / NO_LIC ]';
-            document.getElementById('account-status').classList.remove('text-green-500');
-            document.getElementById('account-status').classList.add('text-red-500');
+            document.getElementById('account-status').className = 'text-red-500 uppercase px-2 py-0.5 bg-red-950/40 border border-red-500/50 shadow-[0_0_10px_rgba(239,68,68,0.3)]';
             document.getElementById('expiry-banner').classList.add('hidden');
             document.getElementById('nav-action').innerHTML = `
-                <a href="#pricing" class="border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-black px-5 py-2 text-xs font-bold transition transform active:scale-95 tracking-widest">BYPASS_SYS</a>
+                <a href="#pricing" class="border border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-black px-5 py-2 text-xs font-bold transition transform active:scale-95 tracking-widest shadow-[0_0_10px_rgba(0,255,102,0.3)]">BYPASS_SYS</a>
             `;
         }
 
